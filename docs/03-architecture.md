@@ -50,7 +50,7 @@
 
 ### 2.2 Mastra server (Hono trên Railway)
 - `@mastra/core` đăng ký `roastAgent`; chạy `mastra build` → `node .mastra/output/index.mjs`.
-- **Model:** ưu tiên `@ai-sdk/anthropic` `createAnthropic(...)('claude-opus-4-8')` để chắc chắn dùng model mới nhất (model-router của Mastra có thể chưa catalog opus-4-8). Fallback `sonnet-4-6`.
+- **Model:** **Gemini qua Vercel AI Gateway** — `@ai-sdk/gateway` `createGateway({ apiKey: AI_GATEWAY_API_KEY })('google/gemini-3-flash')`. ⚠️ Truyền chuỗi `google/...` trần cho Mastra sẽ route sang Google trực tiếp (đòi GOOGLE_API_KEY) → phải dùng gateway provider tường minh.
 - **CORS:** bật `server.cors.origin = ['https://<suins>.wal.app', 'http://localhost:5173']`.
 - **Tools** (mỗi tool là `createTool` với zod schema): xem §5.
 - **Memory hooks:** sau mỗi lượt → `remember` các fact mới vào MemWal; mirror snapshot hồ sơ sang Walrus (async, không chặn phản hồi).
@@ -167,7 +167,7 @@ request kèm { resource: suiAddress, thread }
 | Wallet | Sui Ed25519 | session wallet, nạp **WAL + SUI**; 1 epoch = 14 ngày |
 
 ## 7. Bí mật & cấu hình (env)
-**Server (Railway):** `ANTHROPIC_API_KEY`, `DATABASE_URL` (Supabase session pooler), `MEMWAL_ACCOUNT_ID`, `MEMWAL_DELEGATE_KEY`, `MEMWAL_RELAYER_URL`, `SESSION_WALLET_KEY` (suiprivkey…), `SUI_RPC_URL`, `WALRUS_AGGREGATOR_URL`, `CORS_ORIGINS`.
+**Server (Railway):** `AI_GATEWAY_API_KEY`, `GIL_MODEL` (vd `google/gemini-3-flash`), `DATABASE_URL` (Supabase session pooler), `MEMWAL_ACCOUNT_ID`, `MEMWAL_DELEGATE_KEY`, `MEMWAL_RELAYER_URL`, `SESSION_WALLET_KEY` (suiprivkey…), `SUI_RPC_URL`, `WALRUS_AGGREGATOR_URL`, `CORS_ORIGINS`.
 **Frontend (Vite, public):** `VITE_MASTRA_URL`, `VITE_SUI_NETWORK=mainnet`, `VITE_WALRUS_AGGREGATOR_URL`, `VITE_SUINS_NAME`.
 > Quy tắc: bất cứ thứ gì là bí mật → chỉ ở server. `VITE_*` luôn public.
 

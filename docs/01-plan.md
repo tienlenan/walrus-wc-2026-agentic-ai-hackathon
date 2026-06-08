@@ -22,7 +22,7 @@ Một AI World Cup 2026 buddy theo phong cách **tờ báo lá cải thể thao 
 
 ## Quyết định stack (tóm tắt — chi tiết ở [architecture](03-architecture.md))
 - **Frontend:** React + Vite → deploy **Walrus Sites (Mainnet)** qua `site-builder`.
-- **Agent runtime:** **Mastra** (`@mastra/core`) + **ai-sdk** + **Claude** (`claude-opus-4-8` / `claude-sonnet-4-6`).
+- **Agent runtime:** **Mastra** (`@mastra/core`) + **ai-sdk** + **Gemini qua Vercel AI Gateway** (`google/gemini-3-flash`).
 - **Trí nhớ (ngôi sao):** **Walrus Memory** — `@mysten-incubation/memwal` — `remember`/`recall`/`ask`, lưu blob mã hoá (Seal) trên Walrus Mainnet. Cắm vào Mastra qua AI SDK middleware hoặc Mastra tools.
 - **DB:** **Supabase free** (Postgres + pgvector + realtime) — sổ dự đoán, cache lịch/kết quả, leaderboard, bảng `walrus_index` (con trỏ tới blob/account), user registry.
 - **Server:** Mastra Hono server host trên **Railway** (persistent, hỗ trợ streaming).
@@ -49,7 +49,7 @@ Một AI World Cup 2026 buddy theo phong cách **tờ báo lá cải thể thao 
 | **Supabase free tạm dừng sau ~7 ngày** không hoạt động + Railway free idle | App "chết" đúng lúc chấm | Cron keep-alive, hoặc trả phí cho cửa sổ demo |
 | Chi phí Mainnet (WAL + SUI), phí cố định mỗi blob lớn với blob nhỏ | Tốn / chậm | Nạp ví sớm; **Quilt** gom blob nhỏ; ghi memory **async**, batch |
 | Mastra đang chuyển v1 | Lệch API | Pin version, theo migration notes |
-| `claude-opus-4-8` chưa có trong model-router của Mastra | Lỗi model | Dùng trực tiếp `@ai-sdk/anthropic` provider, hoặc fallback `sonnet-4-6` |
+| Mastra nhận chuỗi `google/...` trần → route sang Google trực tiếp (đòi GOOGLE_API_KEY) | Lỗi model | Dùng `@ai-sdk/gateway` `createGateway({apiKey: AI_GATEWAY_API_KEY})` tường minh |
 
 ## Quyết định còn mở (cần xác nhận)
 1. **Tên & theme:** Product = **"The Daily Walrus"**, theme = **tabloid báo thể thao** (mascot Gil). Fallback: **Walrus Arcade** (8-bit). → *OK chứ?*

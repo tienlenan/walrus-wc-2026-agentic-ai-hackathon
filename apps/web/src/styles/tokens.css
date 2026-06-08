@@ -1,0 +1,47 @@
+/* The Daily Walrus — design tokens (xem docs/05-design-direction.md) */
+:root {
+  /* Surfaces */
+  --paper: #f4ecd8; /* newsprint ngả vàng */
+  --paper-2: #fbf7ec; /* giấy trắng */
+  --ink: #1a1714; /* mực in */
+  --ink-soft: #57514a; /* mực nhạt */
+
+  /* Brand / status */
+  --teal: #37c3b0; /* teal Walrus thật */
+  --teal-deep: #0a2540; /* xanh mực đậm */
+  --red: #c8102e; /* đỏ tabloid */
+  --green: #1f7a3d; /* dự đoán đúng */
+
+  /* Lines */
+  --rule: #d8cdb4;
+  --rule-bold: #1a1714;
+
+  /* Type */
+  --font-display: "Anton", Impact, sans-serif;
+  --font-masthead: "Playfair Display", Georgia, serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Shape */
+  --radius: 4px;
+  --shadow-print: 2px 2px 0 var(--ink);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}

@@ -1,0 +1,145 @@
+.newsroom {
+  margin: 1.5rem 0 2rem;
+  border: 2px solid var(--ink);
+  background: var(--paper-2);
+  box-shadow: var(--shadow-print);
+}
+
+.newsroom-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.5rem 0.9rem;
+  font-size: 1.15rem;
+}
+
+.live-dot {
+  color: var(--red);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  animation: blink 1.4s steps(2) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-dot {
+    animation: none;
+  }
+}
+
+.chat-log {
+  padding: 1rem;
+  min-height: 260px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.chat-empty {
+  color: var(--ink-soft);
+}
+.starters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.starter {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  padding: 0.35rem 0.6rem;
+  border-radius: 2px;
+}
+.starter:hover:not(:disabled) {
+  background: var(--teal);
+  color: #fff;
+}
+
+.msg {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--rule);
+}
+.msg-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.2rem;
+}
+.msg-user .msg-label {
+  color: var(--red);
+}
+.msg-gil .msg-label {
+  color: var(--teal-deep);
+}
+.msg-text {
+  white-space: pre-wrap;
+}
+.msg-gil .msg-text {
+  font-family: var(--font-masthead);
+}
+
+.mem-note {
+  margin-top: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--teal-deep);
+  background: #eef7f5;
+  border-left: 3px solid var(--teal);
+  padding: 0.3rem 0.5rem;
+}
+
+.loading {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.chat-error {
+  color: var(--red);
+  font-size: 0.85rem;
+}
+
+.chat-form {
+  display: flex;
+  gap: 0.5rem;
+  border-top: 2px solid var(--ink);
+  padding: 0.75rem;
+}
+.chat-form input {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  border: 1px solid var(--ink);
+  padding: 0.55rem 0.7rem;
+  border-radius: 2px;
+  background: var(--paper-2);
+}
+.chat-form button {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 0 1.1rem;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.chat-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.chat-form button:hover:not(:disabled) {
+  background: var(--teal);
+}

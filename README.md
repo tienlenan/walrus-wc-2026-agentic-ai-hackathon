@@ -1,86 +1,106 @@
-# 🦭📰 The Daily Walrus — Walrus Memory World Cup
+# 🦭📰 The Daily Walrus
 
-> Bài dự thi cho **Walrus Sessions: Walrus Memory World Cup** (Walrus Foundation).
-> Luật chính thức: https://thewalrussessions.wal.app/memory-world-cup/index.html
+> An AI World Cup 2026 pundit with a memory. Make your predictions — and get roasted for them.
 
-## TL;DR (Tiếng Việt)
-**The Daily Walrus** là một "tờ báo thể thao AI" về **FIFA World Cup 2026**, dẫn dắt bởi mascot
-**Gil — chú hải mã bình luận viên già đời, hay cà khịa**. Người dùng dự đoán kết quả & đưa hot-take;
-Gil **nhớ** mọi dự đoán/quan điểm — lưu **canonical trên Walrus Memory / Mainnet** — rồi theo dõi
-thành tích và **cà khịa cá nhân hoá** bằng chính lịch sử của bạn. Điểm ăn tiền: **trí nhớ thật** tạo
-khác biệt rõ rệt giữa "Gil ngày 1" và "Gil ngày 5+" (before/after). Giao diện web công khai (prediction
-history, Gil's Notebook, roast card) cho thấy trí nhớ "đang hoạt động".
+**The Daily Walrus** is an AI "sports tabloid" fronted by **Gil**, a grizzled walrus pundit who's
+seen every World Cup since 1954. You chat about fixtures, make predictions, and drop hot takes — Gil
+remembers all of it (stored permanently on **Walrus**), tracks your record, and roasts you with your
+own history. The longer you use it, the more personal — and savage — Gil gets.
 
-## 📂 Tài liệu (bắt đầu ở đây)
-| Doc | Nội dung |
+Built for the **Walrus Memory World Cup** hackathon. Full brief, plan, architecture, and design live
+in [`docs/`](docs).
+
+## ✨ Features
+- **Chat with Gil** — fixtures, results, and playful match analysis, fully in character.
+- **Predictions desk** — call match outcomes and tournament bets; auto-scored as results land.
+- **Persistent memory on Walrus** — Gil references what he learned in earlier sessions: a real
+  day‑1‑vs‑day‑N "before/after".
+- **Personalized roasts** — based on your record, favourite team, and past takes.
+- **Leaderboard** — prediction accuracy, in realtime.
+- **Gil's Notebook** — see exactly what Gil remembers about you, verifiable on‑chain.
+- **Shareable report cards** — auto‑generated roast cards to screenshot and post.
+
+## 🧱 Tech stack
+| Layer | Choice |
 |---|---|
-| [docs/01-plan.md](docs/01-plan.md) | Concept sản phẩm, lộ trình/milestone, rủi ro, quyết định còn mở |
-| [docs/02-requirements.md](docs/02-requirements.md) | Yêu cầu chức năng/phi chức năng + compliance hackathon |
-| [docs/03-architecture.md](docs/03-architecture.md) | Kiến trúc hệ thống, data model, luồng trí nhớ, deploy, env |
-| [docs/04-user-flows.md](docs/04-user-flows.md) | Các luồng người dùng (gồm màn before/after) |
-| [docs/05-design-direction.md](docs/05-design-direction.md) | Theme "The Daily Walrus", mascot Gil, design tokens, roast card |
-| [docs/06-research-notes.md](docs/06-research-notes.md) | Chi tiết SDK/CLI/ID + nguồn (MemWal, Walrus, Mastra, Supabase) |
+| Frontend | React + Vite → **Walrus Sites** (Mainnet) |
+| Agent runtime | **Mastra** (ai‑sdk) |
+| LLM | **Gemini** via **Vercel AI Gateway** |
+| Agent memory | **Walrus Memory** (`@mysten-incubation/memwal`) — canonical store on Mainnet |
+| Database | **Supabase** (Postgres + pgvector + realtime) — index / cache / leaderboard |
+| Server host | Mastra (Hono) on Railway |
 
-## 🧱 Stack
-- **Frontend:** React + Vite → deploy **Walrus Sites (Mainnet)**
-- **Agent:** **Mastra** (ai-sdk) + **Claude** (`claude-opus-4-8` / `claude-sonnet-4-6`)
-- **Trí nhớ (ngôi sao):** **Walrus Memory** — `@mysten-incubation/memwal` (Mainnet)
-- **DB:** **Supabase** free (Postgres + pgvector + realtime) — index/cache, KHÔNG phải nơi chứa memory canonical
-- **Server:** Mastra Hono server trên **Railway**
-- **Ví:** Sui Ed25519 session wallet (WAL + SUI)
+> Design note: **Walrus is the source of truth for memory**; Supabase is a rebuildable index/cache.
+> See [`docs/03-architecture.md`](docs/03-architecture.md).
 
-## Mốc thời gian
-- **Hackathon:** 5/6/2026 → 24/6/2026
-- **Công bố kết quả:** 2/7/2026
+## 📁 Project structure
+```
+walrus-memory-world-cup/
+├─ apps/
+│  ├─ web/        # React + Vite (deploys to Walrus Sites)
+│  └─ server/     # Mastra agent server — Gil (Gemini via AI Gateway)
+├─ packages/
+│  ├─ db/         # Supabase: pg pool, admin client, SQL schema
+│  └─ shared/     # shared types + Gil persona / system prompt
+├─ docs/          # plan, requirements, architecture, flows, design, research
+├─ .env.example
+├─ pnpm-workspace.yaml
+└─ package.json
+```
 
-## Phải xây gì (yêu cầu bắt buộc)
-- Agent tích hợp **Walrus Memory** để theo dõi dự đoán / quan điểm / tương tác gắn với **FIFA World Cup 2026**.
-- **Trí nhớ thật sự bền vững:** phải tham chiếu được điều đã học về user ở phiên trước — một khoảnh khắc
-  *before/after* rõ ràng (agent ngày 1 vs. agent sau ít nhất 4 ngày sử dụng).
-- **Toàn bộ state + memory của agent lưu trên Walrus**, deploy trên **Mainnet**.
-- Có **giao diện/site công khai** nơi nhìn thấy trí nhớ đang hoạt động (prediction history, roast thành tích,
-  debate log, hoặc hình thức khác làm trí nhớ trở nên rõ ràng và có ý nghĩa).
-- Tạo **ví riêng (dedicated wallet)** cho session.
-- Cung cấp **link project live** + **video demo ≤ 3 phút**.
+## 🚀 Getting started
+### Prerequisites
+- Node ≥ 20.9, pnpm 9
+- A Supabase project (connection string + API keys)
+- A Vercel AI Gateway API key
 
-## Tiêu chí chấm điểm
-1. **Memory Depth & Authenticity** — trí nhớ có thực sự thay đổi hành vi agent theo thời gian không?
-   Tín hiệu rõ nhất là khoảnh khắc before/after thật.
-2. **Creativity & Flair** — có thú vị, đáng chia sẻ, dùng bối cảnh World Cup một cách bất ngờ/vui không?
-   Project nào trông giống nhau sẽ bị điểm thấp dù kỹ thuật tốt.
-3. **Technical Execution & Completeness** — có chạy live trên Walrus Mainnet, ổn định, MVP hoàn chỉnh không?
-   Một MVP nhỏ mà chạy được ăn điểm cao hơn project tham vọng mà không hoạt động.
+### Setup
+```bash
+pnpm install
+cp .env.example .env.local                 # then fill in the values
+pnpm --filter @daily-walrus/db db:push     # create tables on Supabase
+```
 
-## Giải thưởng (denominated in WAL)
-| Best Submission | Giải |
+### Run
+```bash
+pnpm dev:web       # web app       → http://localhost:5173
+pnpm dev:server    # Mastra server → http://localhost:4111
+```
+
+### Quick verify
+```bash
+pnpm --filter @daily-walrus/db     test:connection            # database connectivity
+pnpm --filter @daily-walrus/server ping "Who wins WC 2026?"   # Gil replies (no server needed)
+```
+
+## 📜 Scripts
+| Command | What it does |
 |---|---|
-| 1st | $500 |
-| 2nd | $400 |
-| 3rd | $300 |
-| 4th | $200 |
-| 5th | $100 |
+| `pnpm dev:web` | Run the web app (Vite) |
+| `pnpm dev:server` | Run the Mastra server |
+| `pnpm build` | Build all packages |
+| `pnpm --filter @daily-walrus/db db:push` | Apply the SQL schema to Supabase |
+| `pnpm --filter @daily-walrus/db test:connection` | Test the database connection |
+| `pnpm --filter @daily-walrus/server ping` | One‑shot Gil reply (bypasses HTTP) |
 
-- **Best Feedback:** 6 người thắng, mỗi người $50 WAL.
-- **Special Prizes:** $200 WAL (theo quyết định của ban giám khảo).
-- **Referral:** referrer hợp lệ nhận thêm 25% giá trị giải (chỉ áp dụng giải 1st–5th).
+## 📚 Docs
+Planning & design (written in Vietnamese):
 
-## Checklist nộp bài
-- [ ] Đăng ký trên nền tảng **DeepSurge**
-- [ ] Điền form nộp bài: https://airtable.com/appoDAKpC74UOqoDa/shrIl2BMnzMwpuLhO
-- [ ] Project chạy live trên **Walrus Mainnet** + có trên DeepSurge
-- [ ] Giao diện công khai cho thấy trí nhớ hoạt động
-- [ ] Video demo ≤ 3 phút
-- [ ] Cung cấp địa chỉ ví riêng cho session
-- [ ] Hoàn thành Walrus Memory feedback form (kèm GitHub tickets nếu có)
-- [ ] Tham gia Walrus Discord: https://discord.com/invite/walrusprotocol
-- [ ] Đăng demo/screenshot/link kèm **#Walrus** trên X
-- [ ] GitHub repo public
+| Doc | Contents |
+|---|---|
+| [01-plan](docs/01-plan.md) | Product concept, roadmap, risks, open decisions |
+| [02-requirements](docs/02-requirements.md) | Functional / non‑functional + hackathon compliance |
+| [03-architecture](docs/03-architecture.md) | System design, data model, memory flow, deploy |
+| [04-user-flows](docs/04-user-flows.md) | User journeys incl. the before/after memory demo |
+| [05-design-direction](docs/05-design-direction.md) | Theme, Gil mascot, design tokens, roast card |
+| [06-research-notes](docs/06-research-notes.md) | SDK / CLI reference + sources |
 
-## Trạng thái project
-- [x] **M0** — Chốt ý tưởng (The Daily Walrus) + tech stack + plan/requirements/architecture/flows/design
-- [ ] **M1** — Skeleton: monorepo, Vite app, Mastra server, Supabase, session wallet
-- [ ] **M2** — Memory spine: tích hợp Walrus Memory (MemWal) + sổ dự đoán + before/after ⭐ *bắt đầu sớm*
-- [ ] **M3** — Core UX: chat Gil, dự đoán, lịch/kết quả, leaderboard
-- [ ] **M4** — Theme polish: design system + mascot Gil + roast card
-- [ ] **M5** — Deploy Walrus Mainnet + Supabase prod + Railway + SuiNS
-- [ ] **M6** — Video demo ≤3', feedback form, post #Walrus, submit DeepSurge/Airtable
+## 🗺️ Status
+- ✅ Monorepo · web (themed landing) · db (live schema) · shared (Gil persona) · server (Gil on Gemini)
+- ⏳ Next: **Walrus Memory** integration (the memory spine) → predictions / roasts / leaderboard UI → deploy to Walrus Mainnet
+
+## License
+TBD
+
+---
+〈 GIL'S VERDICT: STORED FOREVER, JUST LIKE YOUR BAD TAKES. 〉

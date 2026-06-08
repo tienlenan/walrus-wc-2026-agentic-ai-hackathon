@@ -1,0 +1,264 @@
+/* The Daily Walrus — front page (skeleton) */
+
+.paper {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: clamp(1rem, 3vw, 2.5rem);
+  background: var(--paper-2);
+  min-height: 100vh;
+  border-left: 1px solid var(--rule);
+  border-right: 1px solid var(--rule);
+}
+
+/* ---------- Masthead ---------- */
+.masthead {
+  text-align: center;
+  border-bottom: 4px double var(--ink);
+  padding-bottom: 0.75rem;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+}
+
+.eyebrow::before,
+.eyebrow::after {
+  content: "✦";
+  color: var(--teal);
+  margin: 0 0.6rem;
+}
+
+.nameplate {
+  font-family: var(--font-masthead);
+  font-weight: 900;
+  font-size: clamp(2.6rem, 9vw, 5.5rem);
+  line-height: 0.95;
+  margin: 0.4rem 0 0.2rem;
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  font-family: var(--font-body);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: clamp(0.7rem, 1.6vw, 0.9rem);
+  color: var(--ink-soft);
+}
+
+.dateline {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+/* ---------- Front page lead ---------- */
+.lead-block {
+  margin: 1.75rem 0 1rem;
+  max-width: 64ch;
+}
+
+.frontpage {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 1.75rem;
+  margin: 1.75rem 0;
+}
+
+.lead {
+  border-right: 1px solid var(--rule);
+  padding-right: 1.75rem;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  color: var(--red);
+  margin-bottom: 0.5rem;
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  line-height: 0.98;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+  letter-spacing: 0.01em;
+}
+
+.lede {
+  font-size: 1.05rem;
+  margin: 0 0 0.75rem;
+}
+
+.dropcap {
+  float: left;
+  font-family: var(--font-masthead);
+  font-weight: 900;
+  font-size: 3.4rem;
+  line-height: 0.72;
+  padding: 0.1rem 0.5rem 0 0;
+  color: var(--teal-deep);
+}
+
+.byline {
+  font-family: var(--font-masthead);
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+/* ---------- Gil's desk ---------- */
+.desk {
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  padding: 1rem;
+  box-shadow: var(--shadow-print);
+  align-self: start;
+}
+
+.desk-head {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--ink);
+  color: var(--paper);
+  text-align: center;
+  margin: -1rem -1rem 1rem;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.mascot {
+  font-size: 4.5rem;
+  text-align: center;
+  line-height: 1;
+}
+
+.verdict {
+  font-family: var(--font-masthead);
+  font-style: italic;
+  font-size: 1.05rem;
+  margin: 0.75rem 0 0.5rem;
+  padding-left: 0.8rem;
+  border-left: 3px solid var(--teal);
+}
+
+.verdict-foot {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: right;
+  color: var(--ink-soft);
+}
+
+/* ---------- Section teasers ---------- */
+.sections {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  border-top: 4px double var(--ink);
+  padding-top: 1.25rem;
+}
+
+.section-card {
+  border: 1px solid var(--ink);
+  padding: 0.9rem;
+  background: var(--paper-2);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.section-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-print);
+}
+
+.section-kicker {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.4rem;
+}
+
+.section-blurb {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  margin: 0 0 0.75rem;
+}
+
+.soon {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--teal-deep);
+  border-top: 1px dashed var(--rule);
+  padding-top: 0.5rem;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-soft);
+}
+
+.stamp {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  color: var(--red);
+  border: 2px solid var(--red);
+  padding: 0.15rem 0.6rem;
+  transform: rotate(-4deg);
+  letter-spacing: 0.04em;
+  border-radius: 2px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
+  .frontpage {
+    grid-template-columns: 1fr;
+  }
+  .lead {
+    border-right: none;
+    padding-right: 0;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1.25rem;
+  }
+  .sections {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 440px) {
+  .sections {
+    grid-template-columns: 1fr;
+  }
+}

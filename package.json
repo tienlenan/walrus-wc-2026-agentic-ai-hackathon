@@ -1,0 +1,22 @@
+{
+  "name": "daily-walrus",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "The Daily Walrus — AI World Cup 2026 pundit with persistent memory on Walrus. Walrus Memory World Cup hackathon.",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "dev:web": "pnpm --filter @daily-walrus/web dev",
+    "dev:server": "pnpm --filter @daily-walrus/server dev",
+    "build": "pnpm -r build",
+    "build:web": "pnpm --filter @daily-walrus/web build",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

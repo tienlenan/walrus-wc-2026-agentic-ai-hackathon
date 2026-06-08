@@ -1,0 +1,86 @@
+/* Thanh "press bar" trên cùng — gọn, khớp theme tabloid The Daily Walrus. */
+.press-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.45rem 0;
+  margin-bottom: 0.25rem;
+  border-bottom: 2px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.press-pass {
+  color: var(--ink-soft);
+}
+
+.press-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Đồng bộ dapp-kit ConnectButton + nút custom theo theme (ink/teal, mono, góc cứng). */
+.press-actions button {
+  font-family: var(--font-mono) !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  border: 1px solid var(--ink) !important;
+  border-radius: 2px !important;
+  box-shadow: none !important;
+  padding: 0.38rem 0.75rem !important;
+  min-height: 0 !important;
+  line-height: 1.2 !important;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+/* Connected state: ép chữ (địa chỉ ví) + icon thành trắng/kem trên nền đen → đọc rõ. */
+.press-actions button * {
+  color: inherit !important;
+  background: transparent !important;
+  fill: currentColor !important;
+}
+
+.press-actions button:hover {
+  background: var(--teal) !important;
+  border-color: var(--teal) !important;
+  color: #fff !important;
+}
+
+.press-btn.primary {
+  background: var(--teal) !important;
+  border-color: var(--teal) !important;
+  color: #fff !important;
+}
+.press-btn.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.press-signed {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--green);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.press-link {
+  cursor: pointer;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  font-size: 0.68rem;
+}
+.press-link:hover {
+  color: var(--red);
+}
