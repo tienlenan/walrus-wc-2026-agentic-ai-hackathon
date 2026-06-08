@@ -1,4 +1,4 @@
-// Kiểm tra cấu hình + relayer MemWal. Chạy: pnpm --filter @daily-walrus/walrus memwal:health
+// Check configuration + MemWal relayer. Run: pnpm --filter @daily-walrus/walrus memwal:health
 import { isMemoryEnabled, memoryHealth } from "../src/index";
 
 console.log("MEMWAL configured:", isMemoryEnabled());

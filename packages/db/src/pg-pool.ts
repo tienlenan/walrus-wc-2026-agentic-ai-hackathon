@@ -4,7 +4,7 @@ let pool: pg.Pool | undefined;
 
 /**
  * Shared Postgres pool (Supabase). Lazy singleton.
- * Đọc DATABASE_URL từ env. SSL bắt buộc với Supabase.
+ * Reads DATABASE_URL from env. SSL is required with Supabase.
  */
 export function getPool(): pg.Pool {
   if (!pool) {

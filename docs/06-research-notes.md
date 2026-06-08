@@ -1,14 +1,14 @@
-# Research Notes (reference) — verified ~8/6/2026
+# Research Notes (reference) — verified ~Jun 8, 2026
 
-> Chi tiết SDK/CLI/ID để dùng khi build. ⚠️ = cần verify lại lúc code (mọi thứ rất mới / beta).
+> SDK/CLI/ID details to use when building. ⚠️ = needs re-verifying at code time (everything is very new / beta).
 
-## A. Walrus Memory (MemWal) — ngôi sao
-- **Là sản phẩm chính thức** của Mysten/Walrus (ra mắt ~21/5/2026, **beta nhưng dùng được trên Mainnet**). Không chỉ là pattern.
-- **Package:** `@mysten-incubation/memwal` (TS, ⚠️ ~v0.0.7 — **pin version**) + Python SDK.
-- **Gồm:** Relayer (HTTP, lo encryption/embedding/storage/retrieval) · **Seal** E2E encryption · Sui contract (ownership + delegate access) · Indexer · Dashboard/Playground.
-- **Ops:** `remember` (store+embed) · `recall` (semantic search) · `analyze` (trích fact) · `ask` (recall+LLM) · `restore` (dựng lại index từ Walrus).
-- **Tích hợp:** middleware cho **Vercel AI SDK** (`@mysten-incubation/memwal/ai`) → vì Mastra build trên AI SDK nên cắm được; chưa có adapter Mastra chính thức → coi như integration work (đi đường **Mastra tools** wrap remember/recall trước).
-- **Endpoints:** Relayer **Mainnet** `https://relayer.memory.walrus.xyz` (Testnet `…-staging…`). Account/delegate key tạo ở `memory.walrus.xyz`. Setup skill: `curl -sL https://memory.walrus.xyz/skills/setup`.
+## A. Walrus Memory (MemWal) — the star
+- **An official product** from Mysten/Walrus (launched ~May 21, 2026, **beta but usable on Mainnet**). Not just a pattern.
+- **Package:** `@mysten-incubation/memwal` (TS, ⚠️ ~v0.0.7 — **pin the version**) + Python SDK.
+- **Includes:** Relayer (HTTP, handles encryption/embedding/storage/retrieval) · **Seal** E2E encryption · Sui contract (ownership + delegate access) · Indexer · Dashboard/Playground.
+- **Ops:** `remember` (store+embed) · `recall` (semantic search) · `analyze` (extract facts) · `ask` (recall+LLM) · `restore` (rebuild the index from Walrus).
+- **Integration:** middleware for the **Vercel AI SDK** (`@mysten-incubation/memwal/ai`) → since Mastra is built on the AI SDK it plugs in; no official Mastra adapter yet → treat it as integration work (go the **Mastra tools** route wrapping remember/recall first).
+- **Endpoints:** the **Mainnet** Relayer `https://relayer.memory.walrus.xyz` (Testnet `…-staging…`). Account/delegate key created at `memory.walrus.xyz`. Setup skill: `curl -sL https://memory.walrus.xyz/skills/setup`.
 - **Docs:** https://docs.wal.app/walrus-memory/getting-started/what-is-walrus-memory · `/quick-start` · https://walrus.xyz/products/walrus-memory/
 - **Quick start:**
 ```bash
@@ -22,13 +22,13 @@ const memwal = WalrusMemory.create({
   serverUrl: "https://relayer.memory.walrus.xyz",
   namespace: "daily-walrus:<userSuiAddress>",
 });
-const job = await memwal.remember("User là CĐV Brazil, tin Brazil vô địch.");
+const job = await memwal.remember("User is a Brazil fan, believes Brazil will win.");
 await memwal.waitForRememberJob(job.job_id);
-const res = await memwal.recall({ query: "Ta biết gì về user này?" });
+const res = await memwal.recall({ query: "What do we know about this user?" });
 ```
-- ⚠️ **Rủi ro chấm điểm:** relayer hosted ghi blob bằng **ví của relayer**. Nếu BGK đòi "ví của bạn ghi" → self-host relayer (cần ví nạp WAL+SUI) **hoặc** giữ đường raw `@mysten/walrus` (mục B). Khuyến nghị: làm cả hai; hỏi Discord cho chắc.
+- ⚠️ **Judging risk:** the hosted relayer writes blobs with the **relayer's wallet**. If judges demand "written from your wallet" → self-host the relayer (needs a wallet funded with WAL+SUI) **or** keep the raw `@mysten/walrus` path (section B). Recommendation: do both; ask on Discord to be safe.
 
-## B. Walrus blob raw — `@mysten/walrus`
+## B. Raw Walrus blob — `@mysten/walrus`
 - **Package:** `@mysten/walrus` (⚠️ ~v1.1.7) + `@mysten/sui`.
 - **Mainnet objects (verified):** `systemObjectId 0x2134d52768ea07e8c43570ef975eb3e4c27a39fa6396bef985b5abc58d03ddd2` · `stakingPoolId 0x10b9d30c28448939ce6c4d6c6e0ffce4a7f8a4ada8248bdad09ef8b70e4a3904`.
 ```ts
@@ -40,21 +40,21 @@ const walrus = new WalrusClient({ network: 'mainnet', suiClient,
 
 const { blobId } = await walrus.writeBlob({
   blob: new TextEncoder().encode(JSON.stringify(profile)),
-  deletable: true, epochs: 26, signer: sessionKeypair });   // 1 epoch = 14 ngày
+  deletable: true, epochs: 26, signer: sessionKeypair });   // 1 epoch = 14 days
 const bytes = await walrus.readBlob({ blobId });
 ```
-- **Quilt** (`writeFiles` với nhiều `WalrusFile`) gom nhiều blob nhỏ trong 1 tx → rẻ hơn nhiều (docs: ~106x cho 100KB, ~420x cho 10KB). Dùng cho snapshot nhiều mục.
-- **HTTP API:** read Mainnet qua public aggregator (vd `https://aggregator.walrus-mainnet.walrus.space/v1/blobs/<blobId>`); ⚠️ **không có public publisher Mainnet** (write tốn SUI+WAL) → phải tự ghi bằng ví funded.
-- **Mutable memory:** blob immutable → giữ **con trỏ trên Sui object** (HEAD) trỏ tới blobId mới nhất; hoặc append-only log (`prevBlobId`). MemWal đã tự lo việc này.
+- **Quilt** (`writeFiles` with multiple `WalrusFile`) batches many small blobs into 1 tx → much cheaper (docs: ~106x for 100KB, ~420x for 10KB). Use it for multi-item snapshots.
+- **HTTP API:** read Mainnet via the public aggregator (e.g. `https://aggregator.walrus-mainnet.walrus.space/v1/blobs/<blobId>`); ⚠️ **there is no public Mainnet publisher** (writing costs SUI+WAL) → you must write yourself with a funded wallet.
+- **Mutable memory:** blobs are immutable → keep a **pointer on a Sui object** (HEAD) pointing to the latest blobId; or an append-only log (`prevBlobId`). MemWal already handles this.
 
-## C. Chi phí & ví Mainnet
-- Giá **$0.023/GB/tháng** trả bằng **WAL** (đã gồm erasure coding ~4.5–5x). Blob nhỏ bị **phí cố định/blob** chi phối → **Quilt** là đòn bẩy chi phí lớn nhất; ghi **async/batch**, đừng 1 blob/tin nhắn.
-- Cần **WAL** (storage) + **SUI** (gas, tới 3 tx/lần ghi + deposit cho Sui object — burn lại để hoàn phần lớn).
+## C. Mainnet cost & wallet
+- Price **$0.023/GB/month** paid in **WAL** (includes erasure coding ~4.5–5x). Small blobs are dominated by the **fixed per-blob fee** → **Quilt** is the biggest cost lever; write **async/batched**, not 1 blob per message.
+- You need **WAL** (storage) + **SUI** (gas, up to 3 tx per write + a deposit for the Sui object — burn it back to recover most of it).
 - Calculator: https://costcalculator.wal.app/ · `walrus info` / `walrus store --dry-run`.
-- Nạp ví: mua SUI → swap SUI→WAL qua `walrus` CLI. Config mẫu: `curl --create-dirs https://docs.wal.app/setup/client_config.yaml -o ~/.config/walrus/client_config.yaml`.
-- **Session wallet:** `new Ed25519Keypair()`; lưu `getSecretKey()` (suiprivkey…) vào secret; `toSuiAddress()` để nạp tiền. Mainnet RPC `getFullnodeUrl('mainnet')`.
+- Fund the wallet: buy SUI → swap SUI→WAL via the `walrus` CLI. Sample config: `curl --create-dirs https://docs.wal.app/setup/client_config.yaml -o ~/.config/walrus/client_config.yaml`.
+- **Session wallet:** `new Ed25519Keypair()`; store `getSecretKey()` (suiprivkey…) in a secret; `toSuiAddress()` to fund it. Mainnet RPC `getFullnodeUrl('mainnet')`.
 
-## D. Walrus Sites (deploy frontend)
+## D. Walrus Sites (deploy the frontend)
 ```bash
 # install site-builder (macOS)
 curl -sSfL https://raw.githubusercontent.com/Mystenlabs/suiup/main/install.sh | sh
@@ -64,39 +64,39 @@ curl https://raw.githubusercontent.com/MystenLabs/walrus-sites/refs/heads/mainne
 # build + deploy
 npm run build   # Vite -> ./dist
 site-builder --context=mainnet deploy --epochs 12 ./dist
-# update lại site cũ: thêm --object-id 0x<site-object-id>
+# update an existing site: add --object-id 0x<site-object-id>
 ```
-- **SPA routing (bắt buộc):** tạo `ws-resources.json` ở gốc build:
+- **SPA routing (required):** create `ws-resources.json` at the build root:
 ```json
 { "routes": { "/*": "/index.html" } }
 ```
-(file này đọc lúc deploy, không được serve; thiếu nó → refresh route con bị 404.)
-- URL: Base36 subdomain `https://<base36>.wal.app` (từ object id; `site-builder convert`); gắn **SuiNS** (suins.io) để có URL đẹp.
+(this file is read at deploy time, not served; missing it → refreshing a sub-route gives a 404.)
+- URL: a Base36 subdomain `https://<base36>.wal.app` (from the object id; `site-builder convert`); attach **SuiNS** (suins.io) for a nice URL.
 - Mainnet sites package: `0x5a0c509a659ba982f91ff1189872b8d528f8c02b5f6285a3931fc4c2869ccc9c`.
 - Docs: https://docs.wal.app/docs/sites/getting-started/installing-the-site-builder · `/publishing-your-first-site` · `/configuration`
 
 ## E. Mastra + ai-sdk + Claude
-- **Packages:** `@mastra/core`, `@mastra/memory`, `@mastra/pg`, `@mastra/client-js`, `@ai-sdk/anthropic`. ⚠️ Mastra đang chuyển **v1** → pin version, theo migration.
-- **Model:** router string `model: 'anthropic/claude-sonnet-4-6'` (cần `ANTHROPIC_API_KEY`) — ⚠️ router có thể **chưa có `claude-opus-4-8`** (mới thấy tới opus-4-7). An toàn: provider trực tiếp `createAnthropic(...)('claude-opus-4-8')`.
+- **Packages:** `@mastra/core`, `@mastra/memory`, `@mastra/pg`, `@mastra/client-js`, `@ai-sdk/anthropic`. ⚠️ Mastra is migrating to **v1** → pin the version, follow the migration.
+- **Model:** router string `model: 'anthropic/claude-sonnet-4-6'` (needs `ANTHROPIC_API_KEY`) — ⚠️ the router may **not have `claude-opus-4-8` yet** (only seen up to opus-4-7). Safe: the direct provider `createAnthropic(...)('claude-opus-4-8')`.
 - **Server:** `mastra dev` (Hono, **port 4111**, auto REST + Studio). Prod: `mastra build` → `node .mastra/output/index.mjs`. CORS: `server.cors.origin = ['https://<suins>.wal.app','http://localhost:5173']`.
 - **Client:** `@mastra/client-js` → `client.getAgent('roast-agent').stream(msg, { memory: { resource: userId, thread } })`.
-- **Memory (nếu tự làm thay/bổ trợ MemWal):** `@mastra/memory` `Memory` với `workingMemory` (resource-scoped, template Markdown — hồ sơ bền vững) + `semanticRecall` (pgvector) + `lastMessages`. Resource-scoped cần LibSQL/Postgres/Upstash. Embedder: `openai/text-embedding-3-small` (cần OpenAI key) hoặc `@mastra/fastembed` (local/free).
-- **Custom storage adapter = bẫy** (domain `memory` rộng, ít docs) → KHÔNG tự viết full adapter; chỉ `MastraVector` là nhỏ gọn. Dùng **hook mirror-to-Walrus**.
+- **Memory (if doing it ourselves to replace/supplement MemWal):** `@mastra/memory` `Memory` with `workingMemory` (resource-scoped, a Markdown template — a persistent profile) + `semanticRecall` (pgvector) + `lastMessages`. Resource-scoped needs LibSQL/Postgres/Upstash. Embedder: `openai/text-embedding-3-small` (needs an OpenAI key) or `@mastra/fastembed` (local/free).
+- **A custom storage adapter = a trap** (the `memory` domain is broad, with sparse docs) → do NOT write a full adapter yourself; only `MastraVector` is compact. Use a **mirror-to-Walrus hook**.
 - Docs: https://mastra.ai/docs/memory/overview · `/working-memory` · `/semantic-recall` · https://mastra.ai/reference/storage/postgresql · https://mastra.ai/models/providers/anthropic
 
 ## F. Supabase (free)
-- Limits 2026: **500MB** Postgres · **pgvector included** · 50k MAU auth · realtime (200 concurrent / 2M msg) · edge functions 500k/mo · **2 project** · ⚠️ **pause sau ~7 ngày idle**.
-- ⚠️ May 2026: project mới cần **grants Postgres tường minh** cho Data API (nếu REST 403 → check grants/RLS).
-- **Gotchas với `@mastra/pg`:** dùng **session pooler (5432)**, KHÔNG transaction PgBouncer (6543); để Mastra tự tạo schema (`schemaName:'mastra'`), **đừng** trỏ vào bảng embeddings có sẵn (issue #6263); cần SSL.
-- Vai trò: pgvector (nếu dùng Mastra recall) · `walrus_index` · cache `fixtures` · `leaderboard` · realtime · auth (tuỳ chọn).
-- ⚠️ **Pause + host idle = rủi ro demo lớn** → cron keep-alive hoặc trả phí cửa sổ chấm.
+- Limits 2026: **500MB** Postgres · **pgvector included** · 50k MAU auth · realtime (200 concurrent / 2M msg) · edge functions 500k/mo · **2 projects** · ⚠️ **pauses after ~7 days idle**.
+- ⚠️ May 2026: new projects need **explicit Postgres grants** for the Data API (if REST 403 → check grants/RLS).
+- **Gotchas with `@mastra/pg`:** use the **session pooler (5432)**, NOT the transaction PgBouncer (6543); let Mastra create its own schema (`schemaName:'mastra'`), **don't** point it at an existing embeddings table (issue #6263); requires SSL.
+- Roles: pgvector (if using Mastra recall) · `walrus_index` · `fixtures` cache · `leaderboard` · realtime · auth (optional).
+- ⚠️ **Pause + host idle = a big demo risk** → keep-alive cron or pay for the judging window.
 
-## G. Hosting Mastra server
-- **Railway** (top pick: persistent, streaming, env vars dễ) > Render (free **spin-down** idle) > Fly.io > Mastra Cloud (managed) > Vercel (serverless timeout, PG pooling awkward) > Cloudflare (tránh — pg TCP khó).
+## G. Hosting the Mastra server
+- **Railway** (top pick: persistent, streaming, easy env vars) > Render (free **spin-down** when idle) > Fly.io > Mastra Cloud (managed) > Vercel (serverless timeout, awkward PG pooling) > Cloudflare (avoid — pg TCP is hard).
 
-## H. Brand & theme (verified từ live CSS)
-- Mascot Walrus chính thức = **"Aurora"**; tagline **"Trust the Tusk."** → ta làm mascot riêng **"Gil"** (cùng vũ trụ, khác nhân vật).
-- **Màu verified:** teal `#37c3b0` · ink `#0d0f12` · cream `#faf8f5` · mint `#98EFDD` · lavender `#CAB1FF` · lime `#E8FF75` · purple `#6800FF` · sky `#A1C8FF` · electric blue `#0098F5`.
-- **Fonts verified:** `PP Neue Bit` (pixel display, nhúng trên wal.app) · `DM Sans` · `JetBrains Mono` · `Inter`.
-- Theme đã chọn: **THE DAILY WALRUS** (tabloid). Tokens chi tiết ở [design-direction](05-design-direction.md).
-- Nguồn: walrus.xyz · docs.wal.app (curl browser-UA; ⚠️ WebFetch 403 với *.wal.app) · costcalculator.wal.app · npm @mysten-incubation/memwal & @mysten/walrus · github MystenLabs/walrus(+walrus-sites).
+## H. Brand & theme (verified from live CSS)
+- The official Walrus mascot = **"Aurora"**; tagline **"Trust the Tusk."** → we make our own mascot **"Gil"** (same universe, different character).
+- **Verified colors:** teal `#37c3b0` · ink `#0d0f12` · cream `#faf8f5` · mint `#98EFDD` · lavender `#CAB1FF` · lime `#E8FF75` · purple `#6800FF` · sky `#A1C8FF` · electric blue `#0098F5`.
+- **Verified fonts:** `PP Neue Bit` (pixel display, embedded on wal.app) · `DM Sans` · `JetBrains Mono` · `Inter`.
+- Chosen theme: **THE DAILY WALRUS** (tabloid). Detailed tokens in [design-direction](05-design-direction.md).
+- Sources: walrus.xyz · docs.wal.app (curl with a browser-UA; ⚠️ WebFetch 403s on *.wal.app) · costcalculator.wal.app · npm @mysten-incubation/memwal & @mysten/walrus · github MystenLabs/walrus(+walrus-sites).

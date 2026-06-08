@@ -1,10 +1,10 @@
-// PTB builders cho wc_predict. Trả Transaction (chưa ký) — dùng cho sponsored hoặc ký trực tiếp.
+// PTB builders for wc_predict. Returns an unsigned Transaction — for sponsored or direct signing.
 import { Transaction } from "@mysten/sui/transactions";
 import { ids, SUI_CLOCK } from "./ids.js";
 
 const target = (fn: string) => `${ids.pkg()}::prediction_game::${fn}`;
 
-/** User submit 1 prediction (owned). kind theo Kind; payload đóng gói a..e. */
+/** User submits 1 prediction (owned). kind per Kind; payload packs a..e. */
 export function buildSubmitPrediction(input: {
   matchId: bigint | number;
   kind: number;
@@ -32,7 +32,7 @@ export function buildSubmitPrediction(input: {
   return tx;
 }
 
-/** Admin đăng ký 1 trận (kèm kickoff lock). */
+/** Admin registers 1 match (with a kickoff lock). */
 export function buildRegisterMatch(input: {
   matchId: bigint | number;
   label: string;
@@ -54,7 +54,7 @@ export function buildRegisterMatch(input: {
   return tx;
 }
 
-/** Oracle đánh dấu trận đã settle. */
+/** Oracle marks a match as settled. */
 export function buildSettleMatch(matchId: bigint | number): Transaction {
   const tx = new Transaction();
   tx.moveCall({
@@ -64,7 +64,7 @@ export function buildSettleMatch(matchId: bigint | number): Transaction {
   return tx;
 }
 
-/** Oracle ghi batch điểm (server chấm off-chain → ghi on-chain). */
+/** Oracle writes a batch of scores (server scores off-chain → writes on-chain). */
 export function buildRecordScores(input: {
   users: string[];
   points: (bigint | number)[];

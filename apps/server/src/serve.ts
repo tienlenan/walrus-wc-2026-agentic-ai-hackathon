@@ -72,11 +72,20 @@ const server = createServer(async (req, res) => {
     }
     // --- Chat (memory) ---
     if (req.method === "POST" && req.url === "/api/gil/chat") {
-      const body = JSON.parse((await readBody(req)) || "{}") as { resourceId?: string; message?: string };
+      const body = JSON.parse((await readBody(req)) || "{}") as {
+        resourceId?: string;
+        message?: string;
+        lang?: string;
+        instructions?: string;
+      };
       const message = (body.message ?? "").trim();
       const identity = resolveIdentity(req, body);
       if (!identity || !message) return json(res, 400, { error: "identity (session/resourceId) and message required" });
-      return json(res, 200, await chatWithGil(identity, message));
+      return json(
+        res,
+        200,
+        await chatWithGil(identity, message, { lang: body.lang, customInstructions: body.instructions }),
+      );
     }
   } catch (e) {
     return json(res, 500, { error: e instanceof Error ? e.message : String(e) });

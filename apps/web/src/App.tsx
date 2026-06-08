@@ -1,63 +1,91 @@
+import { useState } from "react";
 import { NewsDeskChat } from "./components/news-desk-chat";
 import { ConnectBar } from "./components/connect-bar";
-
-const SECTIONS = [
-  { kicker: "Predictions Desk", blurb: "Đặt kèo từng trận. Gil ghi sổ — và không bao giờ quên." },
-  { kicker: "Leaderboard", blurb: "Bảng xếp hạng độ chính xác. Realtime, và phũ phàng." },
-  { kicker: "Before / After", blurb: "Gil ngày 1 vs Gil ngày 5. Bằng chứng trí nhớ thật." },
-  { kicker: "Gil's Notebook", blurb: "Mọi thứ Gil nhớ về bạn — lưu trên Walrus, xác minh on-chain." },
-];
+import { SettingsPanel } from "./components/settings-panel";
+import { useI18n } from "./lib/i18n";
+import "./styles/ui-controls.css";
 
 export default function App() {
-  const date = new Date().toLocaleDateString("vi-VN", {
+  const { t, lang, setLang } = useI18n();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const date = new Date().toLocaleDateString(lang === "en" ? "en-US" : "vi-VN", {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 
+  const sections = [
+    { k: t("sec.pred.k"), b: t("sec.pred.b") },
+    { k: t("sec.board.k"), b: t("sec.board.b") },
+    { k: t("sec.ba.k"), b: t("sec.ba.b") },
+    { k: t("sec.note.k"), b: t("sec.note.b") },
+  ];
+
   return (
     <div className="paper">
       <ConnectBar />
+
+      <div className="utility-bar">
+        <div className="lang-toggle" role="group" aria-label={t("ui.langLabel")}>
+          <button className={lang === "vi" ? "on" : ""} onClick={() => setLang("vi")}>
+            VI
+          </button>
+          <button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>
+            EN
+          </button>
+        </div>
+        <button className="settings-btn" onClick={() => setSettingsOpen(true)}>
+          ⚙ {t("set.open")}
+        </button>
+      </div>
+
       <header className="masthead">
-        <div className="eyebrow">Powered by Walrus · Mainnet · Trust the Tusk</div>
+        <div className="eyebrow">{t("brand.eyebrow")}</div>
         <h1 className="nameplate">The Daily Walrus</h1>
-        <div className="tagline">Memory Edition — FIFA World Cup 2026</div>
+        <div className="tagline">{t("brand.tagline")}</div>
         <div className="dateline">
-          <span>EST. 2026</span>
+          <span>{t("brand.est")}</span>
           <span>{date}</span>
-          <span>No. 001 · ấn bản memory</span>
+          <span>{t("brand.edition")}</span>
         </div>
       </header>
 
+      <div className="ai-tip">
+        {t("set.tip")}{" "}
+        <button className="ai-tip-link" onClick={() => setSettingsOpen(true)}>
+          {t("set.open")}
+        </button>
+      </div>
+
       <main className="lead-block">
-        <div className="kicker">Độc quyền từ bàn bình luận</div>
-        <h2 className="headline">"Tôi nhớ hết mấy kèo trật của ông."</h2>
+        <div className="kicker">{t("lead.kicker")}</div>
+        <h2 className="headline">{t("lead.headline")}</h2>
         <p className="lede">
-          <span className="dropcap">G</span>il — chú hải mã bình luận viên già đời — theo dõi từng dự
-          đoán World Cup 2026 của bạn, lưu vĩnh viễn trên Walrus, rồi cà khịa bằng chính lịch sử của
-          bạn. Càng dùng lâu, Gil càng biết rõ… và càng phũ. Hỏi thử lão xem.
+          <span className="dropcap">{t("lead.lede").charAt(0)}</span>
+          {t("lead.lede").slice(1)}
         </p>
       </main>
 
       <NewsDeskChat />
 
       <section className="sections">
-        {SECTIONS.map((s) => (
-          <div className="section-card" key={s.kicker}>
-            <div className="section-kicker">{s.kicker}</div>
-            <p className="section-blurb">{s.blurb}</p>
-            <div className="soon">Sắp ra mắt</div>
+        {sections.map((s) => (
+          <div className="section-card" key={s.k}>
+            <div className="section-kicker">{s.k}</div>
+            <p className="section-blurb">{s.b}</p>
+            <div className="soon">{t("sec.soon")}</div>
           </div>
         ))}
       </section>
 
       <footer className="footer">
-        <span className="stamp">Stop Press</span>
-        <span className="footer-text">
-          Build: M2 · Mastra + Gemini + Walrus Memory + Supabase · trí nhớ đang lên sóng…
-        </span>
+        <span className="stamp">{t("footer.stamp")}</span>
+        <span className="footer-text">{t("footer.text")}</span>
       </footer>
+
+      {settingsOpen && <SettingsPanel onClose={() => setSettingsOpen(false)} />}
     </div>
   );
 }

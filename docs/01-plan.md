@@ -1,60 +1,60 @@
 # The Daily Walrus — Project Plan
 
-> Bài dự thi **Walrus Memory World Cup** (5–24/6/2026, kết quả 2/7/2026).
-> Tài liệu liên quan: [requirements](02-requirements.md) · [architecture](03-architecture.md) · [user-flows](04-user-flows.md) · [design-direction](05-design-direction.md) · [research-notes](06-research-notes.md)
+> **Walrus Memory World Cup** submission (Jun 5–24, 2026, results Jul 2, 2026).
+> Related docs: [requirements](02-requirements.md) · [architecture](03-architecture.md) · [user-flows](04-user-flows.md) · [design-direction](05-design-direction.md) · [research-notes](06-research-notes.md)
 
-## TL;DR (Tiếng Việt)
-**The Daily Walrus** = một "tờ báo thể thao AI" về World Cup 2026, dẫn dắt bởi mascot **Gil — chú hải mã bình luận viên già đời, hay cà khịa**. Người dùng dự đoán kết quả, đưa hot-take; Gil **nhớ** mọi dự đoán/quan điểm (lưu trên **Walrus Memory / Mainnet**), theo dõi thành tích, rồi **cà khịa** bạn bằng chính lịch sử của bạn. Điểm ăn tiền: **trí nhớ thật** tạo ra khác biệt rõ rệt giữa "Gil ngày 1" và "Gil ngày 5+".
+## TL;DR
+**The Daily Walrus** = an "AI sports newspaper" about the 2026 World Cup, hosted by the mascot **Gil — a grizzled, sharp-tongued walrus commentator**. Users predict outcomes and drop hot-takes; Gil **remembers** every prediction/opinion (stored on **Walrus Memory / Mainnet**), tracks their record, and then **roasts** you using your own history. The killer feature: **real memory** creates a clear difference between "day-1 Gil" and "day-5+ Gil".
 
-## Sản phẩm: The Daily Walrus
-Một AI World Cup 2026 buddy theo phong cách **tờ báo lá cải thể thao cổ điển** ("THE DAILY WALRUS — EST. 2026"):
-- **Hỏi–đáp**: lịch thi đấu, kết quả, phân tích trận vui vẻ.
-- **Dự đoán**: user đoán tỉ số/đội thắng từng trận & cả giải; hệ thống chấm đúng/sai theo thời gian.
-- **Trí nhớ + cà khịa**: Gil nhớ đội bạn yêu, các "hot-take", thành tích dự đoán → cà khịa cá nhân hoá ("Bạn lại đặt cửa đội đó à? Cặp ngà của tôi đoán còn chuẩn hơn").
-- **Khoảnh khắc chia sẻ**: "Gil's Report Card" — tấm thẻ điểm/roast tự sinh để screenshot đăng #Walrus.
+## Product: The Daily Walrus
+A 2026 World Cup AI buddy in the style of a **classic sports tabloid** ("THE DAILY WALRUS — EST. 2026"):
+- **Q&A**: fixtures, results, lighthearted match analysis.
+- **Predictions**: users guess the scoreline/winner for each match and the whole tournament; the system scores correct/wrong over time.
+- **Memory + roasting**: Gil remembers your favorite team, your "hot-takes", and your prediction record → personalized roasts ("Betting on that team again? My tusks would pick better").
+- **Shareable moment**: "Gil's Report Card" — an auto-generated grade/roast card to screenshot and post with #Walrus.
 
-## Vì sao thắng được (map vào 3 tiêu chí chấm)
-| Tiêu chí | Cách The Daily Walrus đáp ứng |
+## Why it can win (mapped to the 3 judging criteria)
+| Criterion | How The Daily Walrus delivers |
 |---|---|
-| **1. Memory Depth & Authenticity** | Dùng **Walrus Memory (MemWal)** thật trên Mainnet + sổ dự đoán có cấu trúc. Có "harness" tái lập được khoảnh khắc **before/after** (Gil ngày 1 trắng tay vs Gil ngày 5 nhắc đúng hot-take cũ của bạn). |
-| **2. Creativity & Flair** | Concept **tabloid + mascot Gil** độc nhất, không "AI-slop". Roast card để chia sẻ → lan truyền. |
-| **3. Technical Execution** | MVP gọn, chạy thật trên **Walrus Mainnet** (site + memory), stack hiện đại (Mastra + Claude + Supabase). "MVP chạy được" > "tham vọng mà hỏng". |
+| **1. Memory Depth & Authenticity** | Uses real **Walrus Memory (MemWal)** on Mainnet + a structured prediction ledger. Includes a "harness" that reproduces the **before/after** moment (day-1 Gil with nothing vs day-5 Gil correctly recalling your old hot-take). |
+| **2. Creativity & Flair** | A unique **tabloid + Gil mascot** concept, no "AI-slop". Shareable roast card → goes viral. |
+| **3. Technical Execution** | A lean MVP, running for real on **Walrus Mainnet** (site + memory), modern stack (Mastra + Claude + Supabase). "A working MVP" > "ambition that breaks". |
 
-## Quyết định stack (tóm tắt — chi tiết ở [architecture](03-architecture.md))
-- **Frontend:** React + Vite → deploy **Walrus Sites (Mainnet)** qua `site-builder`.
-- **Agent runtime:** **Mastra** (`@mastra/core`) + **ai-sdk** + **Gemini qua Vercel AI Gateway** (`google/gemini-3-flash`).
-- **Trí nhớ (ngôi sao):** **Walrus Memory** — `@mysten-incubation/memwal` — `remember`/`recall`/`ask`, lưu blob mã hoá (Seal) trên Walrus Mainnet. Cắm vào Mastra qua AI SDK middleware hoặc Mastra tools.
-- **DB:** **Supabase free** (Postgres + pgvector + realtime) — sổ dự đoán, cache lịch/kết quả, leaderboard, bảng `walrus_index` (con trỏ tới blob/account), user registry.
-- **Server:** Mastra Hono server host trên **Railway** (persistent, hỗ trợ streaming).
-- **Ví:** Sui Ed25519 keypair làm **dedicated session wallet** (yêu cầu của BTC), nạp WAL + SUI.
+## Stack decisions (summary — details in [architecture](03-architecture.md))
+- **Frontend:** React + Vite → deploy to **Walrus Sites (Mainnet)** via `site-builder`.
+- **Agent runtime:** **Mastra** (`@mastra/core`) + **ai-sdk** + **Gemini via Vercel AI Gateway** (`google/gemini-3-flash`).
+- **Memory (the star):** **Walrus Memory** — `@mysten-incubation/memwal` — `remember`/`recall`/`ask`, storing encrypted blobs (Seal) on Walrus Mainnet. Plugged into Mastra via AI SDK middleware or Mastra tools.
+- **DB:** **Supabase free** (Postgres + pgvector + realtime) — prediction ledger, fixtures/results cache, leaderboard, the `walrus_index` table (pointers to blob/account), user registry.
+- **Server:** Mastra Hono server hosted on **Railway** (persistent, supports streaming).
+- **Wallet:** Sui Ed25519 keypair as a **dedicated session wallet** (a contest requirement), funded with WAL + SUI.
 
-## Lộ trình & milestone (hôm nay 8/6 → hạn 24/6)
-> ⏱️ **Đường găng (critical path):** màn before/after cần **≥ 4 ngày** memory tích luỹ thật. Phải cho MemWal **ghi memory thật chậm nhất ~12/6** để kịp có "ngày 1 vs ngày 5+" lúc chấm. → *Dựng vòng lặp trí nhớ TRƯỚC, polish sau.*
+## Roadmap & milestones (today Jun 8 → deadline Jun 24)
+> ⏱️ **Critical path:** the before/after demo needs **≥ 4 days** of real accumulated memory. MemWal must **start writing real memory by ~Jun 12 at the latest** so we have "day 1 vs day 5+" ready at judging time. → *Build the memory loop FIRST, polish later.*
 
-| Mốc | Nội dung | Mục tiêu ngày |
+| Milestone | Content | Target date |
 |---|---|---|
-| **M0** | Plan / requirements / architecture / design (tài liệu này) | 8/6 ✅ |
-| **M1 — Skeleton** | Monorepo, Vite app, Mastra server "hello agent", Supabase project, tạo session wallet + nạp WAL/SUI | 8–10/6 |
-| **M2 — Memory spine** ⭐ | Tích hợp **MemWal** (remember/recall), sổ dự đoán Supabase, harness before/after, **bắt đầu ghi memory thật** | 10–12/6 |
-| **M3 — Core UX** | Chat với Gil (streaming), UI dự đoán, lịch/kết quả, leaderboard | 12–16/6 |
-| **M4 — Theme polish** | Design system "The Daily Walrus", art mascot Gil (6 biểu cảm), roast card generator | 15–19/6 |
-| **M5 — Deploy Mainnet** | Build → Walrus Sites Mainnet, Supabase prod, Railway, gắn tên SuiNS, `ws-resources.json` cho SPA | 18–21/6 |
-| **M6 — Nộp bài** | Video demo ≤3', Walrus Memory feedback form, post #Walrus trên X, submit DeepSurge + Airtable | 21–24/6 |
+| **M0** | Plan / requirements / architecture / design (this document) | Jun 8 ✅ |
+| **M1 — Skeleton** | Monorepo, Vite app, Mastra server "hello agent", Supabase project, create session wallet + fund WAL/SUI | Jun 8–10 |
+| **M2 — Memory spine** ⭐ | Integrate **MemWal** (remember/recall), Supabase prediction ledger, before/after harness, **start writing real memory** | Jun 10–12 |
+| **M3 — Core UX** | Chat with Gil (streaming), prediction UI, fixtures/results, leaderboard | Jun 12–16 |
+| **M4 — Theme polish** | "The Daily Walrus" design system, Gil mascot art (6 expressions), roast card generator | Jun 15–19 |
+| **M5 — Deploy Mainnet** | Build → Walrus Sites Mainnet, Supabase prod, Railway, attach SuiNS name, `ws-resources.json` for the SPA | Jun 18–21 |
+| **M6 — Submit** | Demo video ≤3', Walrus Memory feedback form, post #Walrus on X, submit to DeepSurge + Airtable | Jun 21–24 |
 
-## Sổ rủi ro (từ research)
-| Rủi ro | Ảnh hưởng | Giảm thiểu |
+## Risk register (from research)
+| Risk | Impact | Mitigation |
 |---|---|---|
-| BGK diễn giải "memory trên Walrus *từ ví của bạn*" — relayer hosted ghi bằng ví của relayer | Có thể mất điểm tiêu chí 1 | Giữ thêm **1 đường ghi raw `@mysten/walrus`** từ session wallet để chứng minh on-chain; hỏi BTC qua Discord |
-| **MemWal là beta** (v0.0.7), API đổi | Vỡ build | Pin version; fallback raw `@mysten/walrus` |
-| **Supabase free tạm dừng sau ~7 ngày** không hoạt động + Railway free idle | App "chết" đúng lúc chấm | Cron keep-alive, hoặc trả phí cho cửa sổ demo |
-| Chi phí Mainnet (WAL + SUI), phí cố định mỗi blob lớn với blob nhỏ | Tốn / chậm | Nạp ví sớm; **Quilt** gom blob nhỏ; ghi memory **async**, batch |
-| Mastra đang chuyển v1 | Lệch API | Pin version, theo migration notes |
-| Mastra nhận chuỗi `google/...` trần → route sang Google trực tiếp (đòi GOOGLE_API_KEY) | Lỗi model | Dùng `@ai-sdk/gateway` `createGateway({apiKey: AI_GATEWAY_API_KEY})` tường minh |
+| Judges interpret "memory on Walrus *from your wallet*" — the hosted relayer writes with the relayer's wallet | Could lose points on criterion 1 | Also keep **a raw `@mysten/walrus` write path** from the session wallet to prove on-chain; ask the organizers via Discord |
+| **MemWal is beta** (v0.0.7), API changes | Broken build | Pin the version; fall back to raw `@mysten/walrus` |
+| **Supabase free pauses after ~7 days** of inactivity + Railway free idle | App "dies" right at judging time | Keep-alive cron, or pay for the demo window |
+| Mainnet cost (WAL + SUI), a fixed per-blob fee that dominates for small blobs | Costly / slow | Fund the wallet early; **Quilt** to batch small blobs; write memory **async**, batched |
+| Mastra is migrating to v1 | API drift | Pin the version, follow migration notes |
+| Mastra receives a bare `google/...` string → routes to Google directly (requires GOOGLE_API_KEY) | Model error | Use `@ai-sdk/gateway` `createGateway({apiKey: AI_GATEWAY_API_KEY})` explicitly |
 
-## Quyết định còn mở (cần xác nhận)
-1. **Tên & theme:** Product = **"The Daily Walrus"**, theme = **tabloid báo thể thao** (mascot Gil). Fallback: **Walrus Arcade** (8-bit). → *OK chứ?*
-2. **Danh tính user:** MVP dùng **địa chỉ Sui làm `resourceId`** (không cần auth nặng); có thể thêm Supabase Auth sau. → mặc định: wallet-as-identity.
-3. **Embeddings/recall:** Ưu tiên **dùng recall của MemWal** (relayer tự lo embeddings) → không cần OpenAI key. Mastra semantic recall chỉ là tuỳ chọn.
-4. **Host server:** **Railway** cho Mastra server. (Mastra Cloud là phương án 2.)
+## Open decisions (need confirmation)
+1. **Name & theme:** Product = **"The Daily Walrus"**, theme = **sports tabloid** (Gil mascot). Fallback: **Walrus Arcade** (8-bit). → *OK?*
+2. **User identity:** the MVP uses the **Sui address as the `resourceId`** (no heavy auth needed); Supabase Auth can be added later. → default: wallet-as-identity.
+3. **Embeddings/recall:** prefer **using MemWal's recall** (the relayer handles embeddings) → no OpenAI key needed. Mastra semantic recall is only optional.
+4. **Server host:** **Railway** for the Mastra server. (Mastra Cloud is the second option.)
 
-→ Nếu bạn duyệt các mặc định trên, bước kế tiếp là **M1: dựng skeleton** (xem [requirements](02-requirements.md) & [architecture](03-architecture.md)).
+→ If you approve the defaults above, the next step is **M1: build the skeleton** (see [requirements](02-requirements.md) & [architecture](03-architecture.md)).

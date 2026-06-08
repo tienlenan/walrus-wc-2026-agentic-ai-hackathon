@@ -1,4 +1,4 @@
-// Smoke test remember/recall. Chạy: pnpm --filter @daily-walrus/walrus memwal:smoke
+// Smoke test remember/recall. Run: pnpm --filter @daily-walrus/walrus memwal:smoke
 import { remember, recall, memNamespace, isMemoryEnabled } from "../src/index";
 
 if (!isMemoryEnabled()) {

@@ -3,9 +3,9 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 let admin: SupabaseClient | undefined;
 
 /**
- * Server-side Supabase client dùng SECRET key (bypass RLS).
- * CHỈ chạy ở server — không bao giờ bundle ra frontend.
- * Dùng cho realtime broadcast, REST, auth admin.
+ * Server-side Supabase client using the SECRET key (bypasses RLS).
+ * Runs on the server ONLY — never bundled into the frontend.
+ * Used for realtime broadcast, REST, admin auth.
  */
 export function getSupabaseAdmin(): SupabaseClient {
   if (!admin) {
