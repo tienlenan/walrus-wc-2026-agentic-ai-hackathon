@@ -1,0 +1,86 @@
+// PTB builders cho wc_predict. Trả Transaction (chưa ký) — dùng cho sponsored hoặc ký trực tiếp.
+import { Transaction } from "@mysten/sui/transactions";
+import { ids, SUI_CLOCK } from "./ids.js";
+
+const target = (fn: string) => `${ids.pkg()}::prediction_game::${fn}`;
+
+/** User submit 1 prediction (owned). kind theo Kind; payload đóng gói a..e. */
+export function buildSubmitPrediction(input: {
+  matchId: bigint | number;
+  kind: number;
+  a: number;
+  b: number;
+  c: number;
+  d: number;
+  e: number;
+}): Transaction {
+  const tx = new Transaction();
+  tx.moveCall({
+    target: target("submit_prediction"),
+    arguments: [
+      tx.object(ids.registry()),
+      tx.pure.u64(input.matchId),
+      tx.pure.u8(input.kind),
+      tx.pure.u32(input.a),
+      tx.pure.u32(input.b),
+      tx.pure.u32(input.c),
+      tx.pure.u32(input.d),
+      tx.pure.u32(input.e),
+      tx.object(SUI_CLOCK),
+    ],
+  });
+  return tx;
+}
+
+/** Admin đăng ký 1 trận (kèm kickoff lock). */
+export function buildRegisterMatch(input: {
+  matchId: bigint | number;
+  label: string;
+  kickoffMs: bigint | number;
+  round: number;
+}): Transaction {
+  const tx = new Transaction();
+  tx.moveCall({
+    target: target("register_match"),
+    arguments: [
+      tx.object(ids.adminCap()),
+      tx.object(ids.registry()),
+      tx.pure.u64(input.matchId),
+      tx.pure.string(input.label),
+      tx.pure.u64(input.kickoffMs),
+      tx.pure.u8(input.round),
+    ],
+  });
+  return tx;
+}
+
+/** Oracle đánh dấu trận đã settle. */
+export function buildSettleMatch(matchId: bigint | number): Transaction {
+  const tx = new Transaction();
+  tx.moveCall({
+    target: target("settle_match"),
+    arguments: [tx.object(ids.oracleCap()), tx.object(ids.registry()), tx.pure.u64(matchId), tx.object(SUI_CLOCK)],
+  });
+  return tx;
+}
+
+/** Oracle ghi batch điểm (server chấm off-chain → ghi on-chain). */
+export function buildRecordScores(input: {
+  users: string[];
+  points: (bigint | number)[];
+  correct: boolean[];
+}): Transaction {
+  const tx = new Transaction();
+  tx.moveCall({
+    target: target("record_scores"),
+    arguments: [
+      tx.object(ids.oracleCap()),
+      tx.object(ids.scoreboard()),
+      tx.pure.vector("address", input.users),
+      tx.pure.vector("u64", input.points),
+      tx.pure.vector("bool", input.correct),
+      tx.object(SUI_CLOCK),
+    ],
+  });
+  return tx;
+}
