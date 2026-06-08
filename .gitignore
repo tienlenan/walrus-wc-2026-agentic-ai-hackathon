@@ -1,0 +1,31 @@
+# ===== Secrets — NEVER commit =====
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+
+# ===== Dependencies =====
+node_modules/
+.pnpm-store/
+
+# ===== Build output =====
+dist/
+build/
+.mastra/
+out/
+*.tsbuildinfo
+
+# ===== Walrus / Sui local config =====
+.walrus/
+ws-resources.local.json
+
+# ===== Misc =====
+.DS_Store
+*.log
+npm-debug.log*
+coverage/
+.vscode/
+.idea/
+.turbo/
