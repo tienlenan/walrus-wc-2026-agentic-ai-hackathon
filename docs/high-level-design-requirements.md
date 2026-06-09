@@ -1,51 +1,54 @@
-# The Daily Walrus - Storage and Memory Explainer
+# The Daily Walrus - High-Level System Design
 
-This is the short submission design note for judges.
+This file is the short English design and requirements note for submission. The PDF export is:
 
-## Core Idea
+- `docs/high-level-design-requirements.pdf`
 
-The Daily Walrus separates evidence into three layers:
+It is intentionally different from the storage explainer:
 
-| Layer | What it stores | Why it exists |
+- `apps/web/public/submission/storage-memory-explainer.pdf` explains how Walrus Blob, Walrus Memory, and Sui Objects split storage responsibilities.
+- `docs/high-level-design-requirements.pdf` explains the system architecture, component boundaries, and signed action/data flows.
+
+## System Canvas
+
+The app has four main runtime zones:
+
+| Zone | Responsibility | Proof surface |
 |---|---|---|
-| Walrus Blob | Immutable payloads and media: team profiles, gallery art, output JSON | Stores the actual data |
-| Walrus Memory | Recallable knowledge: global fixtures, teams, players, roast traits, user notebook | Gives Gil persistent memory |
-| Sui Objects | Public receipts: predictions, scoreboard, match registry, output records | Proves actions, gates, and pointers |
+| Wallet + Web SPA | Connect wallet, sign actions, render prediction/chat/tracking UI | Connected Sui address and signed transactions |
+| Gil Agent API | Mastra tools for fixtures, predictions, memory recall, roasts, and output anchoring | Runtime tracking API and generated output records |
+| Walrus | Blob payloads, gallery media, team/player data, global memory, wallet memory | Blob IDs, Walrus Site URL, Walrus Memory namespace |
+| Sui | Prediction gates, settlement, score records, output proof objects | Package/object IDs, transaction digests, content hashes |
 
-Important distinction: a Walrus blob is not stored inside Sui. Sui stores the receipt: object ID, blob ID, content hash, score, prediction gate, or pointer.
+Supabase is only an index/cache for fast UI reads and leaderboard queries. It is not the canonical memory store.
 
-## Memory Model
+## Data Flow
 
-Static/global memory is shared by everyone:
+Prediction flow:
 
-- World Cup 2026 fixture schedule.
-- Groups, venues, kickoff locks, result updates.
-- Team profiles: coach, flag, squad list.
-- Player roast traits for famous football habits.
-- Updated when results, postponements, or knockout fixtures change.
+1. Wallet connects and signs prediction for an open match.
+2. Sui stores the prediction object and lock/settlement state.
+3. Walrus Memory stores the user's take for future Gil recall and roasts.
+4. Result oracle/seed settles the match and updates score objects.
+5. The leaderboard reads indexed proof state.
 
-User/wallet memory is scoped by Sui address:
+Chat and roast flow:
 
-- Chat history and favorite teams.
-- Prediction behavior and previous bad takes.
-- Roasts Gil already delivered.
-- Notebook recall for the connected Sui address.
+1. Agent recalls global schedule/team/player data and wallet notebook data from Walrus Memory.
+2. Gil generates a fixture answer, team profile answer, or roast.
+3. Important output payloads can be stored on Walrus Blob.
+4. Sui `OutputRecord` anchors blob ID and content hash.
+5. Runtime Tracking exposes the proof links.
 
-## Signed Action Lifecycle
+Global memory flow:
 
-1. Connect wallet and verify identity.
-2. Sign the prediction or output action.
-3. Store payload or memory on Walrus.
-4. Anchor hash, pointer, score, or gate in a Sui object.
-5. Expose proof links through Runtime Tracking.
+1. Fixture schedule, groups, teams, venues, flags, coaches, squads, and player roast traits are seeded into a global namespace.
+2. Postponed fixtures, knockout pairings, and final results update the same namespace.
+3. Gil answers schedule/team questions from memory instead of hardcoded page text.
 
-Prediction actions sign a Sui transaction. Chat, roast, and notebook actions require a verified wallet session; important generated outputs can be stored as Walrus blob payloads and anchored by a Sui `OutputRecord`.
+## Requirements Fit
 
-## Submission Files
-
-- Visual explainer source: `apps/web/public/submission/storage-memory-explainer.html`
-- Visual explainer PDF: `apps/web/public/submission/storage-memory-explainer.pdf`
-- Page images:
-  - `apps/web/public/submission/storage-memory-explainer-page-1.png`
-  - `apps/web/public/submission/storage-memory-explainer-page-2.png`
-
+- Persistent AI memory: Walrus Memory stores global and wallet-scoped recall.
+- Verifiable outputs: Sui objects store public receipts and pointers to Walrus payloads.
+- Prediction integrity: match gates close before kickoff and settle after result seed/oracle update.
+- Submission tracking: a dedicated tracking page lists deployed package, object, memory, blob, and site links.
