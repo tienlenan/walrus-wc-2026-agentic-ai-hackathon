@@ -35,8 +35,8 @@ hard gates:
 | Phase | Name | Status |
 |---|---|---|
 | 1 | [Preflight Audit](./phase-01-preflight-audit.md) | Completed |
-| 2 | [Testnet Verification](./phase-02-testnet-verification.md) | In Progress |
-| 3 | [Mainnet Domain Deployment](./phase-03-mainnet-deploy.md) | pending |
+| 2 | [Testnet Verification](./phase-02-testnet-verification.md) | Completed |
+| 3 | [Mainnet Domain Deployment](./phase-03-mainnet-deploy.md) | In Progress |
 | 4 | [Submission Pack](./phase-04-submission-pack.md) | pending |
 | 5 | [Go-Live Gate](./phase-05-go-live-gate.md) | pending |
 

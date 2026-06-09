@@ -17,6 +17,12 @@
 - `pnpm --filter @daily-walrus/server run before-after -- verify-user`
 - `pnpm --filter @daily-walrus/server run ping -- "Who wins WC 2026?"`
 
+### Sui CLI execute fallback
+- `sui client call ... prediction_game::register_match ... --args ... 2 ...`
+- `sui client call ... prediction_game::submit_prediction ... --args ... 2 0 1 0 0 0 0 0x6`
+- `sui client call ... prediction_game::record_scores ...`
+- `sui client call ... prediction_game::settle_match ...`
+
 ### App build
 - `pnpm build:web`
 - `pnpm --filter @daily-walrus/web build`
@@ -33,6 +39,11 @@
 - `indexer:replay`: ✅ PASS (`resetCursors=3`, `indexed=3`, 104 fixtures / 1 prediction / 1 scoring event / 3 cursors).
 - `register:fixtures` (dry run): ✅ PASS (`count=103` fixtures; Brazil/Morocco etc listed in sample).
 - `register:fixtures --match=2 --execute`: ❌ FAIL (local signer is wrong owner; expected deployer key).
+- Sui CLI register match 2: ✅ PASS (`EwoVCHWDi74dvMzUx8SYV7JBYvw2HkdRJ6comjQ954v1`).
+- Sui CLI submit prediction: ✅ PASS (`5gcAboVBXyqf5te9rUuJ3ac9AfFkmHaXNZ9SqZsf18Wi`).
+- Sui CLI record score: ✅ PASS (`5JP9TNpV1LfyGhtzw3tnz4S269P29iowu9zzuRiJAVUw`).
+- Sui CLI settle match 2: ✅ PASS (`7xhVSDGbR5wocVs8iNMVgB4ZgMSAshZ4uyqX93LtdRDw`).
+- `indexer:replay` after execute flow: ✅ PASS (`indexed=8`, 104 fixtures, 3 predictions, 2 scoring events, 4 cursors).
 - `score:match --match=2 --home=1 --away=0`: ✅ PASS (dry-run returns empty entries because no scorable pending scoreline state).
 - `before-after verify-user`: ✅ PASS (cold/warm memory flow successful; "User said/ used memories" update path works).
 - `ping`: ✅ PASS (Gil returns roast response).
@@ -45,7 +56,8 @@
 
 ## Known Blockers
 - On-chain execute operations requiring admin oracle/deployer wallet fail unless matching signer key is loaded.
-- Mainnet deploy is not attempted until testnet execute signer and mainnet funding/domain inputs are confirmed.
+- Mainnet publish and Walrus Sites deploy are blocked until the deploy wallet has SUI gas and WAL on mainnet.
+- Final submission must use mainnet object IDs and `wal.app` URL, not these testnet IDs.
 
 ## Next
-- Continue Phase 3 only after signer setup is resolved and a final testnet execute path passes.
+- Continue Phase 3 after funding the mainnet deploy wallet, publishing the package, deploying the site, and configuring SuiNS.

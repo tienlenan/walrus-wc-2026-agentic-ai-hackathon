@@ -1,4 +1,10 @@
 {
+  "site_name": "The Daily Walrus",
+  "metadata": {
+    "description": "AI World Cup 2026 pundit with persistent Walrus Memory, Sui predictions, roasts, and on-chain proof.",
+    "project_url": "https://github.com/tienlenan/walrus-wc-2026-agentic-ai-hackathon",
+    "creator": "The Daily Walrus"
+  },
   "routes": {
     "/*": "/index.html"
   }
