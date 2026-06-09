@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { NewsDeskChat } from "./components/news-desk-chat";
 import { ConnectBar } from "./components/connect-bar";
 import { SettingsPanel } from "./components/settings-panel";
@@ -12,9 +12,26 @@ import { RuntimeTracking } from "./components/runtime-tracking";
 import { useI18n } from "./lib/i18n";
 import "./styles/ui-controls.css";
 
+type ReferencePageKey = "team-profiles" | "gallery" | "notebook" | "tracking";
+
+const REFERENCE_PAGES = new Set<string>(["team-profiles", "gallery", "notebook", "tracking"]);
+
+function currentHash(): string {
+  return window.location.hash.replace(/^#/, "");
+}
+
 export default function App() {
   const { t, lang, setLang } = useI18n();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [hash, setHash] = useState(currentHash);
+
+  useEffect(() => {
+    const updateHash = () => setHash(currentHash());
+    window.addEventListener("hashchange", updateHash);
+    return () => window.removeEventListener("hashchange", updateHash);
+  }, []);
+
+  const referencePage = useMemo(() => (REFERENCE_PAGES.has(hash) ? (hash as ReferencePageKey) : null), [hash]);
 
   const date = new Date().toLocaleDateString(lang === "en" ? "en-US" : "vi-VN", {
     weekday: "long",
@@ -59,40 +76,34 @@ export default function App() {
       </main>
 
       <nav className="edition-nav" aria-label="Edition sections">
-        <a href="#newsroom">{t("nav.gil")}</a>
-        <a href="#predictions">{t("nav.predictions")}</a>
-        <a href="#leaderboard">{t("nav.leaderboard")}</a>
-        <a href="#team-profiles">{t("nav.teams")}</a>
-        <a href="#roasts">{t("nav.roasts")}</a>
-        <a href="#gallery">{t("nav.gallery")}</a>
-        <a href="#notebook">{t("nav.notebook")}</a>
-        <a href="#tracking">{t("nav.tracking")}</a>
+        <NavLink href="#newsroom" label={t("nav.gil")} />
+        <NavLink href="#predictions" label={t("nav.predictions")} />
+        <NavLink href="#leaderboard" label={t("nav.leaderboard")} />
+        <NavLink href="#roasts" label={t("nav.roasts")} />
+        <NavLink href="#team-profiles" label={t("nav.teams")} reference />
+        <NavLink href="#gallery" label={t("nav.gallery")} reference />
+        <NavLink href="#notebook" label={t("nav.notebook")} reference />
+        <NavLink href="#tracking" label={t("nav.tracking")} reference />
       </nav>
 
-      <div id="newsroom" className="section-anchor">
-        <NewsDeskChat onOpenSettings={() => setSettingsOpen(true)} />
-      </div>
-      <div id="predictions" className="section-anchor">
-        <PredictionsDesk />
-      </div>
-      <div id="leaderboard" className="section-anchor">
-        <Leaderboard />
-      </div>
-      <div id="team-profiles" className="section-anchor">
-        <TeamProfiles />
-      </div>
-      <div id="roasts" className="section-anchor">
-        <RoastWall />
-      </div>
-      <div id="gallery" className="section-anchor">
-        <GalleryWall />
-      </div>
-      <div id="notebook" className="section-anchor">
-        <MemoryNotebook />
-      </div>
-      <div id="tracking" className="section-anchor">
-        <RuntimeTracking />
-      </div>
+      {referencePage ? (
+        <ReferencePage page={referencePage} />
+      ) : (
+        <>
+          <div id="newsroom" className="section-anchor">
+            <NewsDeskChat onOpenSettings={() => setSettingsOpen(true)} />
+          </div>
+          <div id="predictions" className="section-anchor">
+            <PredictionsDesk />
+          </div>
+          <div id="leaderboard" className="section-anchor">
+            <Leaderboard />
+          </div>
+          <div id="roasts" className="section-anchor">
+            <RoastWall />
+          </div>
+        </>
+      )}
 
       <footer className="footer">
         <span className="stamp">{t("footer.stamp")}</span>
@@ -101,5 +112,43 @@ export default function App() {
 
       {settingsOpen && <SettingsPanel onClose={() => setSettingsOpen(false)} />}
     </div>
+  );
+}
+
+function NavLink({ href, label, reference = false }: { href: string; label: string; reference?: boolean }) {
+  const { t } = useI18n();
+  return (
+    <a className={reference ? "reference-link" : undefined} href={href} title={reference ? t("nav.referenceHint") : undefined}>
+      <span>{label}</span>
+      {reference && (
+        <span className="reference-icon" aria-hidden="true">
+          ↗
+        </span>
+      )}
+    </a>
+  );
+}
+
+function ReferencePage({ page }: { page: ReferencePageKey }) {
+  const { t } = useI18n();
+  const content: Record<ReferencePageKey, ReactNode> = {
+    "team-profiles": <TeamProfiles />,
+    gallery: <GalleryWall />,
+    notebook: <MemoryNotebook />,
+    tracking: <RuntimeTracking />,
+  };
+
+  return (
+    <main className="reference-page">
+      <div className="reference-page-head">
+        <div>
+          <div className="reference-kicker">{t("reference.kicker")}</div>
+          <h2>{t(`reference.${page}.title`)}</h2>
+          <p>{t(`reference.${page}.copy`)}</p>
+        </div>
+        <a href="#newsroom">{t("reference.back")}</a>
+      </div>
+      <div className="reference-page-body">{content[page]}</div>
+    </main>
   );
 }
