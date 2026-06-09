@@ -22,6 +22,7 @@
     "@daily-walrus/walrus": "workspace:*",
     "@mastra/core": "latest",
     "@mysten/sui": "2.17.0",
+    "@protobuf-ts/grpcweb-transport": "2.11.1",
     "zod": "^3"
   },
   "devDependencies": {

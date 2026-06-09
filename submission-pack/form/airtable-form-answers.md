@@ -40,7 +40,7 @@ TODO: Fill after DeepSurge project is submitted on mainnet.
 
 ## Project Link (URL)
 
-TODO: Fill with the final `https://<suins>.wal.app` URL after SuiNS is configured.
+https://roast2026wc.wal.app/
 
 Mainnet Walrus Site object is deployed:
 
@@ -56,7 +56,7 @@ Do not use `https://5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg.wal.app` 
 
 Do not check until the final public SuiNS/wal.app URL and DeepSurge page are complete.
 
-Mainnet contract and Walrus Site object are deployed. Public `wal.app` access is pending SuiNS.
+Mainnet contract and Walrus Site object are deployed. Public `wal.app` access is live at `https://roast2026wc.wal.app/`.
 
 ## Please describe the workflow and functionalities of your project
 
@@ -98,7 +98,7 @@ Record and upload a real sub-3-minute screen walkthrough after SuiNS/public URL 
 
 Suggested flow:
 
-1. Open the final `https://<suins>.wal.app` URL.
+1. Open `https://roast2026wc.wal.app/`.
 2. Connect wallet.
 3. Submit one prediction.
 4. Show Gil's notebook/memory recall.

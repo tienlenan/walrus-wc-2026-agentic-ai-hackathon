@@ -50,7 +50,7 @@ Funding gate:
    - `/#tracking`
 
 ## 5) Backend Deploy
-1. Deploy server to Railway/host.
+1. Deploy server to Vercel/host.
 2. Set `MASTRA_URL` to web public endpoint.
 3. Set CORS allowlist include:
    - deployed Walrus URL

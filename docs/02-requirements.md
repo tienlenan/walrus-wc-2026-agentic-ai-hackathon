@@ -45,10 +45,13 @@ Mapped directly from the event rules. These are pass/fail criteria.
 - **F-QA-1** Answer fixtures, results, standings (from the Supabase cache + a football data source).
 - **F-QA-2** Lighthearted match analysis with personality; **roast players/teams** at an entertainment level, not offensively.
 - **F-QA-3** Hot-take debate: Gil remembers your old stance and "calls you out" when you're inconsistent.
+- **F-QA-4** Chat answers render Markdown via Streamdown and tool results via structured JSON parts, not raw JSON text.
+- **F-QA-5** Mastra tools cover fixture lookup by group/team/date/prediction gate and team-profile lookup by team/player alias.
 
 ### 3.4 Memory-display interface (P0 — required by R-H4)
 - **F-UI-1** **Prediction history**: a timeline of predictions + correct/wrong + streak.
 - **F-UI-2** **Memory panel / "Gil's notebook"**: shows what Gil currently remembers about you (read from Walrus → proves on-chain).
+- **F-UI-2a** Inline "Gil remembers" evidence inside chat is collapsed by default and expandable per answer.
 - **F-UI-3** **Leaderboard**: accuracy ranking (realtime).
 - **F-UI-4** **Roast card generator**: generates the "Gil's Report Card" image to download/post.
 - **F-UI-5** **Before/after viewer**: places Gil's "day 1" vs "now" answers side by side for the same question.

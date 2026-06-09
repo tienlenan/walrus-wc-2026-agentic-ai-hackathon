@@ -29,7 +29,7 @@ Prepared for the Walrus Memory World Cup Airtable submission.
 - Mainnet fixtures: 104/104 registered.
 - Mainnet Walrus Site object: deployed.
 - Mainnet Walrus Site content: updated with 12 English-only cartoon gallery cards.
-- Public `wal.app` URL: pending SuiNS configuration.
+- Public `wal.app` URL: `https://roast2026wc.wal.app/`.
 - Demo video: record a real sub-3-minute walkthrough after the public URL is live.
 
 ## Fields Still Requiring Human Input

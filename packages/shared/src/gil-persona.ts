@@ -93,4 +93,4 @@ export function buildSessionContext(opts: SessionContextOptions): string {
 export const GIL_COLD_OPENER_VI =
   "Lại một tân binh dự đoán bước vào toà soạn. Cặp ngà này chưa biết gì về ông cả — nào, phán một kèo World Cup đi, để tôi còn có cái mà cà.";
 export const GIL_COLD_OPENER_EN =
-  "Another rookie tipster walks into the newsroom. These tusks know nothing about you yet — go on, call a World Cup bet so I've got something to roast.";
+  "Another rookie tipster walks into the newsroom. These tusks know nothing about you yet — go on, call a World Cup pick so I've got something to roast.";

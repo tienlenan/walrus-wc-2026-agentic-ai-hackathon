@@ -5,6 +5,7 @@ import { recallGlobalWorldCupMemory } from "./global-world-cup-memory.js";
 import { publishJsonBlob, type WalrusBlobPointer } from "./walrus-blob.js";
 import { findPlayerRoastTraits } from "../data/player-roast-traits.js";
 import { getUserPredictionMemoryFacts, syncUserPredictionMemory } from "./user-prediction-memory.js";
+import { buildChatToolParts, type ChatRenderPart } from "./chat-render-parts.js";
 
 export interface ChatOptions {
   /** Response language ("vi" | "en"). */
@@ -17,6 +18,7 @@ export interface ChatOptions {
 
 export interface ChatResult {
   text: string;
+  parts: ChatRenderPart[];
   usedMemories: string[];
   memoryEnabled: boolean;
   outputPointer: WalrusBlobPointer;
@@ -63,20 +65,30 @@ export async function chatWithGil(
     customInstructions: opts.customInstructions,
     memories,
   });
+  const toolRender = await buildChatToolParts(message).catch((error) => {
+    console.error("[chat] tool render failed:", error instanceof Error ? error.message : error);
+    return { parts: [] as ChatRenderPart[], context: [] as string[] };
+  });
+  const toolContext = toolRender.context.length
+    ? `\n\n# Tool results already fetched for this turn\n${toolRender.context.map((line) => `- ${line}`).join("\n")}\nUse these facts in the answer. Do not invent extra fixtures/results.`
+    : "";
 
   const res = await gil.generate([
-    { role: "system", content: context },
+    { role: "system", content: `${context}${toolContext}` },
     { role: "user", content: message },
-  ]);
+  ], { maxSteps: 4 });
+  const parts: ChatRenderPart[] = [{ type: "text", text: res.text }, ...toolRender.parts];
 
   const outputPointer = await publishJsonBlob("chat-output", {
     resourceId,
     message,
     reply: res.text,
+    parts,
     globalMemories,
     predictionFacts,
     userMemories,
     usedMemories: memories,
+    toolContext: toolRender.context,
     createdAt: new Date().toISOString(),
   });
 
@@ -87,5 +99,5 @@ export async function chatWithGil(
     );
   }
 
-  return { text: res.text, usedMemories: memories, memoryEnabled: isMemoryEnabled(), outputPointer };
+  return { text: res.text, parts, usedMemories: memories, memoryEnabled: isMemoryEnabled(), outputPointer };
 }

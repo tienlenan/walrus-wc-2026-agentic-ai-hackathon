@@ -1,5 +1,6 @@
 import { SuiGraphQLClient } from "@mysten/sui/graphql";
 import { SuiGrpcClient } from "@mysten/sui/grpc";
+import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 
 export type SuiNetwork = "mainnet" | "testnet" | "devnet" | "localnet";
 
@@ -20,9 +21,12 @@ const GRAPHQL_URLS: Record<SuiNetwork, string> = {
 };
 
 export function getSuiGrpcClient(): SuiGrpcClient {
+  const transport = new GrpcWebFetchTransport({
+    baseUrl: process.env.SUI_GRPC_URL ?? process.env.SUI_RPC_URL ?? GRPC_URLS[SUI_NETWORK],
+  });
   return new SuiGrpcClient({
     network: SUI_NETWORK,
-    baseUrl: process.env.SUI_GRPC_URL ?? process.env.SUI_RPC_URL ?? GRPC_URLS[SUI_NETWORK],
+    transport,
   });
 }
 

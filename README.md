@@ -12,7 +12,7 @@ in [`docs/`](docs).
 
 ## ✨ Features
 - **Chat with Gil** — fixtures, results, and playful match analysis, fully in character.
-- **Predictions desk** — call match outcomes and tournament bets; auto-scored as results land.
+- **Predictions desk** — call match outcomes and tournament picks; auto-scored as results land.
 - **Persistent memory on Walrus** — Gil references what he learned in earlier sessions: a real
   day‑1‑vs‑day‑N "before/after".
 - **Personalized roasts** — based on your record, favourite team, and past takes.
@@ -28,7 +28,7 @@ in [`docs/`](docs).
 | LLM | **Gemini** via **Vercel AI Gateway** |
 | Agent memory | **Walrus Memory** (`@mysten-incubation/memwal`) — canonical store on Mainnet |
 | Database | **Supabase** (Postgres + pgvector + realtime) — index / cache / leaderboard |
-| Server host | Mastra (Hono) on Railway |
+| Server host | Mastra-compatible Node API on **Vercel** |
 
 > Design note: **Walrus is the source of truth for memory**; Supabase is a rebuildable index/cache.
 > See [`docs/03-architecture.md`](docs/03-architecture.md).
@@ -103,7 +103,7 @@ Planning & design (written in English):
 - ✅ Predictions, on-chain gating, oracle scoring, leaderboard, roast wall, team profiles, runtime tracking
 - ✅ Testnet verification completed: 104/104 fixtures registered, prediction submit → score → settle → indexer replay
 - ✅ Mainnet contract + Walrus Site object deployed; 104/104 fixtures registered on-chain
-- ⏳ Final public URL is blocked until a SuiNS name points to the Walrus Site object; record the real demo video after that
+- ✅ Public Walrus URL live: `https://roast2026wc.wal.app/`
 
 ## License
 TBD

@@ -24,7 +24,7 @@
 - Mainnet OracleCap: `0x147d6290d21bd01d51a6cdafc2610cfcdb3d4272d7419d57d71df714fa90c25c`.
 - Mainnet Walrus Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`.
 - Mainnet Walrus Sites base36 diagnostic: `5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg`.
-- Mainnet `wal.app` URL / SuiNS: `TBD after SuiNS is configured for the site object`.
+- Mainnet `wal.app` URL / SuiNS: `https://roast2026wc.wal.app/`.
 - Memory namespace(es): `daily-walrus:global:world-cup-2026` plus per-user `daily-walrus:user:<sui-address>`
 - Track ID / session evidence
 - Short verification note: "How a judge can verify memory + scoring in 3 clicks"

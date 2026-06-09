@@ -43,7 +43,7 @@ Captured on: 2026-06-09
 | Persistent memory | Walrus Memory namespaces for global World Cup memory and per-wallet notebooks. |
 | Before/after proof | Gil can answer differently once user/team/prediction memories exist. |
 | Public interface | React/Vite app includes predictions, leaderboard, notebook, roasts, profiles, gallery, and tracking pages. |
-| Mainnet deployment | Contract and Walrus Site object deployed; public `wal.app` URL pending SuiNS. |
+| Mainnet deployment | Contract and Walrus Site object deployed; public `wal.app` URL live at `https://roast2026wc.wal.app/`. |
 | Dedicated wallet | `0xf5ca4f02cf58d6448b6429c691b53c89c56b30c3ded38b45e73ce78829e99f6d`. |
 | Demo video | Record a real sub-3-minute walkthrough after SuiNS/public URL is connected. |
 | Visuals | Posters, screenshots, architecture PDF, and storage/memory explainer included. |

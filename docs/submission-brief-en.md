@@ -51,12 +51,12 @@ Final submission must use mainnet IDs and URLs only.
 - Mainnet OracleCap object: `0x147d6290d21bd01d51a6cdafc2610cfcdb3d4272d7419d57d71df714fa90c25c`.
 - Mainnet Walrus Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`.
 - Mainnet Walrus Sites base36 diagnostic: `5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg`.
-- Mainnet `wal.app` URL / SuiNS name: `TBD after SuiNS is configured for the site object`.
+- Mainnet `wal.app` URL / SuiNS name: `https://roast2026wc.wal.app/`.
 - Walrus Memory namespaces:
   - Global schedule memory: `daily-walrus:global:world-cup-2026`.
   - Per-user memory: `daily-walrus:user:<sui-address>`.
 
-Current public URL blocker: the mainnet site object exists, but public `wal.app` browsing requires a SuiNS name pointed at the site object. The base36 subdomain without SuiNS currently returns 404 on `wal.app`.
+Current public URL status: `https://roast2026wc.wal.app/` is live and points to the mainnet Walrus Site object above.
 
 Mainnet fixture seed status: 104/104 World Cup fixtures registered in the mainnet MatchRegistry. Example txs:
 - Match 1 register: `DXfbZj4U89VgBAxnm2qRAJo5hevwdxHKwW6b3cYh7WXS`

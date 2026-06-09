@@ -45,7 +45,7 @@ A grizzled walrus commentator, "has watched the World Cup since 1954". **Tusks =
   --font-display: "Anton", Impact, sans-serif;          /* screaming headline */
   --font-masthead:"Playfair Display", Georgia, serif;   /* newspaper nameplate */
   --font-body:    "DM Sans", system-ui, sans-serif;     /* body (Walrus-native) */
-  --font-mono:    "JetBrains Mono", monospace;          /* scores/odds/stats */
+  --font-mono:    "JetBrains Mono", monospace;          /* scores/stats/receipts */
 
   /* Shape */
   --radius: 4px;        /* print → very slight corner rounding */
@@ -68,7 +68,7 @@ A grizzled walrus commentator, "has watched the World Cup since 1954". **Tusks =
 |---|---|
 | App header | **Masthead** nameplate + dateline + "today's edition" |
 | Chat with Gil | **Interview column**: chat bubble = a news paragraph; the roast line = a bordered **"GIL'S VERDICT" pull-quote** |
-| Placing a prediction | **"Predictions Desk"** styled as a betting slip pinned to the newspaper |
+| Placing a prediction | **"Predictions Desk"** styled as a match-pick receipt pinned to the newspaper |
 | Fixtures/results | A **scoreboard** in mono inside a frame, like the results table at the back of the paper |
 | My Record / Notebook | **"Gil's Notebook"** — a notebook page, facts as cut-and-paste clippings |
 | Leaderboard | A **ranking table** styled as a "standings" column |
@@ -80,9 +80,9 @@ An auto-generated image to screenshot and post with **#Walrus / #TrustTheTusk**.
 1. **Masthead bar**: "THE DAILY WALRUS · PREDICTION REPORT CARD" + dateline.
 2. **Hero**: Gil (expression matching the form) on the left + a red-stamped **grade A+→F** on the right.
 3. **Stat line** (mono): `PREDICTIONS 12 · CORRECT 4 · STREAK 0 · ACCURACY 33%`.
-4. **The roast** (pull-quote): *"You bet on that team to win? My tusks would pick better."*
+4. **The roast** (pull-quote): *"You picked that team to win? My tusks would choose better."*
 5. **Mini fixtures**: 2–3 generic balls, prediction vs reality (✔/✗).
-6. **Footer**: "Powered by Walrus · stored forever, just like your losing bets" + a teal mark.
+6. **Footer**: "Powered by Walrus · stored forever, just like your losing takes" + a teal mark.
 > Render with canvas/`satori`→PNG on the server, or html-to-image on the client.
 
 ## 7. World Cup 2026 iconography — DO / DON'T

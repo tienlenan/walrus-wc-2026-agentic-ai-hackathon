@@ -16,7 +16,7 @@ The app has four main runtime zones:
 | Zone | Responsibility | Proof surface |
 |---|---|---|
 | Wallet + Web SPA | Connect wallet, sign actions, render prediction/chat/tracking UI | Connected Sui address and signed transactions |
-| Gil Agent API | Mastra tools for fixtures, predictions, memory recall, roasts, and output anchoring | Runtime tracking API and generated output records |
+| Gil Agent API | Mastra tools for fixtures, team profiles, predictions, memory recall, roasts, and output anchoring | Runtime tracking API and generated output records |
 | Walrus | Blob payloads, gallery media, team/player data, global memory, wallet memory | Blob IDs, Walrus Site URL, Walrus Memory namespace |
 | Sui | Prediction gates, settlement, score records, output proof objects | Package/object IDs, transaction digests, content hashes |
 
@@ -35,10 +35,12 @@ Prediction flow:
 Chat and roast flow:
 
 1. Agent recalls global schedule/team/player data and wallet notebook data from Walrus Memory.
-2. Gil generates a fixture answer, team profile answer, or roast.
-3. Important output payloads can be stored on Walrus Blob.
-4. Sui `OutputRecord` anchors blob ID and content hash.
-5. Runtime Tracking exposes the proof links.
+2. Deterministic tool routing returns typed JSON parts for fixture and team-profile requests.
+3. Gil generates Markdown text around the structured tool context.
+4. The web UI renders Markdown with Streamdown and typed parts as native cards.
+5. Important output payloads can be stored on Walrus Blob.
+6. Sui `OutputRecord` anchors blob ID and content hash.
+7. Runtime Tracking exposes the proof links.
 
 Global memory flow:
 
@@ -52,3 +54,4 @@ Global memory flow:
 - Verifiable outputs: Sui objects store public receipts and pointers to Walrus payloads.
 - Prediction integrity: match gates close before kickoff and settle after result seed/oracle update.
 - Submission tracking: a dedicated tracking page lists deployed package, object, memory, blob, and site links.
+- Perceived performance: a lightweight splash and top progress bar cover initial bundle load and lazy route transitions.

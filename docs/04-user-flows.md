@@ -22,7 +22,7 @@ Landing ("THE DAILY WALRUS" front page)
 
 ## Flow 1 — Onboarding & identity (first day)
 **Goal:** get a stable `resourceId` for memory to follow.
-1. User opens `https://<suins>.wal.app` → the "newspaper" front page with Gil's greeting.
+1. User opens `https://roast2026wc.wal.app/` → the "newspaper" front page with Gil's greeting.
 2. Connect an existing Sui wallet, then sign the nonce message. The verified address becomes the `resourceId`.
 3. (Optional) declare a **favorite team** → `remember("Fan of <team>")` + save `users.favorite_team`.
 4. Gil greets tabloid-style: *"Another rookie tipster. Let's see how many times these tusks get it wrong…"*
@@ -30,14 +30,17 @@ Landing ("THE DAILY WALRUS" front page)
 
 ## Flow 2 — Q&A & analysis (any time)
 1. User asks: "Any good matches tonight?" / "Who is Brazil playing?"
-2. The agent calls `getFixture` (Supabase cache) → returns fixtures/results + a **fun, personality-filled comment**.
-3. If asked about a player → analysis + a light roast (safe, not truly offensive, no real names/faces in images — see design §iconography).
-4. Gil `recall`s before answering → injects personal context if any ("Your beloved team is playing again").
+2. The chat service resolves intent and prepares Vercel-style JSON render parts:
+   - `tool-getFixtures` for group/team/date/gate schedule questions.
+   - `tool-getTeamProfile` for coach, squad, flag, player list, or Walrus blob proof questions.
+3. The agent receives the same tool context in the prompt, then answers in Markdown with a short Gil jab only when it fits.
+4. The frontend renders text through Streamdown and tool results as fixture/profile cards; raw JSON is never shown.
+5. Gil `recall`s before answering → injects personal context if any ("Your beloved team is playing again").
 
 ## Flow 3 — Placing a prediction (P0)
 1. At the **Predictions desk** the signed-in user picks a match → predicts scoreline/MVP/worst/champion/advance.
 2. Wallet signs a Sui tx → owned `Prediction` object. Supabase mirrors the event and `remember("Prediction <match>: <payload>")` runs through MemWal.
-3. Gil reacts instantly based on **history**: *"Betting on the favorite again? Last time you tipped like this you whiffed."*
+3. Gil reacts instantly based on **history**: *"Picking the favorite again? Last time you tipped like this you whiffed."*
 4. The prediction is **locked** at kickoff (`locked_at`).
 
 ## Flow 4 — Scoring & record updates (automatic when results are in)
@@ -50,9 +53,10 @@ Landing ("THE DAILY WALRUS" front page)
 **This is the flow that shows "memory at work".**
 1. The user returns (a new session/thread) with the same `resourceId`.
 2. Before answering, the agent `recall`s + reads the record → builds **"Gil's notebook"**.
-3. Gil opens with the user's own history: *"Hello, master tipster. 2/9 right. Going to praise your beloved team again today, are we?"*
-4. If the user changes their stance → Gil **points out the contradiction**: *"Last week you said France would win, now it's Argentina?"*
-5. The user can click **"What does Gil remember about me?"** → opens the **Memory panel** (read from Walrus) + a **verify on Walrus** link.
+3. Inline notebook evidence is collapsed by default; the user can expand **Gil remembers** only when they want to inspect the receipts.
+4. Gil opens with the user's own history: *"Hello, master tipster. 2/9 right. Going to praise your beloved team again today, are we?"*
+5. If the user changes their stance → Gil **points out the contradiction**: *"Last week you said France would win, now it's Argentina?"*
+6. The user can click **"What does Gil remember about me?"** → opens the **Memory panel** (read from Walrus) + a **verify on Walrus** link.
 
 ## Flow 6 — Before/After viewer (for judges & video) ⭐
 **Goal:** prove the *Memory Depth & Authenticity* criterion.

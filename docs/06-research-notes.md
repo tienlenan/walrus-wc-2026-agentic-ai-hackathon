@@ -92,7 +92,7 @@ site-builder --context=mainnet deploy --epochs 12 ./dist
 - ⚠️ **Pause + host idle = a big demo risk** → keep-alive cron or pay for the judging window.
 
 ## G. Hosting the Mastra server
-- **Railway** (top pick: persistent, streaming, easy env vars) > Render (free **spin-down** when idle) > Fly.io > Mastra Cloud (managed) > Vercel (serverless timeout, awkward PG pooling) > Cloudflare (avoid — pg TCP is hard).
+- Initial evaluation favored Railway for long-lived servers; production currently uses **Vercel** for the stateless Node API at `https://gil-var-shamebook-api.vercel.app`.
 
 ## H. Brand & theme (verified from live CSS)
 - The official Walrus mascot = **"Aurora"**; tagline **"Trust the Tusk."** → we make our own mascot **"Gil"** (same universe, different character).

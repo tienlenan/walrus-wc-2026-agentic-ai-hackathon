@@ -1,62 +1,47 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
-import { getPool } from "@daily-walrus/db";
+import { getFixtureQuery } from "../../services/chat-render-parts.js";
 
-/** Read schedule/results from the Supabase fixtures cache. */
+/** Read schedule/results from the WC2026 fixture cache with prediction-gate state. */
 export const getFixturesTool = createTool({
   id: "get-fixtures",
-  description: "Lấy lịch/kết quả các trận World Cup 2026 (lọc theo đội hoặc trạng thái).",
+  description:
+    "Get FIFA World Cup 2026 fixtures/results. Filter by group, team, date, match status, or prediction gate state.",
   inputSchema: z.object({
-    team: z.string().optional().describe("Tên đội để lọc (khớp gần đúng)"),
+    group: z.string().optional().describe("Group letter A-L"),
+    team: z.string().optional().describe("Team code or team/player alias, for example BRA, Brazil, Ronaldo, Messi"),
+    date: z.string().optional().describe("UTC date as YYYY-MM-DD"),
     status: z.enum(["scheduled", "live", "finished"]).optional(),
-    limit: z.number().int().min(1).max(20).default(5),
+    prediction: z.enum(["open", "closed", "not_onchain"]).optional(),
+    limit: z.number().int().min(1).max(20).default(8),
   }),
   outputSchema: z.object({
+    title: z.string(),
+    filters: z.record(z.unknown()),
+    totalMatches: z.number(),
     fixtures: z.array(
       z.object({
         matchId: z.string(),
+        stage: z.string().nullable(),
+        groupName: z.string().nullable(),
         home: z.string(),
         away: z.string(),
+        homeTeamCode: z.string().nullable(),
+        awayTeamCode: z.string().nullable(),
         status: z.string(),
         homeScore: z.number().nullable(),
         awayScore: z.number().nullable(),
         kickoff: z.string().nullable(),
+        venue: z.string().nullable(),
+        city: z.string().nullable(),
+        chainRegistered: z.boolean(),
+        predictionOpen: z.boolean(),
+        predictionStatus: z.string(),
+        predictionLockedReason: z.string().nullable(),
       }),
     ),
   }),
   execute: async ({ context }) => {
-    const { team, status, limit } = context;
-    const clauses: string[] = [];
-    const params: (string | number)[] = [];
-    if (team) {
-      params.push(`%${team}%`);
-      clauses.push(`(home ilike $${params.length} or away ilike $${params.length})`);
-    }
-    if (status) {
-      params.push(status);
-      clauses.push(`status = $${params.length}`);
-    }
-    const where = clauses.length ? `where ${clauses.join(" and ")}` : "";
-    params.push(limit);
-
-    const { rows } = await getPool().query(
-      `select match_id, home, away, status, home_score, away_score, kickoff
-         from fixtures ${where}
-        order by kickoff nulls last
-        limit $${params.length}`,
-      params,
-    );
-
-    return {
-      fixtures: rows.map((r) => ({
-        matchId: r.match_id as string,
-        home: r.home as string,
-        away: r.away as string,
-        status: r.status as string,
-        homeScore: (r.home_score ?? null) as number | null,
-        awayScore: (r.away_score ?? null) as number | null,
-        kickoff: r.kickoff ? new Date(r.kickoff).toISOString() : null,
-      })),
-    };
+    return getFixtureQuery(context);
   },
 });

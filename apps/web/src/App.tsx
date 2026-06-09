@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { DeferredSection } from "./components/deferred-section";
 import { useI18n } from "./lib/i18n";
 import { useTimeSettings } from "./lib/time-settings";
@@ -29,12 +29,43 @@ export default function App() {
   const { formatDate, timeZoneLabel } = useTimeSettings();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [hash, setHash] = useState(currentHash);
+  const [routeLoading, setRouteLoading] = useState(false);
+  const routeLoadingTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const updateHash = () => setHash(currentHash());
-    window.addEventListener("hashchange", updateHash);
-    return () => window.removeEventListener("hashchange", updateHash);
+    const frame = window.requestAnimationFrame(() => {
+      window.setTimeout(() => {
+        document.documentElement.classList.add("app-ready");
+      }, 80);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
+
+  useEffect(() => {
+    const updateHash = () => {
+      if (routeLoadingTimerRef.current !== null) {
+        window.clearTimeout(routeLoadingTimerRef.current);
+      }
+      setRouteLoading(true);
+      setHash(currentHash());
+      routeLoadingTimerRef.current = window.setTimeout(() => {
+        setRouteLoading(false);
+        routeLoadingTimerRef.current = null;
+      }, 520);
+    };
+    window.addEventListener("hashchange", updateHash);
+    return () => {
+      window.removeEventListener("hashchange", updateHash);
+      if (routeLoadingTimerRef.current !== null) {
+        window.clearTimeout(routeLoadingTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("app-route-loading", routeLoading);
+    return () => document.documentElement.classList.remove("app-route-loading");
+  }, [routeLoading]);
 
   const referencePage = useMemo(() => (REFERENCE_PAGES.has(hash) ? (hash as ReferencePageKey) : null), [hash]);
 

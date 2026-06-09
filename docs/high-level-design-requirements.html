@@ -634,11 +634,11 @@
               <h3>System spine</h3>
               <p>
                 React SPA on Walrus Sites talks to Gil's Mastra API. The API coordinates memory recall,
-                fixture tools, prediction tooling, output anchoring, and tracking.
+                fixture/profile tools, prediction receipts, output anchoring, and tracking.
               </p>
               <div class="spine-map">
                 <div class="spine-step"><span class="step-dot">1</span><div><strong>Wallet signs</strong><span>Identity and transaction intent.</span></div></div>
-                <div class="spine-step"><span class="step-dot">2</span><div><strong>Agent decides</strong><span>Fixtures, memory, predictions, roasts.</span></div></div>
+                <div class="spine-step"><span class="step-dot">2</span><div><strong>Agent decides</strong><span>Fixtures, memory, profiles, predictions, roasts.</span></div></div>
                 <div class="spine-step"><span class="step-dot">3</span><div><strong>Proof lands</strong><span>Walrus payload plus Sui receipt.</span></div></div>
               </div>
               <div class="tile-icon">
@@ -686,8 +686,8 @@
             </article>
 
             <article class="tile small image-scale">
-              <h3>Index cache</h3>
-              <p>Supabase is rebuilt from proofs and used only for fast UI reads.</p>
+              <h3>Generative UI</h3>
+              <p>Chat responses return Markdown plus typed JSON parts for fixture cards, team profiles, and proof receipts.</p>
               <div class="tile-icon">
                 <svg class="icon-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="13" y="14" width="38" height="34" rx="8" />
@@ -741,7 +741,7 @@
             <div class="flow-row">
               <div class="lane-label">Chat and roast</div>
               <div class="flow-card mint"><strong>Recall context</strong><span>Agent loads global fixtures, team profiles, player traits, and wallet notebook.</span></div>
-              <div class="flow-card sky"><strong>Generate</strong><span>Gil answers schedule, profile, prediction, or roast prompts.</span></div>
+              <div class="flow-card sky"><strong>Render answer</strong><span>Streamdown handles Markdown; typed JSON parts render fixture/profile cards.</span></div>
               <div class="flow-card orange"><strong>Store payload</strong><span>Important generated output is written to Walrus Blob when publisher is configured.</span></div>
               <div class="flow-card mint"><strong>Anchor proof</strong><span>Sui OutputRecord stores blob pointer and content hash.</span></div>
             </div>
@@ -767,6 +767,10 @@
             <article class="accordion">
               <h3>Submission fit</h3>
               <p>Persistent memory, on-chain prediction gates, verifiable output records, and media stored through Walrus.</p>
+            </article>
+            <article class="accordion">
+              <h3>Perceived speed</h3>
+              <p>A lightweight splash and top progress bar appear before the React bundle finishes and during lazy route transitions.</p>
             </article>
           </section>
 

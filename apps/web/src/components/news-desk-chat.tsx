@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { askGil } from "../lib/gil-api";
+import { Streamdown } from "streamdown";
+import { askGil, type ChatRenderPart, type ChatToolPart, type FixturesToolOutput, type TeamProfileToolOutput } from "../lib/gil-api";
 import { useI18n } from "../lib/i18n";
 import { loadAiSettings, resolveAiLang } from "../lib/ai-settings";
 import { useSuiOutputRecorder } from "../lib/sui-output-record";
 import { useVerifiedSession } from "../lib/wallet-session";
+import { useTimeSettings } from "../lib/time-settings";
+import { teamWithFlag } from "../lib/team-flags";
+import "streamdown/styles.css";
 import "./news-desk-chat.css";
 
 interface Msg {
   role: "user" | "gil";
   text: string;
+  parts?: ChatRenderPart[];
   memories?: string[];
   proofDigest?: string;
 }
@@ -94,7 +99,7 @@ const CONTEXT_SUGGESTIONS = [
     ],
     en: [
       "Roast Haaland's goal robot mode, then ask whether Odegaard delivers on time.",
-      "Which Norway matches are open and how risky is the bet?",
+      "Which Norway matches are open and how risky is the pick?",
       "If Haaland gets starved, who in Norway deserves the roast?",
     ],
   },
@@ -146,7 +151,7 @@ const CONTEXT_SUGGESTIONS = [
     ],
     en: [
       "Roast Mbappe sprinting so fast the tactics board needs a sick day.",
-      "Which France matches are open and which bet gives Gil the least comedy?",
+      "Which France matches are open and which pick gives Gil the least comedy?",
       "Compare Mbappe turbo mode with Vini's courtroom dribble.",
     ],
   },
@@ -161,6 +166,151 @@ function normalizeForSuggestion(text: string): string {
     .toLocaleLowerCase()
     .normalize("NFD")
     .replace(/\p{Diacritic}/gu, "");
+}
+
+function scoreLabel(fixture: FixturesToolOutput["fixtures"][number]): string | null {
+  if (fixture.homeScore == null || fixture.awayScore == null) return null;
+  return `${fixture.homeScore}-${fixture.awayScore}`;
+}
+
+function GateBadge({ fixture }: { fixture: FixturesToolOutput["fixtures"][number] }) {
+  const label = fixture.predictionOpen ? "Open" : fixture.predictionStatus.replace(/_/g, " ");
+  return <span className={fixture.predictionOpen ? "tool-gate open" : "tool-gate"}>{label}</span>;
+}
+
+function FixturesToolCard({ output }: { output: FixturesToolOutput }) {
+  const { formatDateTime } = useTimeSettings();
+  return (
+    <div className="tool-card fixture-tool-card">
+      <div className="tool-card-head">
+        <div>
+          <span className="tool-kicker">Fixture tool</span>
+          <strong>{output.title}</strong>
+        </div>
+        <span>{output.totalMatches} found</span>
+      </div>
+      <div className="tool-fixtures">
+        {output.fixtures.length === 0 && <div className="tool-empty">No fixture matched that warrant.</div>}
+        {output.fixtures.map((fixture) => (
+          <div className="tool-fixture" key={fixture.matchId}>
+            <div className="tool-fixture-main">
+              <b>
+                {teamWithFlag(fixture.home, fixture.homeTeamCode)} <span>vs</span> {teamWithFlag(fixture.away, fixture.awayTeamCode)}
+              </b>
+              {scoreLabel(fixture) && <em>{scoreLabel(fixture)}</em>}
+            </div>
+            <div className="tool-fixture-meta">
+              <span>M{fixture.matchId}</span>
+              <span>{fixture.groupName ? `Group ${fixture.groupName}` : fixture.stage ?? "Knockout"}</span>
+              <span>{fixture.kickoff ? formatDateTime(fixture.kickoff) : "Kickoff TBA"}</span>
+              <span>{[fixture.venue, fixture.city].filter(Boolean).join(", ")}</span>
+            </div>
+            <GateBadge fixture={fixture} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TeamProfileToolCard({ output }: { output: TeamProfileToolOutput }) {
+  const { formatDateTime } = useTimeSettings();
+  return (
+    <div className="tool-card team-tool-card">
+      <div className="tool-card-head">
+        <div>
+          <span className="tool-kicker">Team profile tool</span>
+          <strong>
+            {output.team.flagEmoji} {output.team.name}
+          </strong>
+        </div>
+        <span>Group {output.team.groupName}</span>
+      </div>
+      <div className="team-tool-grid">
+        <div>
+          <span>Coach</span>
+          <b>{output.team.coach ?? "TBA"}</b>
+        </div>
+        <div>
+          <span>Squad</span>
+          <b>{output.squadCount} players</b>
+        </div>
+        <div>
+          <span>Walrus blob</span>
+          <b>{output.team.walrusBlobId ? output.team.walrusBlobId.slice(0, 12) : output.team.walrusStatus}</b>
+        </div>
+      </div>
+      <div className="tool-squad">
+        {output.squadSample.map((player) => (
+          <span key={`${player.number}-${player.playerName}`}>
+            #{player.number} {player.playerName} · {player.position}
+          </span>
+        ))}
+      </div>
+      <div className="tool-mini-fixtures">
+        {output.fixtures.slice(0, 3).map((fixture) => (
+          <span key={fixture.matchId}>
+            {teamWithFlag(fixture.home, fixture.homeTeamCode)} vs {teamWithFlag(fixture.away, fixture.awayTeamCode)} ·{" "}
+            {fixture.kickoff ? formatDateTime(fixture.kickoff) : "TBA"}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ToolPartRenderer({ part }: { part: ChatToolPart }) {
+  if (part.state !== "output-available") {
+    return <div className="tool-card tool-pending">Running {part.type.replace("tool-", "")}...</div>;
+  }
+  if (part.type === "tool-getFixtures" && part.output) {
+    return <FixturesToolCard output={part.output as FixturesToolOutput} />;
+  }
+  if (part.type === "tool-getTeamProfile" && part.output) {
+    return <TeamProfileToolCard output={part.output as TeamProfileToolOutput} />;
+  }
+  return <div className="tool-card tool-pending">{part.type.replace("tool-", "")} completed.</div>;
+}
+
+function MessageParts({ message }: { message: Msg }) {
+  const parts = message.parts?.length ? message.parts : [{ type: "text" as const, text: message.text }];
+  return (
+    <div className="message-parts">
+      {parts.map((part, index) => {
+        if (part.type === "text") {
+          return (
+            <Streamdown key={`${part.type}-${index}`} className="msg-markdown" mode="static" controls={false}>
+              {part.text}
+            </Streamdown>
+          );
+        }
+        return <ToolPartRenderer key={`${part.type}-${part.toolCallId}-${index}`} part={part} />;
+      })}
+    </div>
+  );
+}
+
+function MemoryNote({ memories }: { memories: string[] }) {
+  const { t } = useI18n();
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mem-note">
+      <button type="button" className="mem-toggle" onClick={() => setOpen((value) => !value)} aria-expanded={open}>
+        <span>{t("chat.remembers")}</span>
+        <b>
+          {memories.length} {t("chat.memoryReceipts")}
+        </b>
+        <span aria-hidden="true">{open ? "−" : "+"}</span>
+      </button>
+      {open && (
+        <ul className="mem-list">
+          {memories.map((memory, index) => (
+            <li key={`${index}-${memory.slice(0, 20)}`}>{memory}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 export function NewsDeskChat({ onOpenSettings }: { onOpenSettings: () => void }) {
@@ -208,10 +358,13 @@ export function NewsDeskChat({ onOpenSettings }: { onOpenSettings: () => void })
         outputKind: "chat",
         resourceType: "chat_message",
         resourceId: `chat-${Date.now().toString(36)}`,
-        payload: { message: msg, reply: reply.text, usedMemories: reply.usedMemories },
+        payload: { message: msg, reply: reply.text, parts: reply.parts, usedMemories: reply.usedMemories },
         pointer: reply.outputPointer,
       });
-      setMessages((m) => [...m, { role: "gil", text: reply.text, memories: reply.usedMemories, proofDigest: proof.txDigest }]);
+      setMessages((m) => [
+        ...m,
+        { role: "gil", text: reply.text, parts: reply.parts, memories: reply.usedMemories, proofDigest: proof.txDigest },
+      ]);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("chat.error"));
     } finally {
@@ -257,12 +410,8 @@ export function NewsDeskChat({ onOpenSettings }: { onOpenSettings: () => void })
         {messages.map((m, i) => (
           <div key={i} className={m.role === "user" ? "msg msg-user" : "msg msg-gil"}>
             <div className="msg-label">{m.role === "user" ? t("chat.you") : t("chat.gil")}</div>
-            <div className="msg-text">{m.text}</div>
-            {m.memories && m.memories.length > 0 && (
-              <div className="mem-note" title="Walrus Memory">
-                {t("chat.remembers")} {m.memories.join(" · ")}
-              </div>
-            )}
+            <MessageParts message={m} />
+            {m.memories && m.memories.length > 0 && <MemoryNote memories={m.memories} />}
             {m.proofDigest && <div className="mem-note">Sui OutputRecord {shortDigest(m.proofDigest)}</div>}
           </div>
         ))}

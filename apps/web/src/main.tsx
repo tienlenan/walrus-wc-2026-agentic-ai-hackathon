@@ -7,7 +7,9 @@ import { I18nProvider } from "./lib/i18n";
 import { TimeProvider } from "./lib/time-settings";
 import App from "./App";
 
-createRoot(document.getElementById("root")!).render(
+const root = createRoot(document.getElementById("root")!);
+
+root.render(
   <StrictMode>
     <Providers>
       <I18nProvider>
@@ -18,3 +20,7 @@ createRoot(document.getElementById("root")!).render(
     </Providers>
   </StrictMode>,
 );
+
+window.setTimeout(() => {
+  document.documentElement.classList.add("app-ready");
+}, 5000);

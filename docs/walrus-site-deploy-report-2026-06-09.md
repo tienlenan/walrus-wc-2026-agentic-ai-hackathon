@@ -3,7 +3,7 @@
 ## Result
 - Testnet Walrus Sites deploy: passed.
 - Mainnet Walrus Sites deploy: passed after funding.
-- Public `wal.app` browsing is still pending SuiNS configuration.
+- Public `wal.app` browsing is live at `https://roast2026wc.wal.app/`.
 - Final hackathon submission must use mainnet IDs and URLs. Testnet IDs below are internal verification only.
 
 ## Tooling
