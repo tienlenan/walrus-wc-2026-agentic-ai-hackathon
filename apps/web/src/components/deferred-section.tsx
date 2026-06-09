@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
-export function DeferredSection({ children, fallback, minDelayMs = 1400 }: { children: ReactNode; fallback: ReactNode; minDelayMs?: number }) {
+export function DeferredSection({ children, fallback, minDelayMs = 120 }: { children: ReactNode; fallback: ReactNode; minDelayMs?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [delayDone, setDelayDone] = useState(false);
@@ -24,7 +24,7 @@ export function DeferredSection({ children, fallback, minDelayMs = 1400 }: { chi
           observer.disconnect();
         }
       },
-      { rootMargin: "0px" },
+      { rootMargin: "360px 0px" },
     );
     observer.observe(node);
     return () => observer.disconnect();

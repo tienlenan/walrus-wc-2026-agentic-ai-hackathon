@@ -20,7 +20,3 @@ root.render(
     </Providers>
   </StrictMode>,
 );
-
-window.setTimeout(() => {
-  document.documentElement.classList.add("app-ready");
-}, 5000);

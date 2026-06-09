@@ -34,9 +34,7 @@ export default function App() {
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      window.setTimeout(() => {
-        document.documentElement.classList.add("app-ready");
-      }, 80);
+      document.documentElement.classList.add("app-ready");
     });
     return () => window.cancelAnimationFrame(frame);
   }, []);
@@ -132,6 +130,11 @@ export default function App() {
         <NavLink href="#notebook" label={t("nav.notebook")} reference />
         <NavLink href="#tracking" label={t("nav.tracking")} reference />
       </nav>
+
+      <div className={`route-load-strip ${routeLoading ? "is-active" : ""}`} role="status" aria-live="polite">
+        <img src="/app-icon.svg" alt="" aria-hidden="true" />
+        <span>{t("ui.loadingStrip")}</span>
+      </div>
 
       {referencePage ? (
         <ReferencePage page={referencePage} />
