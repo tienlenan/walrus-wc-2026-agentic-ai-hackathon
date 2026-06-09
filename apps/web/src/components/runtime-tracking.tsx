@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { getRuntimeTracking, type RuntimeTracking as RuntimeTrackingDto } from "../lib/world-cup-api";
 import { useI18n } from "../lib/i18n";
+import { useTimeSettings } from "../lib/time-settings";
 import "./runtime-tracking.css";
 
 function shortId(value: string | null | undefined): string {
@@ -25,6 +26,7 @@ function LinkAction({ href, label }: { href: string | null; label: string }) {
 
 export function RuntimeTracking() {
   const { t } = useI18n();
+  const { formatDateTime, formatTime } = useTimeSettings();
   const [tracking, setTracking] = useState<RuntimeTrackingDto | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -89,7 +91,7 @@ export function RuntimeTracking() {
             </div>
             <div>
               <span>{t("tracking.updated")}</span>
-              <strong>{new Date(tracking.updatedAt).toLocaleTimeString()}</strong>
+              <strong>{formatTime(tracking.updatedAt)}</strong>
             </div>
           </div>
 
@@ -134,7 +136,7 @@ export function RuntimeTracking() {
                     <span>{t("tracking.status")}</span>
                     <strong>{memory?.status ?? "not_synced"}</strong>
                   </div>
-                  <small>{memory?.error ?? (memory?.updatedAt ? new Date(memory.updatedAt).toLocaleString() : t("tracking.noSync"))}</small>
+                  <small>{memory?.error ?? (memory?.updatedAt ? formatDateTime(memory.updatedAt) : t("tracking.noSync"))}</small>
                 </div>
                 <div className="tracking-row">
                   <div>

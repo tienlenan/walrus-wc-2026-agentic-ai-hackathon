@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getGameSnapshot, subscribeGameSnapshot, type GameSnapshot, type LeaderboardRow } from "../lib/game-api";
 import { useI18n } from "../lib/i18n";
+import { useTimeSettings } from "../lib/time-settings";
 import { GiftRevealStrip } from "./gift-reveal-strip";
 import "./leaderboard.css";
 
@@ -14,6 +15,7 @@ function displayName(row: LeaderboardRow): string {
 
 export function Leaderboard() {
   const { t } = useI18n();
+  const { formatTime } = useTimeSettings();
   const [snapshot, setSnapshot] = useState<GameSnapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -120,7 +122,7 @@ export function Leaderboard() {
       </div>
 
       {error && <div className="leaderboard-error">{error}</div>}
-      {snapshot?.updatedAt && <div className="leaderboard-asof">{t("board.asOf")} {new Date(snapshot.updatedAt).toLocaleTimeString()}</div>}
+      {snapshot?.updatedAt && <div className="leaderboard-asof">{t("board.asOf")} {formatTime(snapshot.updatedAt)}</div>}
     </section>
   );
 }

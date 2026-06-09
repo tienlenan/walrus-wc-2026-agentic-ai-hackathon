@@ -132,6 +132,12 @@
 .settings-field textarea {
   resize: vertical;
 }
+.settings-field small {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--ink-soft, #555);
+  font: 500 0.72rem/1.35 system-ui, sans-serif;
+}
 .settings-actions {
   display: flex;
   gap: 0.6rem;

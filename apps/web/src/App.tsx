@@ -10,6 +10,7 @@ import { GalleryWall } from "./components/gallery-wall";
 import { MemoryNotebook } from "./components/memory-notebook";
 import { RuntimeTracking } from "./components/runtime-tracking";
 import { useI18n } from "./lib/i18n";
+import { useTimeSettings } from "./lib/time-settings";
 import "./styles/ui-controls.css";
 
 type ReferencePageKey = "team-profiles" | "gallery" | "notebook" | "tracking";
@@ -22,6 +23,7 @@ function currentHash(): string {
 
 export default function App() {
   const { t, lang, setLang } = useI18n();
+  const { formatDate, timeZoneLabel } = useTimeSettings();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [hash, setHash] = useState(currentHash);
 
@@ -33,7 +35,7 @@ export default function App() {
 
   const referencePage = useMemo(() => (REFERENCE_PAGES.has(hash) ? (hash as ReferencePageKey) : null), [hash]);
 
-  const date = new Date().toLocaleDateString(lang === "en" ? "en-US" : "vi-VN", {
+  const date = formatDate(new Date(), {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -68,6 +70,7 @@ export default function App() {
         <div className="dateline">
           <span>{t("brand.est")}</span>
           <span>{date}</span>
+          <span>{timeZoneLabel}</span>
           <span>{t("brand.edition")}</span>
         </div>
       </header>

@@ -4,13 +4,16 @@ import "./styles/tokens.css";
 import "./App.css";
 import { Providers } from "./providers";
 import { I18nProvider } from "./lib/i18n";
+import { TimeProvider } from "./lib/time-settings";
 import App from "./App";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Providers>
       <I18nProvider>
-        <App />
+        <TimeProvider>
+          <App />
+        </TimeProvider>
       </I18nProvider>
     </Providers>
   </StrictMode>,

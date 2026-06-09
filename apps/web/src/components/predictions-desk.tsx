@@ -7,6 +7,7 @@ import { SUI_NETWORKS, type AppSuiNetwork } from "../lib/sui-network";
 import { useSuiOutputRecorder } from "../lib/sui-output-record";
 import { useSuiGasBalance } from "../lib/use-sui-gas-balance";
 import { useVerifiedSession } from "../lib/wallet-session";
+import { useTimeSettings } from "../lib/time-settings";
 import "./predictions-desk.css";
 
 type KindKey = "scoreline" | "match_mvp" | "worst_player" | "champion" | "advance";
@@ -35,10 +36,10 @@ function hashToU32(value: string): number {
   return hash >>> 0;
 }
 
-function formatFixture(fixture: Fixture, t: (key: string) => string): string {
-  const kickoff = fixture.kickoff
-    ? new Date(fixture.kickoff).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
-    : "kickoff TBA";
+type DateTimeFormatter = ReturnType<typeof useTimeSettings>["formatDateTime"];
+
+function formatFixture(fixture: Fixture, t: (key: string) => string, formatDateTime: DateTimeFormatter): string {
+  const kickoff = fixture.kickoff ? formatDateTime(fixture.kickoff) : "kickoff TBA";
   const group = fixture.groupName ? `${t("common.group")} ${fixture.groupName}` : fixture.stage ?? t("pred.filter.knockout");
   return `M${fixture.matchId} ${fixture.home} vs ${fixture.away} - ${kickoff} - ${group} - ${gateLabel(fixture, t)}`;
 }
@@ -83,6 +84,7 @@ function voteTitle(summary: MatchVoteSummary | undefined, t: (key: string) => st
 
 export function PredictionsDesk() {
   const { t } = useI18n();
+  const { formatDateTime } = useTimeSettings();
   const account = useCurrentAccount();
   const { signedIn } = useVerifiedSession();
   const gas = useSuiGasBalance(account?.address);
@@ -251,7 +253,7 @@ export function PredictionsDesk() {
               <select value={matchId} onChange={(e) => setMatchId(e.target.value)}>
                 {visibleFixtures.map((fixture) => (
                   <option key={fixture.matchId} value={fixture.matchId} disabled={!fixture.predictionOpen}>
-                    {formatFixture(fixture, t)}
+                    {formatFixture(fixture, t, formatDateTime)}
                   </option>
                 ))}
               </select>

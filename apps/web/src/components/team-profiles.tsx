@@ -1,16 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { getWorldCupSnapshot, type TeamProfile, type WorldCupFixture, type WorldCupSnapshot } from "../lib/world-cup-api";
 import { useI18n } from "../lib/i18n";
+import { useTimeSettings } from "../lib/time-settings";
 import "./team-profiles.css";
-
-function formatKickoff(value: string): string {
-  return new Date(value).toLocaleString(undefined, {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 
 function byKickoff(a: WorldCupFixture, b: WorldCupFixture): number {
   return new Date(a.kickoff).getTime() - new Date(b.kickoff).getTime();
@@ -18,6 +10,7 @@ function byKickoff(a: WorldCupFixture, b: WorldCupFixture): number {
 
 export function TeamProfiles() {
   const { t } = useI18n();
+  const { formatDate, formatDateTime } = useTimeSettings();
   const [snapshot, setSnapshot] = useState<WorldCupSnapshot | null>(null);
   const [selectedCode, setSelectedCode] = useState("MEX");
   const [error, setError] = useState<string | null>(null);
@@ -88,8 +81,8 @@ export function TeamProfiles() {
           <span>{teams.length} {t("team.teams")}</span>
           <span>{teams.reduce((sum, team) => sum + team.squad.length, 0)} {t("team.officialRows")}</span>
           <span>{fixtures.length} {t("team.matches")}</span>
-          <span>{t("team.squads")}: {new Date(snapshot.sources.squadDocumentTimestampUtc).toLocaleString()}</span>
-          <span>{t("team.schedule")}: {new Date(snapshot.sources.scheduleGeneratedAtUtc).toLocaleDateString()}</span>
+          <span>{t("team.squads")}: {formatDateTime(snapshot.sources.squadDocumentTimestampUtc)}</span>
+          <span>{t("team.schedule")}: {formatDate(snapshot.sources.scheduleGeneratedAtUtc)}</span>
         </div>
       )}
       {error && <div className="profile-error">{error}</div>}
@@ -99,6 +92,7 @@ export function TeamProfiles() {
 
 function ProfileDetails({ team, fixtures }: { team: TeamProfile; fixtures: WorldCupFixture[] }) {
   const { t } = useI18n();
+  const { formatDateTime } = useTimeSettings();
   return (
     <article className="profile-detail">
       <div className="profile-title-row">
@@ -137,7 +131,7 @@ function ProfileDetails({ team, fixtures }: { team: TeamProfile; fixtures: World
               {fixture.home} vs {fixture.away}
             </b>
             <span>
-              {formatKickoff(fixture.kickoff)} · {fixture.venue}
+              {formatDateTime(fixture.kickoff)} · {fixture.venue}
             </span>
           </div>
         ))}

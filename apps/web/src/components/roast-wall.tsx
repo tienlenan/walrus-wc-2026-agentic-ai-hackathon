@@ -4,6 +4,7 @@ import { loadAiSettings, resolveAiLang } from "../lib/ai-settings";
 import { useI18n } from "../lib/i18n";
 import { useSuiOutputRecorder } from "../lib/sui-output-record";
 import { useVerifiedSession } from "../lib/wallet-session";
+import { useTimeSettings } from "../lib/time-settings";
 import "./roast-wall.css";
 
 function shortDigest(digest: string): string {
@@ -12,6 +13,7 @@ function shortDigest(digest: string): string {
 
 export function RoastWall() {
   const { lang, t } = useI18n();
+  const { formatTime } = useTimeSettings();
   const { signedIn } = useVerifiedSession();
   const recordOutput = useSuiOutputRecorder();
   const [snapshot, setSnapshot] = useState<WorldCupSnapshot | null>(null);
@@ -154,7 +156,7 @@ export function RoastWall() {
           <article className="roast-card" key={roast.id}>
             <div className="roast-card-top">
               <span>{roast.targetType}</span>
-              <time>{new Date(roast.createdAt).toLocaleTimeString()}</time>
+              <time>{formatTime(roast.createdAt)}</time>
             </div>
             <h3>{roast.cardTitle}</h3>
             <p>{roast.roastText}</p>
