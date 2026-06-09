@@ -231,48 +231,79 @@
   border: 2px solid var(--ink);
   background: var(--paper);
   box-shadow: 4px 4px 0 rgba(26, 23, 20, 0.78);
-  animation: boot-card-float 1.3s ease-in-out infinite alternate;
+  opacity: 0;
+  transform: translate(var(--enter-x, 0), var(--enter-y, 0)) rotate(var(--boot-rotate, 0deg)) scale(0.72);
+  animation:
+    boot-card-roll 680ms cubic-bezier(0.2, 0.9, 0.2, 1.2) var(--enter-delay, 0ms) both,
+    boot-card-float 1.6s ease-in-out calc(var(--enter-delay, 0ms) + 700ms) infinite alternate;
 }
 
 .boot-chaos-card.card-1 {
-  left: 6vw;
-  top: 8vh;
-  transform: rotate(-14deg);
+  left: clamp(1.25rem, 7vw, 6rem);
+  top: clamp(4.5rem, 10vh, 7rem);
+  --boot-rotate: -14deg;
+  --enter-x: -5rem;
+  --enter-y: -2rem;
+  --enter-delay: 120ms;
 }
 
 .boot-chaos-card.card-2 {
-  right: 7vw;
-  top: 10vh;
-  transform: rotate(12deg);
-  animation-delay: 110ms;
+  right: clamp(1.25rem, 7vw, 6rem);
+  top: clamp(5.5rem, 12vh, 8rem);
+  --boot-rotate: 12deg;
+  --enter-x: 5rem;
+  --enter-y: -2rem;
+  --enter-delay: 420ms;
 }
 
 .boot-chaos-card.card-3 {
-  left: -2.5rem;
-  top: 38vh;
-  transform: rotate(18deg);
-  animation-delay: 220ms;
+  left: clamp(1rem, 4vw, 3rem);
+  top: 36vh;
+  --boot-rotate: 18deg;
+  --enter-x: -5.5rem;
+  --enter-y: 0;
+  --enter-delay: 780ms;
 }
 
 .boot-chaos-card.card-4 {
-  right: -2.5rem;
-  top: 42vh;
-  transform: rotate(-18deg);
-  animation-delay: 330ms;
+  right: clamp(1rem, 4vw, 3rem);
+  top: 43vh;
+  --boot-rotate: -18deg;
+  --enter-x: 5.5rem;
+  --enter-y: 0;
+  --enter-delay: 1120ms;
 }
 
 .boot-chaos-card.card-5 {
-  left: 18vw;
-  bottom: 7vh;
-  transform: rotate(9deg);
-  animation-delay: 440ms;
+  left: clamp(1.5rem, 18vw, 15rem);
+  bottom: clamp(4.5rem, 9vh, 7rem);
+  --boot-rotate: 9deg;
+  --enter-x: -3rem;
+  --enter-y: 4rem;
+  --enter-delay: 1460ms;
 }
 
 .boot-chaos-card.card-6 {
-  right: 18vw;
-  bottom: 5vh;
-  transform: rotate(-10deg);
-  animation-delay: 550ms;
+  right: clamp(1.5rem, 18vw, 15rem);
+  bottom: clamp(3.5rem, 8vh, 6rem);
+  --boot-rotate: -10deg;
+  --enter-x: 3rem;
+  --enter-y: 4rem;
+  --enter-delay: 1800ms;
+}
+
+@keyframes boot-card-roll {
+  from {
+    opacity: 0;
+    transform: translate(var(--enter-x, 0), var(--enter-y, 0)) rotate(var(--boot-rotate, 0deg)) scale(0.72);
+  }
+  70% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) rotate(var(--boot-rotate, 0deg)) scale(1);
+  }
 }
 
 @keyframes boot-card-float {
@@ -340,33 +371,33 @@
   }
 
   .boot-chaos-card.card-1 {
-    left: 1rem;
-    top: 5rem;
+    left: 1.25rem;
+    top: 5.25rem;
   }
 
   .boot-chaos-card.card-2 {
-    right: 0.5rem;
-    top: 8.5rem;
+    right: 1.25rem;
+    top: 8.75rem;
   }
 
   .boot-chaos-card.card-3 {
-    left: -2.2rem;
+    left: 1.15rem;
     top: 34vh;
   }
 
   .boot-chaos-card.card-4 {
-    right: -2.2rem;
+    right: 1.15rem;
     top: 48vh;
   }
 
   .boot-chaos-card.card-5 {
-    left: 2rem;
+    left: 1.35rem;
     bottom: 5rem;
   }
 
   .boot-chaos-card.card-6 {
-    right: 1.1rem;
-    bottom: 2.2rem;
+    right: 1.35rem;
+    bottom: 2.6rem;
   }
 }
 
@@ -378,11 +409,12 @@
 }
 
 .section-skeleton {
-  min-height: 7rem;
+  min-height: 2.75rem;
   display: grid;
   place-items: center;
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
+  margin: 0.35rem 0;
   color: var(--ink-soft);
   font-family: var(--font-mono);
   font-size: 0.72rem;

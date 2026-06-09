@@ -4,17 +4,29 @@ import { useI18n } from "./lib/i18n";
 import { useTimeSettings } from "./lib/time-settings";
 import "./styles/ui-controls.css";
 
-const WalletProviders = lazy(() => import("./wallet-providers").then((mod) => ({ default: mod.WalletProviders })));
-const ConnectBar = lazy(() => import("./components/connect-bar").then((mod) => ({ default: mod.ConnectBar })));
-const NewsDeskChat = lazy(() => import("./components/news-desk-chat").then((mod) => ({ default: mod.NewsDeskChat })));
-const SettingsPanel = lazy(() => import("./components/settings-panel").then((mod) => ({ default: mod.SettingsPanel })));
-const PredictionsDesk = lazy(() => import("./components/predictions-desk").then((mod) => ({ default: mod.PredictionsDesk })));
-const Leaderboard = lazy(() => import("./components/leaderboard").then((mod) => ({ default: mod.Leaderboard })));
-const RoastWall = lazy(() => import("./components/roast-wall").then((mod) => ({ default: mod.RoastWall })));
-const TeamProfiles = lazy(() => import("./components/team-profiles").then((mod) => ({ default: mod.TeamProfiles })));
-const GalleryWall = lazy(() => import("./components/gallery-wall").then((mod) => ({ default: mod.GalleryWall })));
-const MemoryNotebook = lazy(() => import("./components/memory-notebook").then((mod) => ({ default: mod.MemoryNotebook })));
-const RuntimeTracking = lazy(() => import("./components/runtime-tracking").then((mod) => ({ default: mod.RuntimeTracking })));
+const loadWalletProviders = () => import("./wallet-providers").then((mod) => ({ default: mod.WalletProviders }));
+const loadConnectBar = () => import("./components/connect-bar").then((mod) => ({ default: mod.ConnectBar }));
+const loadNewsDeskChat = () => import("./components/news-desk-chat").then((mod) => ({ default: mod.NewsDeskChat }));
+const loadSettingsPanel = () => import("./components/settings-panel").then((mod) => ({ default: mod.SettingsPanel }));
+const loadPredictionsDesk = () => import("./components/predictions-desk").then((mod) => ({ default: mod.PredictionsDesk }));
+const loadLeaderboard = () => import("./components/leaderboard").then((mod) => ({ default: mod.Leaderboard }));
+const loadRoastWall = () => import("./components/roast-wall").then((mod) => ({ default: mod.RoastWall }));
+const loadTeamProfiles = () => import("./components/team-profiles").then((mod) => ({ default: mod.TeamProfiles }));
+const loadGalleryWall = () => import("./components/gallery-wall").then((mod) => ({ default: mod.GalleryWall }));
+const loadMemoryNotebook = () => import("./components/memory-notebook").then((mod) => ({ default: mod.MemoryNotebook }));
+const loadRuntimeTracking = () => import("./components/runtime-tracking").then((mod) => ({ default: mod.RuntimeTracking }));
+
+const WalletProviders = lazy(loadWalletProviders);
+const ConnectBar = lazy(loadConnectBar);
+const NewsDeskChat = lazy(loadNewsDeskChat);
+const SettingsPanel = lazy(loadSettingsPanel);
+const PredictionsDesk = lazy(loadPredictionsDesk);
+const Leaderboard = lazy(loadLeaderboard);
+const RoastWall = lazy(loadRoastWall);
+const TeamProfiles = lazy(loadTeamProfiles);
+const GalleryWall = lazy(loadGalleryWall);
+const MemoryNotebook = lazy(loadMemoryNotebook);
+const RuntimeTracking = lazy(loadRuntimeTracking);
 
 type ReferencePageKey = "team-profiles" | "gallery" | "notebook" | "tracking";
 
@@ -43,6 +55,7 @@ const BOOT_LINES = {
   vi: VI_BOOT_LINES,
   en: EN_BOOT_LINES,
 } as const;
+const BOOT_SPLASH_MIN_MS = 10000;
 
 function currentHash(): string {
   return window.location.hash.replace(/^#/, "");
@@ -51,6 +64,17 @@ function currentHash(): string {
 function bootLineFor(lang: "vi" | "en", index: number): string {
   const lines = BOOT_LINES[lang];
   return lines[index % lines.length] ?? EN_BOOT_LINES[0];
+}
+
+function preloadHomeChunks(): Promise<unknown> {
+  return Promise.all([
+    loadWalletProviders(),
+    loadConnectBar(),
+    loadNewsDeskChat(),
+    loadPredictionsDesk(),
+    loadLeaderboard(),
+    loadRoastWall(),
+  ]);
 }
 
 export default function App() {
@@ -64,17 +88,23 @@ export default function App() {
   const routeLoadingTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
     const lineTimer = window.setInterval(() => {
       setBootLineIndex((value) => (value + 1) % EN_BOOT_LINES.length);
-    }, 760);
+    }, 2000);
     const frame = window.requestAnimationFrame(() => {
       document.documentElement.classList.add("app-ready");
     });
-    const hideTimer = window.setTimeout(() => setBootSplashVisible(false), 1050);
+    const minSplash = new Promise((resolve) => window.setTimeout(resolve, BOOT_SPLASH_MIN_MS));
+    void Promise.all([minSplash, preloadHomeChunks().catch(() => undefined)]).then(() => {
+      if (!cancelled) {
+        setBootSplashVisible(false);
+      }
+    });
     return () => {
+      cancelled = true;
       window.cancelAnimationFrame(frame);
       window.clearInterval(lineTimer);
-      window.clearTimeout(hideTimer);
     };
   }, []);
 

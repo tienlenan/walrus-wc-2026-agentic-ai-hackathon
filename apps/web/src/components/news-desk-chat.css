@@ -39,7 +39,7 @@
 
 .chat-log {
   padding: 1rem;
-  min-height: 260px;
+  min-height: clamp(8rem, 22vh, 13rem);
   max-height: 60vh;
   overflow-y: auto;
 }
@@ -59,6 +59,16 @@
 
 .chat-empty {
   color: var(--ink-soft);
+}
+
+.chat-empty p {
+  margin: 0;
+  border: 1px dashed var(--rule);
+  background: color-mix(in srgb, var(--paper) 70%, #fff);
+  padding: 0.75rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.45;
 }
 .starters {
   display: flex;
