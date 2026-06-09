@@ -46,16 +46,16 @@
 }
 
 .ai-tip {
-  width: fit-content;
-  max-width: min(720px, calc(100% - 2rem));
-  margin: 0.8rem auto;
+  width: 100%;
+  max-width: none;
+  margin: 0.8rem 0;
   padding: 0.55rem 0.9rem;
   border: 1px dashed var(--teal, #1f7a6b);
   border-radius: 3px;
   background: color-mix(in srgb, var(--teal, #1f7a6b) 8%, transparent);
   color: var(--ink, #1a1a1a);
   font: 500 0.82rem/1.4 system-ui, sans-serif;
-  text-align: center;
+  text-align: left;
 }
 .ai-tip-link {
   border: 0;

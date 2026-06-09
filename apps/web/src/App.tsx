@@ -53,6 +53,9 @@ export default function App() {
             EN
           </button>
         </div>
+        <button type="button" className="settings-btn" onClick={() => setSettingsOpen(true)}>
+          {t("set.open")}
+        </button>
       </div>
 
       <header className="masthead">

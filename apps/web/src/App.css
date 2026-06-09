@@ -4,7 +4,7 @@
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
-  padding: clamp(0.75rem, 1.4vw, 1.5rem);
+  padding: clamp(0.75rem, 1.8vw, 2rem);
   background: var(--paper-2);
   min-height: 100vh;
   border-left: 1px solid var(--rule);

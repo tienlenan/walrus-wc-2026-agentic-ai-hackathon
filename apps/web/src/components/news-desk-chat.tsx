@@ -80,9 +80,6 @@ export function NewsDeskChat({ onOpenSettings }: { onOpenSettings: () => void })
         </button>
       </div>
       <div className="newsroom-head">
-        <button type="button" className="newsroom-settings" onClick={onOpenSettings}>
-          ⚙ {t("set.open")}
-        </button>
         <span>{t("chat.live")}</span>
         <span className="live-dot">● LIVE</span>
       </div>
