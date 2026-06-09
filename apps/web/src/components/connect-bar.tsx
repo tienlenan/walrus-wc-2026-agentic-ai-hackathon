@@ -9,6 +9,7 @@ import {
   useSwitchAccount,
 } from "@mysten/dapp-kit";
 import { signIn, signOut, getSession, type Session } from "../lib/auth";
+import { useI18n } from "../lib/i18n";
 import { SUI_NETWORKS, formatMistAsSui, type AppSuiNetwork } from "../lib/sui-network";
 import { useSuiGasBalance } from "../lib/use-sui-gas-balance";
 import "./connect-bar.css";
@@ -18,6 +19,7 @@ function shortAddress(address: string): string {
 }
 
 export function ConnectBar() {
+  const { t } = useI18n();
   const account = useCurrentAccount();
   const accounts = useAccounts();
   const suiClient = useSuiClient();
@@ -106,7 +108,7 @@ export function ConnectBar() {
       <span className="press-pass">🦭 Digital Edition · sui:{gas.network} · Member Pass</span>
       <div className="press-actions">
         {!account ? (
-          <ConnectButton connectText="Kết nối ví" />
+          <ConnectButton connectText={t("wallet.connect")} />
         ) : (
           <div className="wallet-control">
             <span className={gas.hasGas ? "network-pill" : "network-pill warn"} title={gas.error ?? undefined}>
@@ -125,18 +127,18 @@ export function ConnectBar() {
               ))}
             </select>
             <button type="button" className="press-btn" onClick={() => void doDisconnect()} disabled={walletBusy}>
-              Disconnect
+              {t("wallet.disconnect")}
             </button>
             {!gas.loading && !gas.hasGas && faucetUrl && (
               <a className="faucet-link" href={faucetUrl} target="_blank" rel="noreferrer">
-                Faucet
+                {t("wallet.faucet")}
               </a>
             )}
           </div>
         )}
         {account && !signedIn && (
           <button className="press-btn primary" onClick={doSignIn} disabled={busy}>
-            {busy ? "Đang ký…" : "Sign in"}
+            {busy ? t("wallet.signing") : t("wallet.signIn")}
           </button>
         )}
       </div>
