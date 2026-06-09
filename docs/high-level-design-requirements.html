@@ -4,18 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>The Daily Walrus - High-Level System Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --paper: #fffaf0;
-        --ink: #211d18;
-        --muted: #5c5349;
-        --blue: #2466a8;
-        --mint: #16a394;
-        --orange: #f4a950;
-        --sky-soft: #dff1ff;
-        --mint-soft: #dff7ed;
-        --orange-soft: #ffe1b8;
-        --white: #fffdf8;
+        --ink: #071116;
+        --paper: #f5efe2;
+        --cream: #fff8e8;
+        --cloud: #dbeffc;
+        --mint: #d7f4e7;
+        --orange: #f7b267;
+        --blue: #2c6ea8;
+        --line: rgba(7, 17, 22, 0.18);
+        --white: #ffffff;
       }
 
       @page {
@@ -29,26 +31,119 @@
 
       body {
         margin: 0;
-        background: #e9dfcd;
+        background: #111;
         color: var(--ink);
-        font-family: "Comic Sans MS", "Bradley Hand", "Trebuchet MS", Arial, sans-serif;
+        font-family: "Outfit", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
       }
 
       .page {
+        position: relative;
         width: 1440px;
         height: 1900px;
         margin: 0 auto;
-        padding: 58px;
-        background:
-          repeating-linear-gradient(0deg, rgba(33, 29, 24, 0.025) 0 1px, transparent 1px 30px),
-          var(--paper);
-        border: 4px solid var(--ink);
-        page-break-after: always;
         overflow: hidden;
+        page-break-after: always;
       }
 
       .page:last-child {
         page-break-after: auto;
+      }
+
+      .dark {
+        background:
+          radial-gradient(circle at 18% 18%, rgba(219, 239, 252, 0.22), transparent 34%),
+          radial-gradient(circle at 84% 8%, rgba(247, 178, 103, 0.22), transparent 30%),
+          linear-gradient(135deg, #061018 0%, #0b1b27 44%, #071116 100%);
+        color: var(--white);
+      }
+
+      .light {
+        background:
+          radial-gradient(circle at 12% 20%, rgba(219, 239, 252, 0.75), transparent 28%),
+          radial-gradient(circle at 88% 12%, rgba(247, 178, 103, 0.48), transparent 30%),
+          linear-gradient(180deg, #fbf4e6 0%, #f5efe2 100%);
+        color: var(--ink);
+      }
+
+      .grain {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.18;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 34px 34px;
+      }
+
+      .shell {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        padding: 54px 72px 64px;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 78px;
+        padding: 0 22px 0 28px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.09);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+        backdrop-filter: blur(18px);
+      }
+
+      .light .nav {
+        border-color: rgba(7, 17, 22, 0.14);
+        background: rgba(255, 255, 255, 0.62);
+        box-shadow: 0 24px 80px rgba(32, 52, 65, 0.14);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: var(--orange);
+        color: var(--ink);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 34px;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .light .nav-links {
+        color: rgba(7, 17, 22, 0.62);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 430px;
+        gap: 68px;
+        align-items: end;
+        padding-top: 134px;
       }
 
       h1,
@@ -58,85 +153,418 @@
         margin: 0;
       }
 
-      .hero {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 32px;
-        align-items: start;
-        padding-bottom: 28px;
-        border-bottom: 4px solid var(--ink);
-      }
-
       h1 {
-        display: inline;
-        padding: 0 10px;
-        background: linear-gradient(transparent 12%, var(--orange-soft) 12% 82%, transparent 82%);
-        font-size: 70px;
-        line-height: 1.04;
-        letter-spacing: 0;
-      }
-
-      .subtitle {
-        max-width: 950px;
-        margin-top: 16px;
-        color: var(--muted);
-        font-size: 31px;
-        line-height: 1.24;
-      }
-
-      .stamp {
-        margin-top: 8px;
-        padding: 14px 18px;
-        border: 4px solid var(--blue);
-        color: var(--blue);
-        font-size: 27px;
+        max-width: 1180px;
+        font-size: clamp(72px, 7vw, 126px);
+        line-height: 0.91;
+        letter-spacing: -0.065em;
         font-weight: 900;
-        transform: rotate(2deg);
-        white-space: nowrap;
       }
 
-      .canvas {
-        position: relative;
-        margin-top: 42px;
+      .inline-shot {
+        display: inline-block;
+        width: 168px;
+        height: 70px;
+        margin: 0 18px;
+        border: 2px solid rgba(255, 255, 255, 0.42);
+        border-radius: 999px;
+        background:
+          linear-gradient(rgba(7, 17, 22, 0.08), rgba(7, 17, 22, 0.08)),
+          url("https://picsum.photos/seed/walrus-memory-architecture/420/180") center / cover;
+        vertical-align: middle;
+        filter: grayscale(0.2) contrast(1.12) saturate(0.82);
+      }
+
+      .hero-copy {
+        max-width: 830px;
+        margin-top: 34px;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 31px;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 18px;
+        margin-top: 44px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 198px;
+        height: 64px;
+        border-radius: 999px;
+        font-size: 20px;
+        font-weight: 800;
+      }
+
+      .button.primary {
+        background: var(--cream);
+        color: var(--ink);
+      }
+
+      .button.secondary {
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        color: var(--white);
+      }
+
+      .hero-card {
+        min-height: 500px;
         padding: 28px;
-        border: 4px solid var(--ink);
-        border-radius: 24px 14px 26px 18px;
-        background: var(--white);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 34px;
+        background: rgba(255, 255, 255, 0.09);
+        box-shadow: 0 34px 120px rgba(0, 0, 0, 0.3);
       }
 
-      .canvas-title {
+      .hero-image {
+        height: 265px;
+        border-radius: 26px;
+        overflow: hidden;
+        background:
+          linear-gradient(135deg, rgba(7, 17, 22, 0.25), rgba(44, 110, 168, 0.2)),
+          url("https://picsum.photos/seed/world-cup-walrus-systems/900/640") center / cover;
+        filter: grayscale(0.1) contrast(1.15) saturate(0.82);
+      }
+
+      .hero-card h2 {
+        margin-top: 28px;
+        font-size: 36px;
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-card p {
+        margin-top: 18px;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 22px;
+        line-height: 1.28;
+      }
+
+      .bento {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(2, 330px);
+        grid-auto-flow: dense;
+        gap: 18px;
+        margin-top: 108px;
+      }
+
+      .tile {
+        position: relative;
+        overflow: hidden;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 32px;
+        background: rgba(255, 255, 255, 0.09);
+        box-shadow: 0 24px 90px rgba(0, 0, 0, 0.22);
+      }
+
+      .tile.large {
+        grid-column: span 5;
+        grid-row: span 2;
+        background:
+          linear-gradient(180deg, rgba(219, 239, 252, 0.18), rgba(255, 255, 255, 0.07)),
+          rgba(255, 255, 255, 0.08);
+      }
+
+      .tile.wide {
+        grid-column: span 4;
+      }
+
+      .tile.small {
+        grid-column: span 3;
+      }
+
+      .tile h3 {
+        position: relative;
+        z-index: 1;
+        max-width: 86%;
+        font-size: 32px;
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+      }
+
+      .tile p {
+        position: relative;
+        z-index: 1;
+        max-width: 92%;
+        margin-top: 18px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 22px;
+        line-height: 1.22;
+      }
+
+      .spine-map {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        gap: 14px;
+        margin-top: 38px;
+      }
+
+      .spine-step {
+        display: grid;
+        grid-template-columns: 54px 1fr;
+        gap: 14px;
+        align-items: center;
+        min-height: 78px;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .step-dot {
+        display: grid;
+        place-items: center;
+        width: 54px;
+        height: 54px;
+        border-radius: 18px;
+        background: rgba(247, 178, 103, 0.18);
+        color: var(--orange);
+        font-size: 20px;
+        font-weight: 900;
+      }
+
+      .spine-step strong {
+        display: block;
+        font-size: 22px;
+        letter-spacing: -0.03em;
+      }
+
+      .spine-step span {
+        display: block;
+        margin-top: 4px;
+        color: rgba(255, 255, 255, 0.58);
+        font-size: 18px;
+        line-height: 1.12;
+      }
+
+      .tile-icon {
+        position: absolute;
+        z-index: 0;
+        right: 26px;
+        bottom: 24px;
+        display: grid;
+        place-items: center;
+        width: 92px;
+        height: 92px;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.12);
+        color: var(--orange);
+      }
+
+      .large .tile-icon {
+        width: 150px;
+        height: 150px;
+        right: 32px;
+        bottom: 34px;
+        background: rgba(247, 178, 103, 0.2);
+        opacity: 0.42;
+      }
+
+      .light .shell {
+        padding-top: 60px;
+      }
+
+      .page-title {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 76px;
+        align-items: end;
+        margin-top: 74px;
+      }
+
+      .page-title h2 {
+        max-width: 760px;
+        color: var(--ink);
+        font-size: 74px;
+        line-height: 0.93;
+        letter-spacing: -0.06em;
+        font-weight: 900;
+      }
+
+      .page-title p {
+        color: rgba(7, 17, 22, 0.66);
+        font-size: 29px;
+        line-height: 1.17;
+        letter-spacing: -0.02em;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: 330px repeat(4, 1fr);
+        gap: 16px;
+        margin-top: 56px;
+      }
+
+      .flow-row {
+        display: contents;
+      }
+
+      .lane-label,
+      .flow-card {
+        min-height: 168px;
+        border: 1px solid rgba(7, 17, 22, 0.15);
+        border-radius: 28px;
+        box-shadow: 0 20px 70px rgba(32, 52, 65, 0.1);
+      }
+
+      .lane-label {
         display: flex;
         align-items: center;
-        gap: 18px;
+        padding: 28px;
+        background: var(--ink);
+        color: var(--cream);
+        font-size: 31px;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+      }
+
+      .flow-card {
+        padding: 24px;
+        background: rgba(255, 255, 255, 0.68);
+      }
+
+      .flow-card.sky {
+        background: color-mix(in srgb, var(--cloud) 70%, white);
+      }
+
+      .flow-card.mint {
+        background: color-mix(in srgb, var(--mint) 74%, white);
+      }
+
+      .flow-card.orange {
+        background: color-mix(in srgb, var(--orange) 54%, white);
+      }
+
+      .flow-card strong {
+        display: block;
         color: var(--blue);
-        font-size: 44px;
+        font-size: 23px;
+        line-height: 1.02;
+        letter-spacing: -0.03em;
       }
 
-      .doodle-icon,
-      .small-icon {
-        flex: 0 0 auto;
-        display: inline-grid;
-        place-items: center;
-        border: 3px solid var(--ink);
-        background: var(--sky-soft);
-        box-shadow: 6px 6px 0 rgba(33, 29, 24, 0.12);
+      .flow-card span {
+        display: block;
+        margin-top: 12px;
+        color: rgba(7, 17, 22, 0.66);
+        font-size: 18px;
+        line-height: 1.18;
       }
 
-      .doodle-icon {
-        width: 86px;
-        height: 70px;
-        border-radius: 16px 10px 18px 12px;
-        transform: rotate(-1deg);
+      .accordions {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr;
+        gap: 18px;
+        margin-top: 48px;
       }
 
-      .small-icon {
-        width: 58px;
+      .accordion {
+        min-height: 278px;
+        padding: 30px;
+        border-radius: 34px;
+        border: 1px solid rgba(7, 17, 22, 0.14);
+        background: var(--cream);
+        box-shadow: 0 24px 80px rgba(32, 52, 65, 0.11);
+      }
+
+      .accordion:first-child {
+        background:
+          linear-gradient(135deg, rgba(7, 17, 22, 0.08), rgba(44, 110, 168, 0.08)),
+          url("https://picsum.photos/seed/onchain-football-proof/900/720") center / cover;
+        color: var(--white);
+      }
+
+      .accordion:first-child p {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .accordion h3 {
+        font-size: 36px;
+        line-height: 0.98;
+        letter-spacing: -0.055em;
+      }
+
+      .accordion p {
+        max-width: 430px;
+        margin-top: 18px;
+        color: rgba(7, 17, 22, 0.64);
+        font-size: 20px;
+        line-height: 1.22;
+      }
+
+      .marquee {
+        position: absolute;
+        right: -80px;
+        bottom: 86px;
+        left: -80px;
+        display: flex;
+        gap: 38px;
+        padding: 22px 0;
+        border-top: 1px solid rgba(7, 17, 22, 0.14);
+        border-bottom: 1px solid rgba(7, 17, 22, 0.14);
+        color: rgba(7, 17, 22, 0.35);
+        font-size: 42px;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        white-space: nowrap;
+        transform: rotate(-2deg);
+      }
+
+      .footer-cta {
+        margin-top: 42px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 40px;
+        align-items: center;
+        padding: 38px 42px;
+        border-radius: 38px;
+        background: var(--ink);
+        color: var(--cream);
+      }
+
+      .footer-cta h2 {
+        max-width: 840px;
+        font-size: 46px;
+        line-height: 0.96;
+        letter-spacing: -0.055em;
+      }
+
+      .footer-cta p {
+        margin-top: 14px;
+        max-width: 820px;
+        color: rgba(255, 248, 232, 0.64);
+        font-size: 20px;
+        line-height: 1.2;
+      }
+
+      .footer-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 214px;
+        height: 64px;
+        border-radius: 999px;
+        background: var(--orange);
+        color: var(--ink);
+        font-size: 20px;
+        font-weight: 900;
+      }
+
+      .mark-svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .icon-svg {
+        width: 48px;
         height: 48px;
-        border-radius: 14px 10px 16px 10px;
-      }
-
-      svg {
-        overflow: visible;
       }
 
       svg path,
@@ -144,542 +572,244 @@
       svg circle,
       svg line,
       svg polyline {
-        stroke: var(--ink);
-        stroke-width: 4;
+        stroke: currentColor;
+        stroke-width: 3.5;
         stroke-linecap: round;
         stroke-linejoin: round;
       }
 
-      .arch {
-        position: relative;
-        display: grid;
-        grid-template-columns: 290px 320px 1fr;
-        gap: 34px;
-        align-items: stretch;
-        margin-top: 28px;
-      }
-
-      .node {
-        min-height: 250px;
-        padding: 24px;
-        border: 4px solid var(--ink);
-        border-radius: 22px 12px 24px 14px;
-        background: color-mix(in srgb, var(--sky-soft) 38%, var(--white));
-      }
-
-      .node.agent {
-        background: color-mix(in srgb, var(--orange-soft) 54%, var(--white));
-      }
-
-      .node h3 {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        color: var(--blue);
-        font-size: 34px;
-        line-height: 1.05;
-      }
-
-      .node p {
-        margin-top: 16px;
-        color: var(--muted);
-        font-size: 25px;
-        line-height: 1.22;
-      }
-
-      .platform-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 18px;
-      }
-
-      .platform {
-        min-height: 250px;
-        padding: 22px;
-        border: 4px solid var(--ink);
-        border-radius: 20px 12px 22px 14px;
-        background: var(--white);
-      }
-
-      .platform.memory {
-        background: color-mix(in srgb, var(--mint-soft) 54%, var(--white));
-      }
-
-      .platform.blob {
-        background: color-mix(in srgb, var(--sky-soft) 46%, var(--white));
-      }
-
-      .platform.sui {
-        background: color-mix(in srgb, var(--orange-soft) 54%, var(--white));
-      }
-
-      .platform.cache {
-        background: color-mix(in srgb, var(--mint-soft) 28%, var(--white));
-      }
-
-      .platform h3 {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: var(--blue);
-        font-size: 30px;
-        line-height: 1.08;
-      }
-
-      .platform p {
-        margin-top: 14px;
-        color: var(--muted);
-        font-size: 23px;
-        line-height: 1.2;
-      }
-
-      .arrow {
-        position: absolute;
-        color: var(--blue);
-        font-size: 36px;
-        font-weight: 900;
-      }
-
-      .arrow.one {
-        left: 300px;
-        top: 146px;
-      }
-
-      .arrow.two {
-        left: 650px;
-        top: 146px;
-      }
-
-      .roles {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 22px;
-        margin-top: 34px;
-      }
-
-      .role {
-        min-height: 240px;
-        padding: 22px;
-        border: 3px dashed var(--blue);
-        border-radius: 20px 12px 22px 14px;
-        background: color-mix(in srgb, var(--sky-soft) 36%, var(--white));
-      }
-
-      .role:nth-child(2),
-      .role:nth-child(4) {
-        background: color-mix(in srgb, var(--mint-soft) 40%, var(--white));
-      }
-
-      .role:nth-child(3) {
-        background: color-mix(in srgb, var(--orange-soft) 46%, var(--white));
-      }
-
-      .role h3 {
-        color: var(--blue);
-        font-size: 28px;
-        line-height: 1.08;
-      }
-
-      .role p {
-        margin-top: 12px;
-        color: var(--muted);
-        font-size: 22px;
-        line-height: 1.2;
-      }
-
-      .note {
-        margin-top: 34px;
-        padding: 24px 30px;
-        border-left: 12px solid var(--mint);
-        background: var(--mint-soft);
-        font-size: 29px;
-        line-height: 1.24;
-      }
-
-      .swimlanes {
-        display: grid;
-        gap: 20px;
-        margin-top: 42px;
-      }
-
-      .lane {
-        display: grid;
-        grid-template-columns: 230px 1fr;
-        gap: 22px;
-        align-items: stretch;
-      }
-
-      .lane-label {
-        display: grid;
-        place-items: center;
-        padding: 18px;
-        border: 4px solid var(--ink);
-        border-radius: 22px 12px 22px 14px;
-        background: var(--orange-soft);
-        color: var(--blue);
-        font-size: 30px;
-        font-weight: 900;
-        text-align: center;
-      }
-
-      .lane-steps {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-      }
-
-      .flow-card {
-        min-height: 170px;
-        padding: 18px;
-        border: 3px solid var(--ink);
-        border-radius: 18px 10px 20px 12px;
-        background: var(--white);
-      }
-
-      .flow-card h3 {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--blue);
-        font-size: 25px;
-        line-height: 1.06;
-      }
-
-      .flow-card p {
-        margin-top: 10px;
-        color: var(--muted);
-        font-size: 20px;
-        line-height: 1.17;
-      }
-
-      .flow-card.blue {
-        background: color-mix(in srgb, var(--sky-soft) 42%, var(--white));
-      }
-
-      .flow-card.mint {
-        background: color-mix(in srgb, var(--mint-soft) 50%, var(--white));
-      }
-
-      .flow-card.orange {
-        background: color-mix(in srgb, var(--orange-soft) 52%, var(--white));
-      }
-
-      .boundary {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 28px;
-        margin-top: 38px;
-      }
-
-      .boundary-card {
-        min-height: 300px;
-        padding: 28px;
-        border: 4px solid var(--ink);
-        border-radius: 22px 12px 24px 14px;
-        background: var(--white);
-      }
-
-      .boundary-card h2 {
-        color: var(--blue);
-        font-size: 39px;
-      }
-
-      ul {
-        display: grid;
-        gap: 12px;
-        margin: 20px 0 0;
-        padding-left: 34px;
-      }
-
-      li {
-        font-size: 24px;
-        line-height: 1.2;
-      }
-
-      .footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 34px;
-        padding-top: 22px;
-        border-top: 3px dashed var(--blue);
-        color: var(--muted);
-        font-size: 22px;
+      .reveal {
+        opacity: 1;
       }
     </style>
   </head>
   <body>
-    <section class="page">
-      <header class="hero">
-        <div>
-          <h1>High-Level System Design</h1>
-          <p class="subtitle">
-            The Daily Walrus is a wallet-gated AI football app where every important action gets a signed Sui proof,
-            Walrus stores the durable payloads, and Walrus Memory gives Gil recall across sessions.
-          </p>
-        </div>
-        <div class="stamp">MAINNET TARGET<br />TESTNET VERIFIED</div>
-      </header>
-
-      <section class="canvas">
-        <h2 class="canvas-title">
-          <span class="doodle-icon" aria-hidden="true">
-            <svg width="64" height="52" viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="10" y="12" width="44" height="30" rx="5" fill="#fffdf8" />
-              <path d="M18 23h19M18 32h28" />
-              <circle cx="48" cy="18" r="5" fill="#dff1ff" />
-            </svg>
-          </span>
-          Architecture Canvas
-        </h2>
-
-        <div class="arch">
-          <article class="node">
-            <h3>
-              <span class="small-icon" aria-hidden="true">
-                <svg width="42" height="34" viewBox="0 0 42 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="5" y="8" width="31" height="20" rx="4" fill="#fffdf8" />
-                  <path d="M28 14h10v9H28" fill="#dff1ff" />
-                  <circle cx="33" cy="18" r="1.5" fill="#211d18" />
+    <main class="overflow-root">
+      <section class="page dark">
+        <div class="grain"></div>
+        <div class="shell">
+          <nav class="nav">
+            <div class="brand">
+              <span class="brand-mark" aria-hidden="true">
+                <svg class="mark-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 18c2-7 7-11 13-11 4 0 7 2 8 5" />
+                  <path d="M5 20c4 5 11 7 20 4" />
+                  <path d="M11 16h4M21 15h3" />
                 </svg>
               </span>
-              Wallet + SPA
-            </h3>
-            <p>React/Vite on Walrus Sites. Connects Sui wallet, signs prediction/output actions, then renders proof links for judges.</p>
-          </article>
+              The Daily Walrus
+            </div>
+            <div class="nav-links">
+              <span>Architecture</span>
+              <span>Memory</span>
+              <span>Proof</span>
+            </div>
+          </nav>
 
-          <div class="arrow one">→</div>
+          <section class="hero">
+            <div>
+              <h1 class="reveal">A football agent with <span class="inline-shot"></span> memory receipts.</h1>
+              <p class="hero-copy reveal">
+                Gil predicts, remembers, roasts, and exposes proof. Walrus stores the durable payloads,
+                Walrus Memory stores recall, and Sui stores compact public receipts.
+              </p>
+              <div class="hero-actions">
+                <a class="button primary" href="#system">View system</a>
+                <a class="button secondary" href="#proof">Trace proof</a>
+              </div>
+            </div>
 
-          <article class="node agent">
-            <h3>
-              <span class="small-icon" aria-hidden="true">
-                <svg width="42" height="34" viewBox="0 0 42 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="8" y="7" width="26" height="20" rx="7" fill="#fffdf8" />
-                  <circle cx="16" cy="17" r="2" fill="#211d18" />
-                  <circle cx="26" cy="17" r="2" fill="#211d18" />
-                  <path d="M17 23c4 3 8 3 12 0" />
-                  <path d="M21 3v4" />
+            <aside class="hero-card image-scale">
+              <div class="hero-image"></div>
+              <h2>Wallet-gated actions, durable memory, public verification.</h2>
+              <p>
+                The system is designed so judges can inspect what was signed, what was stored,
+                and which memory namespace powered each generated answer.
+              </p>
+            </aside>
+          </section>
+
+          <section id="system" class="bento">
+            <article class="tile large image-scale">
+              <h3>System spine</h3>
+              <p>
+                React SPA on Walrus Sites talks to Gil's Mastra API. The API coordinates memory recall,
+                fixture tools, prediction tooling, output anchoring, and tracking.
+              </p>
+              <div class="spine-map">
+                <div class="spine-step"><span class="step-dot">1</span><div><strong>Wallet signs</strong><span>Identity and transaction intent.</span></div></div>
+                <div class="spine-step"><span class="step-dot">2</span><div><strong>Agent decides</strong><span>Fixtures, memory, predictions, roasts.</span></div></div>
+                <div class="spine-step"><span class="step-dot">3</span><div><strong>Proof lands</strong><span>Walrus payload plus Sui receipt.</span></div></div>
+              </div>
+              <div class="tile-icon">
+                <svg class="icon-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="14" width="44" height="34" rx="8" />
+                  <path d="M19 27h18M19 37h26" />
+                  <circle cx="48" cy="20" r="5" />
+                </svg>
+              </div>
+            </article>
+
+            <article class="tile wide image-scale">
+              <h3>Walrus Memory</h3>
+              <p>Global schedule and wallet notebooks become recallable context for Gil.</p>
+              <div class="tile-icon">
+                <svg class="icon-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 18c10-6 20-6 30 0v34c-10-6-20-6-30 0V18Z" />
+                  <path d="M42 18c5-4 10-5 16-2v34c-6-3-11-2-16 2V18Z" />
+                  <path d="M42 18v34M20 30h13M20 40h11" />
+                </svg>
+              </div>
+            </article>
+
+            <article class="tile small image-scale">
+              <h3>Walrus Blob</h3>
+              <p>Media and output JSON live as durable content-addressed payloads.</p>
+              <div class="tile-icon">
+                <svg class="icon-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14 23 32 12l18 11-18 11-18-11Z" />
+                  <path d="M14 23v20l18 11 18-11V23" />
+                  <path d="M32 34v20" />
+                </svg>
+              </div>
+            </article>
+
+            <article class="tile wide image-scale">
+              <h3>Sui Objects</h3>
+              <p>Prediction gates, settlement state, score records, and output pointers stay compact and inspectable.</p>
+              <div class="tile-icon">
+                <svg class="icon-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="16" y="10" width="30" height="44" rx="7" />
+                  <path d="M24 25h14M24 35h16M46 22h9v18h-9" />
+                </svg>
+              </div>
+            </article>
+
+            <article class="tile small image-scale">
+              <h3>Index cache</h3>
+              <p>Supabase is rebuilt from proofs and used only for fast UI reads.</p>
+              <div class="tile-icon">
+                <svg class="icon-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="13" y="14" width="38" height="34" rx="8" />
+                  <path d="M22 27h20M22 37h14" />
+                  <circle cx="50" cy="15" r="6" />
+                </svg>
+              </div>
+            </article>
+          </section>
+        </div>
+      </section>
+
+      <section id="proof" class="page light">
+        <div class="grain"></div>
+        <div class="shell">
+          <nav class="nav">
+            <div class="brand">
+              <span class="brand-mark" aria-hidden="true">
+                <svg class="mark-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 18c2-7 7-11 13-11 4 0 7 2 8 5" />
+                  <path d="M5 20c4 5 11 7 20 4" />
+                  <path d="M11 16h4M21 15h3" />
                 </svg>
               </span>
-              Gil Agent API
-            </h3>
-            <p>Mastra server with fixture tools, prediction tools, roast generation, memory recall, and output anchoring.</p>
-          </article>
+              Proof model
+            </div>
+            <div class="nav-links">
+              <span>Prediction</span>
+              <span>Roast</span>
+              <span>Tracking</span>
+            </div>
+          </nav>
 
-          <div class="arrow two">→</div>
+          <section class="page-title">
+            <h2 class="reveal">Outputs live where they can be proved.</h2>
+            <p class="reveal">
+              The product separates durable content, semantic recall, and public receipts.
+              This keeps the app fast while preserving a verifiable trail for the hackathon judges.
+            </p>
+          </section>
 
-          <div class="platform-grid">
-            <article class="platform memory">
-              <h3>
-                <span class="small-icon" aria-hidden="true">
-                  <svg width="42" height="34" viewBox="0 0 42 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 9c7-4 14-4 21 0v20c-7-4-14-4-21 0V9Z" fill="#fffdf8" />
-                    <path d="M28 9c4-3 8-3 12-1v20c-4-2-8-2-12 1V9Z" fill="#fffdf8" />
-                    <path d="M28 9v20M13 17h9M13 23h8" />
-                  </svg>
-                </span>
-                Walrus Memory
-              </h3>
-              <p>Canonical memory namespaces: global fixtures/team facts and per-wallet notebooks.</p>
+          <section class="flow">
+            <div class="flow-row">
+              <div class="lane-label">Prediction</div>
+              <div class="flow-card sky"><strong>Wallet signs</strong><span>User selects an open match and signs before kickoff.</span></div>
+              <div class="flow-card orange"><strong>Sui gate</strong><span>Prediction object stores owner, match ID, pick hash, and lock state.</span></div>
+              <div class="flow-card mint"><strong>Memory note</strong><span>Gil remembers the take for future callbacks and roasts.</span></div>
+              <div class="flow-card sky"><strong>Settlement</strong><span>Result seed closes the gate, scores the pick, and updates board state.</span></div>
+            </div>
+
+            <div class="flow-row">
+              <div class="lane-label">Chat and roast</div>
+              <div class="flow-card mint"><strong>Recall context</strong><span>Agent loads global fixtures, team profiles, player traits, and wallet notebook.</span></div>
+              <div class="flow-card sky"><strong>Generate</strong><span>Gil answers schedule, profile, prediction, or roast prompts.</span></div>
+              <div class="flow-card orange"><strong>Store payload</strong><span>Important generated output is written to Walrus Blob when publisher is configured.</span></div>
+              <div class="flow-card mint"><strong>Anchor proof</strong><span>Sui OutputRecord stores blob pointer and content hash.</span></div>
+            </div>
+
+            <div class="flow-row">
+              <div class="lane-label">Global memory</div>
+              <div class="flow-card orange"><strong>Fixture seed</strong><span>Schedule, groups, teams, venues, flags, squads, and coaches are seeded.</span></div>
+              <div class="flow-card sky"><strong>Match changes</strong><span>Postponements, knockout pairings, and results refresh the same namespace.</span></div>
+              <div class="flow-card mint"><strong>Roast traits</strong><span>Player habits and team folklore are stored as reusable recall facts.</span></div>
+              <div class="flow-card orange"><strong>Agent reads</strong><span>Gil answers from memory, not from hardcoded page copy.</span></div>
+            </div>
+          </section>
+
+          <section class="accordions">
+            <article class="accordion image-scale">
+              <h3>Runtime Tracking</h3>
+              <p>Judges get one surface for package IDs, registry objects, blob links, memory namespaces, site URLs, and explorer links.</p>
             </article>
-
-            <article class="platform blob">
-              <h3>
-                <span class="small-icon" aria-hidden="true">
-                  <svg width="42" height="34" viewBox="0 0 42 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 12 21 5l13 7-13 8-12-8Z" fill="#fffdf8" />
-                    <path d="M9 12v14l12 7 13-7V12" />
-                    <path d="M21 20v13" />
-                  </svg>
-                </span>
-                Walrus Blob
-              </h3>
-              <p>Immutable media and JSON payloads: posters, gallery art, team profiles, output records.</p>
+            <article class="accordion">
+              <h3>Source of truth</h3>
+              <p>Walrus Memory owns recall. Walrus Blob owns payloads. Sui owns compact public proof. The cache is disposable.</p>
             </article>
-
-            <article class="platform sui">
-              <h3>
-                <span class="small-icon" aria-hidden="true">
-                  <svg width="42" height="34" viewBox="0 0 42 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="8" y="5" width="22" height="27" rx="4" fill="#fffdf8" />
-                    <path d="M14 14h10M14 21h12M30 13h7v10h-7" />
-                  </svg>
-                </span>
-                Sui Objects
-              </h3>
-              <p>Owned prediction gates, result settlement, score records, and blob/hash receipts.</p>
+            <article class="accordion">
+              <h3>Submission fit</h3>
+              <p>Persistent memory, on-chain prediction gates, verifiable output records, and media stored through Walrus.</p>
             </article>
+          </section>
 
-            <article class="platform cache">
-              <h3>
-                <span class="small-icon" aria-hidden="true">
-                  <svg width="42" height="34" viewBox="0 0 42 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="8" y="7" width="26" height="20" rx="4" fill="#fffdf8" />
-                    <path d="M14 14h14M14 21h10" />
-                    <circle cx="33" cy="8" r="4" fill="#dff7ed" />
-                  </svg>
-                </span>
-                Index Cache
-              </h3>
-              <p>Supabase indexes fixtures, leaderboard, proof URLs, and rebuildable UI state.</p>
-            </article>
+          <section class="footer-cta">
+            <div>
+              <h2>The architecture is built for inspection, not just presentation.</h2>
+              <p>Open the tracking page, follow the object links, inspect the Walrus blobs, and compare the memory-backed answers.</p>
+            </div>
+            <a class="footer-button" href="#proof">Trace it</a>
+          </section>
+
+          <div class="marquee" aria-hidden="true">
+            <span>Walrus Memory</span>
+            <span>Walrus Blob</span>
+            <span>Sui Objects</span>
+            <span>Runtime Tracking</span>
+            <span>Prediction Gates</span>
+            <span>Output Records</span>
           </div>
         </div>
       </section>
+    </main>
 
-      <section class="roles">
-        <article class="role">
-          <h3>Wallet Boundary</h3>
-          <p>No anonymous writes. Prediction, roast, notebook, and share outputs start from a connected wallet session.</p>
-        </article>
-        <article class="role">
-          <h3>Memory Boundary</h3>
-          <p>Walrus Memory is the source of truth for Gil's recall. Supabase can be rebuilt from proofs and blobs.</p>
-        </article>
-        <article class="role">
-          <h3>Contract Boundary</h3>
-          <p>Sui stores compact proofs: object IDs, blob IDs, content hashes, gates, scores, and settlement state.</p>
-        </article>
-        <article class="role">
-          <h3>Judge Boundary</h3>
-          <p>Runtime Tracking exposes live network, package, object, memory, blob, and explorer links.</p>
-        </article>
-      </section>
-
-      <p class="note">
-        Design rule: store big content on Walrus, store recall facts in Walrus Memory, store public receipts and gates on Sui.
-        The app can be fast without pretending the cache is the source of truth.
-      </p>
-    </section>
-
-    <section class="page">
-      <header class="hero">
-        <div>
-          <h1>Signed Action + Data Flow</h1>
-          <p class="subtitle">
-            Four flows cover the product: prediction, chat/roast output, global memory refresh, and judge verification.
-            Each flow has one clear owner and one clear proof surface.
-          </p>
-        </div>
-        <div class="stamp">SHORT DESIGN<br />SUBMISSION PDF</div>
-      </header>
-
-      <section class="swimlanes">
-        <div class="lane">
-          <div class="lane-label">Prediction</div>
-          <div class="lane-steps">
-            <article class="flow-card blue">
-              <h3>1. Wallet signs</h3>
-              <p>User selects an open match. UI checks kickoff gate before asking for signature.</p>
-            </article>
-            <article class="flow-card orange">
-              <h3>2. Sui object</h3>
-              <p>Prediction object stores match ID, pick hash, owner, and lock state.</p>
-            </article>
-            <article class="flow-card mint">
-              <h3>3. Gil remembers</h3>
-              <p>Memory records the take so future roasts can cite the user's football crimes.</p>
-            </article>
-            <article class="flow-card blue">
-              <h3>4. Settled result</h3>
-              <p>Oracle seed updates final score, closes gate, scores prediction, updates board.</p>
-            </article>
-          </div>
-        </div>
-
-        <div class="lane">
-          <div class="lane-label">Chat + Roast</div>
-          <div class="lane-steps">
-            <article class="flow-card mint">
-              <h3>1. Recall context</h3>
-              <p>Agent loads global schedule, team facts, player traits, and wallet notebook.</p>
-            </article>
-            <article class="flow-card blue">
-              <h3>2. Generate answer</h3>
-              <p>Gil answers fixtures, team profile, prediction history, or roast prompt.</p>
-            </article>
-            <article class="flow-card orange">
-              <h3>3. Store output</h3>
-              <p>Important generated payloads are written to Walrus Blob when publisher is configured.</p>
-            </article>
-            <article class="flow-card mint">
-              <h3>4. Anchor proof</h3>
-              <p>Sui OutputRecord stores blob pointer and content hash for verification.</p>
-            </article>
-          </div>
-        </div>
-
-        <div class="lane">
-          <div class="lane-label">Global Memory</div>
-          <div class="lane-steps">
-            <article class="flow-card orange">
-              <h3>1. Fixture seed</h3>
-              <p>World Cup schedule, groups, teams, venues, and flags are stored as global memory.</p>
-            </article>
-            <article class="flow-card blue">
-              <h3>2. Match changes</h3>
-              <p>Postponed fixtures, knockout pairings, and settled results update the same namespace.</p>
-            </article>
-            <article class="flow-card mint">
-              <h3>3. Team profiles</h3>
-              <p>Coach, squad, flag, and player roast traits are stored as reusable recall facts.</p>
-            </article>
-            <article class="flow-card orange">
-              <h3>4. App reads once</h3>
-              <p>Gil answers schedule/team questions from memory instead of hardcoded page text.</p>
-            </article>
-          </div>
-        </div>
-
-        <div class="lane">
-          <div class="lane-label">Tracking</div>
-          <div class="lane-steps">
-            <article class="flow-card blue">
-              <h3>1. Runtime config</h3>
-              <p>Network, package ID, registry object, memory namespace, and publisher status.</p>
-            </article>
-            <article class="flow-card mint">
-              <h3>2. Object links</h3>
-              <p>Sui Explorer links point to owned predictions, output records, and settlement objects.</p>
-            </article>
-            <article class="flow-card orange">
-              <h3>3. Walrus links</h3>
-              <p>Blob and site links point to the exact stored media, JSON, and static app artifacts.</p>
-            </article>
-            <article class="flow-card blue">
-              <h3>4. Rebuild check</h3>
-              <p>Cache/index can be regenerated from Walrus and Sui proof surfaces.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="boundary">
-        <article class="boundary-card">
-          <h2>System Components</h2>
-          <ul>
-            <li>Web SPA: prediction desk, chat, gallery, team profiles, tracking pages.</li>
-            <li>Agent API: Mastra tools for fixtures, memory recall, roasts, and output records.</li>
-            <li>Sui package: prediction registry, lock/settle rules, score and output proof objects.</li>
-            <li>Walrus: blobs for media/payloads, Walrus Memory for static and wallet-scoped recall.</li>
-          </ul>
-        </article>
-
-        <article class="boundary-card">
-          <h2>Requirement Fit</h2>
-          <ul>
-            <li>Persistent AI memory: Walrus Memory, split by global and wallet namespace.</li>
-            <li>On-chain verifiability: Sui object receipts link to blob IDs and content hashes.</li>
-            <li>Prediction integrity: match gates close before kickoff and settle after results.</li>
-            <li>Submission proof: Runtime Tracking lists deployed contract, object, memory, and site links.</li>
-          </ul>
-        </article>
-      </section>
-
-      <footer class="footer">
-        <span>The Daily Walrus - Memory World Cup submission</span>
-        <span>High-level only: architecture, boundaries, and proof flow</span>
-      </footer>
-    </section>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script>
+      if (window.gsap && window.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.fromTo(".reveal", { opacity: 0.18, y: 28 }, { opacity: 1, y: 0, duration: 1, stagger: 0.12, ease: "power3.out" });
+        gsap.utils.toArray(".image-scale").forEach((item) => {
+          gsap.fromTo(item, { scale: 0.92, opacity: 0.72 }, {
+            scale: 1,
+            opacity: 1,
+            ease: "none",
+            scrollTrigger: { trigger: item, start: "top 90%", end: "bottom 20%", scrub: true }
+          });
+        });
+        gsap.to(".marquee", {
+          xPercent: -12,
+          ease: "none",
+          scrollTrigger: { trigger: ".marquee", start: "top bottom", end: "bottom top", scrub: true }
+        });
+      }
+    </script>
   </body>
 </html>
