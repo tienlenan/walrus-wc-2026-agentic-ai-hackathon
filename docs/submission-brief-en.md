@@ -1,7 +1,7 @@
-# The Daily Walrus — Submission Brief (English)
+# Gil's VAR Shamebook — Submission Brief (English)
 
 ## 1) Project Snapshot
-**The Daily Walrus** is an AI web app built for FIFA World Cup 2026 fandom with persistent, wallet-linked memory.
+**Gil's VAR Shamebook** is an AI web app built for FIFA World Cup 2026 fandom with persistent, wallet-linked memory.
 
 Users connect a Sui wallet, chat with **Gil**, place predictions, and receive personalized roast-style responses that reference their own memory history.  
 
@@ -52,9 +52,16 @@ Final submission must use mainnet IDs and URLs only.
 - Mainnet Walrus Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`.
 - Mainnet Walrus Sites base36 diagnostic: `5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg`.
 - Mainnet `wal.app` URL / SuiNS name: `https://roast2026wc.wal.app/`.
-- Walrus Memory namespaces:
-  - Global schedule memory: `daily-walrus:global:world-cup-2026`.
-  - Per-user memory: `daily-walrus:user:<sui-address>`.
+- Walrus Memory / MemWal account: `0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51`.
+- Walrus Memory relayer: `https://relayer.memory.walrus.xyz`.
+- Walrus Memory global namespace: `daily-walrus:global:world-cup-2026`.
+- Walrus Memory namespace URL: `https://relayer.memory.walrus.xyz/account/0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51/namespace/daily-walrus%3Aglobal%3Aworld-cup-2026`.
+- Per-user memory namespace pattern used by the app: `daily-walrus:<sui-address>`.
+- Mainnet memory sync evidence:
+  - Schedule memory: `world_cup_schedule`, synced, content hash `a42baa72cf1e627c5330667f730600d239795a521489f52ffd24c4f5b075a5f5`, 104 fixtures, 104 open matches, updated `2026-06-09T17:06:13.109Z`.
+  - Team/player memory: `world_cup_teams`, synced, content hash `9d561534f1179d30d76845bd862598a91597fa44673ed5cf93097f53987c16b7`, 48 teams, 1248 players, 49 memory docs, updated `2026-06-09T17:07:50.215Z`.
+  - Player roast memory: `player_roast_traits`, synced, content hash `0061009a1c5ec8786f9b7e0c50691faa0f01c4a435decf67eff1a2bd56f8ac34`, 8 players, 8 memory docs, updated `2026-06-09T17:06:13.961Z`.
+- Walrus team profile blobs: 48 published mainnet blob/object pairs. Full proof snapshot: `submission-pack/proof/mainnet-runtime-ids.json`.
 
 Current public URL status: `https://roast2026wc.wal.app/` is live and points to the mainnet Walrus Site object above.
 

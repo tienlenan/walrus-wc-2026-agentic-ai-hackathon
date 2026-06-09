@@ -1,0 +1,516 @@
+{
+  "capturedAt": "2026-06-09T18:58:53.578Z",
+  "publicUrl": "https://roast2026wc.wal.app/",
+  "apiUrl": "https://gil-var-shamebook-api.vercel.app/",
+  "network": "mainnet",
+  "explorerBaseUrl": "https://suiscan.xyz/mainnet/object",
+  "walrusAggregatorUrl": "https://aggregator.walrus-mainnet.walrus.space",
+  "memwal": {
+    "accountId": "0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51",
+    "relayerUrl": "https://relayer.memory.walrus.xyz",
+    "globalNamespace": "daily-walrus:global:world-cup-2026",
+    "globalNamespaceUrl": "https://relayer.memory.walrus.xyz/account/0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51/namespace/daily-walrus%3Aglobal%3Aworld-cup-2026",
+    "perUserNamespacePattern": "daily-walrus:<sui-address>",
+    "syncs": {
+      "schedule": {
+        "namespace": "daily-walrus:global:world-cup-2026",
+        "memoryKind": "world_cup_schedule",
+        "memoryEnabled": true,
+        "status": "synced",
+        "reason": "post-clean-mainnet-resync",
+        "error": null,
+        "contentHash": "a42baa72cf1e627c5330667f730600d239795a521489f52ffd24c4f5b075a5f5",
+        "walrusBlobId": null,
+        "walrusObjectId": null,
+        "walrusStatus": "not_configured",
+        "fixtureCount": 104,
+        "openMatches": 104,
+        "closedMatches": 0,
+        "notOnchainMatches": 0,
+        "teamCount": 0,
+        "playerCount": 0,
+        "memoryDocs": 0,
+        "updatedAt": "2026-06-09T17:06:13.109Z"
+      },
+      "teams": {
+        "namespace": "daily-walrus:global:world-cup-2026",
+        "memoryKind": "world_cup_teams",
+        "memoryEnabled": true,
+        "status": "synced",
+        "reason": "post-clean-mainnet-resync",
+        "error": null,
+        "contentHash": "9d561534f1179d30d76845bd862598a91597fa44673ed5cf93097f53987c16b7",
+        "walrusBlobId": null,
+        "walrusObjectId": null,
+        "walrusStatus": "not_configured",
+        "fixtureCount": 0,
+        "openMatches": 0,
+        "closedMatches": 0,
+        "notOnchainMatches": 0,
+        "teamCount": 48,
+        "playerCount": 1248,
+        "memoryDocs": 49,
+        "updatedAt": "2026-06-09T17:07:50.215Z"
+      },
+      "playerRoastTraits": {
+        "namespace": "daily-walrus:global:world-cup-2026",
+        "memoryKind": "player_roast_traits",
+        "memoryEnabled": true,
+        "status": "synced",
+        "reason": "post-clean-mainnet-resync",
+        "error": null,
+        "contentHash": "0061009a1c5ec8786f9b7e0c50691faa0f01c4a435decf67eff1a2bd56f8ac34",
+        "walrusBlobId": null,
+        "walrusObjectId": null,
+        "walrusStatus": "not_configured",
+        "fixtureCount": 0,
+        "openMatches": 0,
+        "closedMatches": 0,
+        "notOnchainMatches": 0,
+        "teamCount": 7,
+        "playerCount": 8,
+        "memoryDocs": 8,
+        "updatedAt": "2026-06-09T17:06:13.961Z"
+      }
+    }
+  },
+  "suiObjects": [
+    {
+      "key": "package",
+      "label": "Move package",
+      "objectId": "0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb",
+      "url": "https://suiscan.xyz/mainnet/object/0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb"
+    },
+    {
+      "key": "registry",
+      "label": "Match registry",
+      "objectId": "0xa992d65237ec8a953f04f0450c39203cc2777b2a67ae61add8c39f74578d3446",
+      "url": "https://suiscan.xyz/mainnet/object/0xa992d65237ec8a953f04f0450c39203cc2777b2a67ae61add8c39f74578d3446"
+    },
+    {
+      "key": "scoreboard",
+      "label": "Scoreboard",
+      "objectId": "0xfed0e2738f38965144bdcc840d4bf79ff0c9d75a9afd04753cd4f13c763cec10",
+      "url": "https://suiscan.xyz/mainnet/object/0xfed0e2738f38965144bdcc840d4bf79ff0c9d75a9afd04753cd4f13c763cec10"
+    },
+    {
+      "key": "adminCap",
+      "label": "Admin cap",
+      "objectId": "0xd94e85b3a9e06ecd12b9c032412ffaa6d8d7044d9e97214621aad19528171c41",
+      "url": "https://suiscan.xyz/mainnet/object/0xd94e85b3a9e06ecd12b9c032412ffaa6d8d7044d9e97214621aad19528171c41"
+    },
+    {
+      "key": "oracleCap",
+      "label": "Oracle cap",
+      "objectId": "0x147d6290d21bd01d51a6cdafc2610cfcdb3d4272d7419d57d71df714fa90c25c",
+      "url": "https://suiscan.xyz/mainnet/object/0x147d6290d21bd01d51a6cdafc2610cfcdb3d4272d7419d57d71df714fa90c25c"
+    }
+  ],
+  "walrusSite": {
+    "objectId": "0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158",
+    "base36Diagnostic": "5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg"
+  },
+  "walrusRuntime": {
+    "publisherConfigured": false,
+    "profileBlobs": 48,
+    "outputRecords": 1,
+    "globalScheduleBlobUrl": null,
+    "globalScheduleObjectUrl": null
+  },
+  "fixtures": {
+    "total": 104,
+    "registered": 104,
+    "open": 104,
+    "notOnchain": 0,
+    "closedFinished": 0,
+    "closedKickoff": 0,
+    "unknown": 0,
+    "finished": 0
+  },
+  "teamProfileBlobs": [
+    {
+      "code": "CZE",
+      "name": "Czechia",
+      "groupName": "A",
+      "walrusStatus": "published",
+      "walrusBlobId": "qCXo8Tq1xdNZB9LrRV4Y883orxfbiDK9ZYLQmAtrZWI",
+      "walrusObjectId": "0x6458300e7e6688e3ed6181d106be1a4c04e4b28b3b39860dea7f60d542829c29"
+    },
+    {
+      "code": "KOR",
+      "name": "Korea Republic",
+      "groupName": "A",
+      "walrusStatus": "published",
+      "walrusBlobId": "mI6ShSjLKuGhCGspBaaYFlCbwCG16fUesW1r2egNgk4",
+      "walrusObjectId": "0xa064ad59c91c2a44effecb526f142acd64e32a551842ed8905346364ae933f78"
+    },
+    {
+      "code": "MEX",
+      "name": "Mexico",
+      "groupName": "A",
+      "walrusStatus": "published",
+      "walrusBlobId": "lgQ6y0xWvm1tDKpckVgOWNm8P9XUX5l7gZxSCcYQh4I",
+      "walrusObjectId": "0xa874e91635770a607b97215ba2acad340d6266c16cc47ff3ca91b1808abbc5ec"
+    },
+    {
+      "code": "RSA",
+      "name": "South Africa",
+      "groupName": "A",
+      "walrusStatus": "published",
+      "walrusBlobId": "9vHsKfGtAbGs7X_Xns2_-mBLf2y0AfoGM-Sjls53VKE",
+      "walrusObjectId": "0xd7eddd29d4453177a3870ce196aa8814ec47e0b94698f4fbf967ff7be9f3f59e"
+    },
+    {
+      "code": "BIH",
+      "name": "Bosnia And Herzegovina",
+      "groupName": "B",
+      "walrusStatus": "published",
+      "walrusBlobId": "VzRgA10_xlzQkG0pAU6PqGW62K_5BK4DM_IO2VJUAn8",
+      "walrusObjectId": "0x2ab00f96d1ec4f98f7e774a800440b4f9d7a028548e06e88556a5b274a9f88d8"
+    },
+    {
+      "code": "CAN",
+      "name": "Canada",
+      "groupName": "B",
+      "walrusStatus": "published",
+      "walrusBlobId": "B11CqsFB-BmjNXIKssc9IPupjcofUPv-JWH-t7f5e3k",
+      "walrusObjectId": "0xf5789237b1024ccc7f1c727baf6e77bc8a589b2ca6f7429820288539c00d27fb"
+    },
+    {
+      "code": "QAT",
+      "name": "Qatar",
+      "groupName": "B",
+      "walrusStatus": "published",
+      "walrusBlobId": "dgzYiu7cOLy8-JqAEM0n1qtsG2VChoZh86ni1f6aBag",
+      "walrusObjectId": "0x82729182074e30b8c2c416721b9e1f57237bb09274ba68240790b1fb172503a7"
+    },
+    {
+      "code": "SUI",
+      "name": "Switzerland",
+      "groupName": "B",
+      "walrusStatus": "published",
+      "walrusBlobId": "kEnhWxJcH-Sx3jAA0NGHNGUDUn0ZcEL9D26johodzUI",
+      "walrusObjectId": "0xbc267d7c2ffd9baced1d6414bdf048c19da113bceafb04899d23807d29765b84"
+    },
+    {
+      "code": "BRA",
+      "name": "Brazil",
+      "groupName": "C",
+      "walrusStatus": "published",
+      "walrusBlobId": "hDOtKvJQ76wCQJZNZ2zjTX3EOI4iU5ELCyHNC9OuIto",
+      "walrusObjectId": "0x63b35e4a23bfcdc40ea6ed6a1344fc4cecc82c072c41d223deb7ef73653f67b8"
+    },
+    {
+      "code": "HAI",
+      "name": "Haiti",
+      "groupName": "C",
+      "walrusStatus": "published",
+      "walrusBlobId": "LqFs62JfjH3Z27re0g4ngWcDWIAoAPZ4MUs8jolOhPI",
+      "walrusObjectId": "0x89c667a7dfee0d4a1ff47104abfad62d9aee08424fe9d5d3ccb91e3557ff5d72"
+    },
+    {
+      "code": "MAR",
+      "name": "Morocco",
+      "groupName": "C",
+      "walrusStatus": "published",
+      "walrusBlobId": "8WE2Lkh28pixrECiVDl9HPcwODvHBTsD6Yk0tim9ons",
+      "walrusObjectId": "0x9e80c5306c1c1eb73dff1a0970a753f7f6eeff09ca9e239cfa685364222bbfea"
+    },
+    {
+      "code": "SCO",
+      "name": "Scotland",
+      "groupName": "C",
+      "walrusStatus": "published",
+      "walrusBlobId": "VjUC3Z8j0_Qu6lBdTkculwOJsvo-Ug2z3GR7uEQYk2I",
+      "walrusObjectId": "0x25ab02832f8688bf7e346e3d649cdc57d17394b338171dfb36ec9e3cd144462f"
+    },
+    {
+      "code": "AUS",
+      "name": "Australia",
+      "groupName": "D",
+      "walrusStatus": "published",
+      "walrusBlobId": "iP7uX2VujjquYFGu1Bk4KriNzAp-1st5vrn8K2_PjH8",
+      "walrusObjectId": "0x44e9dd427096c9cfaef024099a286dc516eade669ba04dc286025f874f8997cf"
+    },
+    {
+      "code": "PAR",
+      "name": "Paraguay",
+      "groupName": "D",
+      "walrusStatus": "published",
+      "walrusBlobId": "VY77iAMGL3XGxidM_FuBg6jVZ2APNF4CD5Eg1eozjrM",
+      "walrusObjectId": "0xde295ddfb6fc6634d79b3a2681688a92586b1674dd18fe5a94a886bb1f822764"
+    },
+    {
+      "code": "TUR",
+      "name": "Türkiye",
+      "groupName": "D",
+      "walrusStatus": "published",
+      "walrusBlobId": "bmt6T6-tksLc2JFWKTk4BrGhAxbg_c2sD5w_xUireqE",
+      "walrusObjectId": "0xa404432b62d369d75f0c210453351271244e200221802d37bf1c3ac900e06b2f"
+    },
+    {
+      "code": "USA",
+      "name": "USA",
+      "groupName": "D",
+      "walrusStatus": "published",
+      "walrusBlobId": "Kd1xpF9OdrsiriMfSP_6r2vwyw_1yU0eLLuR7YPx4zs",
+      "walrusObjectId": "0x81558bd0c8a82de0111f2daa3d184c7bbad2dc54ad07493d5df6748407b263c7"
+    },
+    {
+      "code": "CIV",
+      "name": "Côte D'Ivoire",
+      "groupName": "E",
+      "walrusStatus": "published",
+      "walrusBlobId": "xxNhnEED9w2-ffZbNBlCv-zSymwxoqcPZqisq4yaci8",
+      "walrusObjectId": "0x09ba8d1df1f830296fdab6224e95624e0f173ef244bf5d2fc148e237385c9c28"
+    },
+    {
+      "code": "CUW",
+      "name": "Curaçao",
+      "groupName": "E",
+      "walrusStatus": "published",
+      "walrusBlobId": "DKnXHGGaXliSRZJcqdw_2oQgL-JbyeqX3UMd-vFJ_4c",
+      "walrusObjectId": "0xf1ff3d502f0183ca33d1cfe20464b914761ea903c8b1721511a07f037c866ac9"
+    },
+    {
+      "code": "ECU",
+      "name": "Ecuador",
+      "groupName": "E",
+      "walrusStatus": "published",
+      "walrusBlobId": "mYDm4LVNbrmecepi3gz-7T71tNQmn1HhTXIuS5N_DXc",
+      "walrusObjectId": "0x58252431ca99700b9fca92d2968a30cc6ec468604b1f4c3b53c6a8c054027df4"
+    },
+    {
+      "code": "GER",
+      "name": "Germany",
+      "groupName": "E",
+      "walrusStatus": "published",
+      "walrusBlobId": "F6gws2EOVzyWfUbXQMr4AFjp0yVxV_QoqifUIdXFlwg",
+      "walrusObjectId": "0xc42d6847c4d659a732896b0d2048811dff9df8f6ed398eaab1d501b0d1d1687c"
+    },
+    {
+      "code": "JPN",
+      "name": "Japan",
+      "groupName": "F",
+      "walrusStatus": "published",
+      "walrusBlobId": "-CfxjO0KDvy0xtPtOb_QII7qbcDhp40ei0urfRAL1zs",
+      "walrusObjectId": "0x6c2fd4c7f6aa408c104f9e11d7536df49c7d03731e9bdca30b17595ffa6493a8"
+    },
+    {
+      "code": "NED",
+      "name": "Netherlands",
+      "groupName": "F",
+      "walrusStatus": "published",
+      "walrusBlobId": "5dTJ8c0P2TX_OLQLuNPllgKfBHyRXH-eNezkBptDIto",
+      "walrusObjectId": "0xc5d8e4059d227355fd07f22727f53ceac9f4e121631a827fe285c79acef1005a"
+    },
+    {
+      "code": "SWE",
+      "name": "Sweden",
+      "groupName": "F",
+      "walrusStatus": "published",
+      "walrusBlobId": "MMoin52tdLPaylWhr-aKZ3S1GU_6kXxqsC6X3ksMJAo",
+      "walrusObjectId": "0x5278276806b7fc049a7c92b6e632763d2bcc986c2a4ea41bfd4ca1726a5c6df8"
+    },
+    {
+      "code": "TUN",
+      "name": "Tunisia",
+      "groupName": "F",
+      "walrusStatus": "published",
+      "walrusBlobId": "ovv9NCGnJQHNWhLAS21iHC7meRhYakXFRsjHaVjFBzA",
+      "walrusObjectId": "0x71ee2038eb8288ec5808722af0553da8cea054dd06d79668454a3091c72046d8"
+    },
+    {
+      "code": "BEL",
+      "name": "Belgium",
+      "groupName": "G",
+      "walrusStatus": "published",
+      "walrusBlobId": "aazgfNTkz6PQKEtXBSlBu1hUQSxZSDryMGM7U_cuGHE",
+      "walrusObjectId": "0xcf4c610721095989e61b70514ca41efdd4f8de9a1f451612f46aff7c7c933f6f"
+    },
+    {
+      "code": "EGY",
+      "name": "Egypt",
+      "groupName": "G",
+      "walrusStatus": "published",
+      "walrusBlobId": "qVDTr3sDQgC5YUkvranaf38-FR3b9QRDlqdjZWgwcyI",
+      "walrusObjectId": "0x6d844b549345065a1b3603c613bf4159b633ecb02c5169255280ddd6301aee99"
+    },
+    {
+      "code": "IRN",
+      "name": "IR Iran",
+      "groupName": "G",
+      "walrusStatus": "published",
+      "walrusBlobId": "UA-g7ZBBFghCzXUwFSPNxzrvmEt29d-PNxWXai8wREM",
+      "walrusObjectId": "0xc613f77a429bbbf3704e0b406abec8da21b78b9845c5f99c300debf7d7f4270b"
+    },
+    {
+      "code": "NZL",
+      "name": "New Zealand",
+      "groupName": "G",
+      "walrusStatus": "published",
+      "walrusBlobId": "Sa6gxgRR9-iyewQnFOA28-il60ccqAoiqulUTSOrWm4",
+      "walrusObjectId": "0x42f2e1f6497b8c9de065530015edf4d0ca3d102361cee060b5ad627dcb4d7c23"
+    },
+    {
+      "code": "CPV",
+      "name": "Cabo Verde",
+      "groupName": "H",
+      "walrusStatus": "published",
+      "walrusBlobId": "zCEfWp1avmtCLTnhRK6CuvVXrVFiae-VMvXi_OLK79Y",
+      "walrusObjectId": "0xc58a075633f4cd1284cbb8c806a92449066a5e2eadf3d4164d8d917bd0ca9814"
+    },
+    {
+      "code": "KSA",
+      "name": "Saudi Arabia",
+      "groupName": "H",
+      "walrusStatus": "published",
+      "walrusBlobId": "mCdh_467ZXNwLErQ1SPOZtdYVMjKjAbS2JpTBsmyaOI",
+      "walrusObjectId": "0x7bf67d006f8264fe36f8b55fde37adb89c97d3c05f1f2e58215c071d411695fe"
+    },
+    {
+      "code": "ESP",
+      "name": "Spain",
+      "groupName": "H",
+      "walrusStatus": "published",
+      "walrusBlobId": "MFpsJiICcEvLp0IV2r41YPACsUV1wzKJRMfbgsuje_M",
+      "walrusObjectId": "0xc56c4f263c61ce4c0808e38d873f418f48557fbac215189d4154c78d30f47e3a"
+    },
+    {
+      "code": "URU",
+      "name": "Uruguay",
+      "groupName": "H",
+      "walrusStatus": "published",
+      "walrusBlobId": "4rMTTgoi2Jm1GGw7uW8SC3K2q_wHCPy2YkADU3PNRK8",
+      "walrusObjectId": "0xe99c59485156345d76a734f79aa0ecaab468cb20e835a6075cb79971f11e3a9c"
+    },
+    {
+      "code": "FRA",
+      "name": "France",
+      "groupName": "I",
+      "walrusStatus": "published",
+      "walrusBlobId": "BnyHT7nZbH7fa2r0q3W6W9JnAGvBtSqc6eQogGrjGiQ",
+      "walrusObjectId": "0xfb4cdd341f32d898518b14cadded589c181f10d16e38b81d8fd8e3bae9334f82"
+    },
+    {
+      "code": "IRQ",
+      "name": "Iraq",
+      "groupName": "I",
+      "walrusStatus": "published",
+      "walrusBlobId": "wqqQbTemVKlv6VbL-w9gkmQ54gHUN8v0kHatPChhHY4",
+      "walrusObjectId": "0x14e99f63d1f6af2c8d2dc7687f7aac9f42038e11c99cfd57ba140ae23f14e600"
+    },
+    {
+      "code": "NOR",
+      "name": "Norway",
+      "groupName": "I",
+      "walrusStatus": "published",
+      "walrusBlobId": "U_-Nvi2xcGh8L84LswudKvOeZo1i12EhdXOi_3kdwI0",
+      "walrusObjectId": "0x78469d7d1f93a90d764f7fe9ad0890514d15a21507067117083381db2b8fcd29"
+    },
+    {
+      "code": "SEN",
+      "name": "Senegal",
+      "groupName": "I",
+      "walrusStatus": "published",
+      "walrusBlobId": "FqWWBgPIsAFQtlkCNFPjprp5feLVtLRQA0T4N7jMYzI",
+      "walrusObjectId": "0x4b330c0dd19178b413cecb7aaca95aeb843bb89b79c0bb2f32b286b9f1a0e094"
+    },
+    {
+      "code": "ALG",
+      "name": "Algeria",
+      "groupName": "J",
+      "walrusStatus": "published",
+      "walrusBlobId": "TRHsLGHgI_hPx6NUodlFhPp_hze41oNDbIn5LmdsOMk",
+      "walrusObjectId": "0x52240299b2b875a1d4b6041d0db370a1b0fe5bdafbfb8bbeb34750050abe363e"
+    },
+    {
+      "code": "ARG",
+      "name": "Argentina",
+      "groupName": "J",
+      "walrusStatus": "published",
+      "walrusBlobId": "SxgLcHDGmooX2e0ZfdcKrxKZ49wLxcMXSpx5HYJZkC4",
+      "walrusObjectId": "0x3e3caa7d1cb0a54a26bfc7fa24b944ed056009cb05abcfaa03e13c73fac2167b"
+    },
+    {
+      "code": "AUT",
+      "name": "Austria",
+      "groupName": "J",
+      "walrusStatus": "published",
+      "walrusBlobId": "wmq5NHrzzasiqgccRGRwkcXIaUen2RKedyGyQVOd5oQ",
+      "walrusObjectId": "0x83c58eb2f86a6c5255956b1ba913d15fdf39fbdda6af750ba6e9caba9500d9da"
+    },
+    {
+      "code": "JOR",
+      "name": "Jordan",
+      "groupName": "J",
+      "walrusStatus": "published",
+      "walrusBlobId": "RqhCgg4aBqAYGSinwwn0L4RfDOM8em9KRH9LH6Xa-OQ",
+      "walrusObjectId": "0x1fe5e0cfb00d8517f0760e85df84cf437d52b81d2362c35f2914f08916d1c427"
+    },
+    {
+      "code": "COL",
+      "name": "Colombia",
+      "groupName": "K",
+      "walrusStatus": "published",
+      "walrusBlobId": "RNJADa2-zM1HPVk04YzMwuFTiuAHO9jdupYvlh5azJk",
+      "walrusObjectId": "0x6b87996c1eb1a9e99f74f1e286ee1245b2ea49458b6189f5b47309057f029a1d"
+    },
+    {
+      "code": "COD",
+      "name": "Congo DR",
+      "groupName": "K",
+      "walrusStatus": "published",
+      "walrusBlobId": "K4iyUzDDR3P5mPrssuZcktwxZVqFEkmLAxQ7uHzgD1g",
+      "walrusObjectId": "0xc58ccbe1551c3b8fa7d2463163ffbc0e0e4183add3d5e74d9282b48132be5156"
+    },
+    {
+      "code": "POR",
+      "name": "Portugal",
+      "groupName": "K",
+      "walrusStatus": "published",
+      "walrusBlobId": "p4093exLjfCntV9o66kUHcL6yjjmxvELb_yHJuGoY2Y",
+      "walrusObjectId": "0x6d9d7190f44267825a6ea6f4728b83194113b13c24038b8b1efb12130e7eb49a"
+    },
+    {
+      "code": "UZB",
+      "name": "Uzbekistan",
+      "groupName": "K",
+      "walrusStatus": "published",
+      "walrusBlobId": "QpYsIGyPAZ--nNzmOKUNNJiJcbMdc-wBjVkG2PyTgYM",
+      "walrusObjectId": "0x7aaa79355da36555c43ceebbbeab24da58cc600b1cdec3bda303b3b259278167"
+    },
+    {
+      "code": "CRO",
+      "name": "Croatia",
+      "groupName": "L",
+      "walrusStatus": "published",
+      "walrusBlobId": "riANYy-14jXZIEhDkx02KzioDBandFjlgNHRk5-AY84",
+      "walrusObjectId": "0x3da208f2b362348adbf79d82fa0c405501de0789385b3f663708fbbe5a2de337"
+    },
+    {
+      "code": "ENG",
+      "name": "England",
+      "groupName": "L",
+      "walrusStatus": "published",
+      "walrusBlobId": "DAlZ93I_pMoU6U8APInUsvzlhnbF7z9q156sWbmT54o",
+      "walrusObjectId": "0x5cc478283e4e37bef592b31662d312824b1efe86e7eb07de68dc7d3a959ab5af"
+    },
+    {
+      "code": "GHA",
+      "name": "Ghana",
+      "groupName": "L",
+      "walrusStatus": "published",
+      "walrusBlobId": "PUWnFQ7cJAVjkSzSeIGX8IopTVLbXv3UzhBnbVY1zSA",
+      "walrusObjectId": "0x617b84ca94b8390221347632c6b341a1b640f8e422e06b01eaf0dfa9255f4a2e"
+    },
+    {
+      "code": "PAN",
+      "name": "Panama",
+      "groupName": "L",
+      "walrusStatus": "published",
+      "walrusBlobId": "nPvuw0ZRV1JrwacPs_STvty01PdpndVXZldns5SkVCc",
+      "walrusObjectId": "0xb6807c70e195760908cea7e210b3f57e4cb88199495257d2344372169793eb5b"
+    }
+  ]
+}

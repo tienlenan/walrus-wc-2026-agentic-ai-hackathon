@@ -25,7 +25,16 @@
 - Mainnet Walrus Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`.
 - Mainnet Walrus Sites base36 diagnostic: `5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg`.
 - Mainnet `wal.app` URL / SuiNS: `https://roast2026wc.wal.app/`.
-- Memory namespace(es): `daily-walrus:global:world-cup-2026` plus per-user `daily-walrus:user:<sui-address>`
+- Walrus Memory / MemWal account: `0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51`.
+- Walrus Memory relayer: `https://relayer.memory.walrus.xyz`.
+- Global namespace: `daily-walrus:global:world-cup-2026`.
+- Namespace URL: `https://relayer.memory.walrus.xyz/account/0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51/namespace/daily-walrus%3Aglobal%3Aworld-cup-2026`.
+- Per-user namespace pattern: `daily-walrus:<sui-address>`.
+- Memory sync proof:
+  - Schedule: `world_cup_schedule`, `synced`, hash `a42baa72cf1e627c5330667f730600d239795a521489f52ffd24c4f5b075a5f5`, 104 fixtures.
+  - Teams: `world_cup_teams`, `synced`, hash `9d561534f1179d30d76845bd862598a91597fa44673ed5cf93097f53987c16b7`, 48 teams, 1248 players.
+  - Player traits: `player_roast_traits`, `synced`, hash `0061009a1c5ec8786f9b7e0c50691faa0f01c4a435decf67eff1a2bd56f8ac34`, 8 memory docs.
+- Team profile blob/object proof file: `submission-pack/proof/mainnet-runtime-ids.json`.
 - Track ID / session evidence
 - Short verification note: "How a judge can verify memory + scoring in 3 clicks"
 - Do not use testnet object IDs in the final form.

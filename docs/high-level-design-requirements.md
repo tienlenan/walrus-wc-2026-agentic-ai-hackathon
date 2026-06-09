@@ -1,4 +1,4 @@
-# The Daily Walrus - High-Level System Design
+# Gil's VAR Shamebook - High-Level System Design
 
 This file is the short English design and requirements note for submission. The PDF export is:
 
@@ -55,3 +55,15 @@ Global memory flow:
 - Prediction integrity: match gates close before kickoff and settle after result seed/oracle update.
 - Submission tracking: a dedicated tracking page lists deployed package, object, memory, blob, and site links.
 - Perceived performance: a lightweight splash and top progress bar cover initial bundle load and lazy route transitions.
+
+## Mainnet Proof Snapshot
+
+- Public app: `https://roast2026wc.wal.app/`
+- API: `https://gil-var-shamebook-api.vercel.app/`
+- Walrus Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`
+- Sui package: `0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb`
+- MatchRegistry: `0xa992d65237ec8a953f04f0450c39203cc2777b2a67ae61add8c39f74578d3446`
+- Scoreboard: `0xfed0e2738f38965144bdcc840d4bf79ff0c9d75a9afd04753cd4f13c763cec10`
+- Walrus Memory account: `0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51`
+- Walrus Memory namespace: `daily-walrus:global:world-cup-2026`
+- Team profile blobs: 48/48 published on Walrus Mainnet.

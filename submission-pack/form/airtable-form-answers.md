@@ -1,10 +1,10 @@
-# Airtable Form Answers - The Daily Walrus
+# Airtable Form Answers - Gil's VAR Shamebook
 
 Source form: https://airtable.com/appoDAKpC74UOqoDa/shrIl2BMnzMwpuLhO
 
 ## Project name
 
-The Daily Walrus
+Gil's VAR Shamebook
 
 ## Please select the session
 
@@ -50,17 +50,17 @@ Base36 diagnostic:
 
 `5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg`
 
-Do not use `https://5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg.wal.app` as the final URL; it returns 404 until a SuiNS name points to the site object.
+Canonical public URL:
+
+`https://roast2026wc.wal.app/`
 
 ## I confirm that I have submitted it on Mainnet
 
-Do not check until the final public SuiNS/wal.app URL and DeepSurge page are complete.
-
-Mainnet contract and Walrus Site object are deployed. Public `wal.app` access is live at `https://roast2026wc.wal.app/`.
+Yes. Mainnet contract, Walrus Memory, Walrus Site object, and public `wal.app` access are live at `https://roast2026wc.wal.app/`.
 
 ## Please describe the workflow and functionalities of your project
 
-The Daily Walrus is an AI World Cup 2026 pundit with persistent memory on Walrus. A user connects a Sui wallet, chats with Gil, makes match and tournament predictions, and receives personalized roast-style feedback based on their historical takes.
+Gil's VAR Shamebook is an AI World Cup 2026 pundit with persistent memory on Walrus. A user connects a Sui wallet, chats with Gil, makes match and tournament predictions, and receives personalized roast-style feedback based on their historical takes.
 
 Core workflow:
 
@@ -81,7 +81,11 @@ Mainnet proof:
 - MatchRegistry: `0xa992d65237ec8a953f04f0450c39203cc2777b2a67ae61add8c39f74578d3446`
 - Scoreboard: `0xfed0e2738f38965144bdcc840d4bf79ff0c9d75a9afd04753cd4f13c763cec10`
 - Walrus Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`
+- Walrus Memory account: `0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51`
+- Walrus Memory namespace: `daily-walrus:global:world-cup-2026`
+- Walrus Memory namespace URL: `https://relayer.memory.walrus.xyz/account/0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51/namespace/daily-walrus%3Aglobal%3Aworld-cup-2026`
 - Fixture seed: 104/104 matches registered on mainnet.
+- Team profile blobs: 48/48 published on Walrus Mainnet. Full team blob/object list: `submission-pack/proof/mainnet-runtime-ids.json`.
 
 ## Share any visuals of your project
 
@@ -156,7 +160,7 @@ TODO: Post project demo/screenshot/link with `#Walrus`, then paste the tweet URL
 
 Suggested tweet:
 
-The Daily Walrus is live for the Walrus Memory World Cup: a World Cup 2026 AI pundit that remembers your predictions, tracks your record, and roasts your bad football takes with Walrus Memory.
+Gil's VAR Shamebook is live for the Walrus Memory World Cup: a World Cup 2026 AI pundit that remembers your predictions, tracks your record, and roasts your bad football takes with Walrus Memory.
 
 Built with Walrus Memory, Walrus Blob, Sui objects, and Walrus Sites.
 

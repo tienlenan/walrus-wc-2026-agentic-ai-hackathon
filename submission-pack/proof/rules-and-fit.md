@@ -45,12 +45,11 @@ Captured on: 2026-06-09
 | Public interface | React/Vite app includes predictions, leaderboard, notebook, roasts, profiles, gallery, and tracking pages. |
 | Mainnet deployment | Contract and Walrus Site object deployed; public `wal.app` URL live at `https://roast2026wc.wal.app/`. |
 | Dedicated wallet | `0xf5ca4f02cf58d6448b6429c691b53c89c56b30c3ded38b45e73ce78829e99f6d`. |
-| Demo video | Record a real sub-3-minute walkthrough after SuiNS/public URL is connected. |
+| Demo video | Record or attach a sub-3-minute walkthrough from the public URL. |
 | Visuals | Posters, screenshots, architecture PDF, and storage/memory explainer included. |
 
 ## Do Not Submit Yet If
 
-- Public mainnet `wal.app` URL is still `TBD`.
 - DeepSurge project link is still `TBD`.
 - X tweet URL is still `TBD`.
-- Airtable mainnet confirmation cannot honestly be checked.
+- Required personal/team contact fields are still blank.
