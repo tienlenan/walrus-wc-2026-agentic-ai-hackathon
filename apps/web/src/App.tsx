@@ -1,17 +1,20 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { NewsDeskChat } from "./components/news-desk-chat";
-import { ConnectBar } from "./components/connect-bar";
-import { SettingsPanel } from "./components/settings-panel";
-import { PredictionsDesk } from "./components/predictions-desk";
-import { Leaderboard } from "./components/leaderboard";
-import { TeamProfiles } from "./components/team-profiles";
-import { RoastWall } from "./components/roast-wall";
-import { GalleryWall } from "./components/gallery-wall";
-import { MemoryNotebook } from "./components/memory-notebook";
-import { RuntimeTracking } from "./components/runtime-tracking";
+import { lazy, Suspense, useEffect, useMemo, useState, type ReactNode } from "react";
+import { DeferredSection } from "./components/deferred-section";
 import { useI18n } from "./lib/i18n";
 import { useTimeSettings } from "./lib/time-settings";
 import "./styles/ui-controls.css";
+
+const WalletProviders = lazy(() => import("./wallet-providers").then((mod) => ({ default: mod.WalletProviders })));
+const ConnectBar = lazy(() => import("./components/connect-bar").then((mod) => ({ default: mod.ConnectBar })));
+const NewsDeskChat = lazy(() => import("./components/news-desk-chat").then((mod) => ({ default: mod.NewsDeskChat })));
+const SettingsPanel = lazy(() => import("./components/settings-panel").then((mod) => ({ default: mod.SettingsPanel })));
+const PredictionsDesk = lazy(() => import("./components/predictions-desk").then((mod) => ({ default: mod.PredictionsDesk })));
+const Leaderboard = lazy(() => import("./components/leaderboard").then((mod) => ({ default: mod.Leaderboard })));
+const RoastWall = lazy(() => import("./components/roast-wall").then((mod) => ({ default: mod.RoastWall })));
+const TeamProfiles = lazy(() => import("./components/team-profiles").then((mod) => ({ default: mod.TeamProfiles })));
+const GalleryWall = lazy(() => import("./components/gallery-wall").then((mod) => ({ default: mod.GalleryWall })));
+const MemoryNotebook = lazy(() => import("./components/memory-notebook").then((mod) => ({ default: mod.MemoryNotebook })));
+const RuntimeTracking = lazy(() => import("./components/runtime-tracking").then((mod) => ({ default: mod.RuntimeTracking })));
 
 type ReferencePageKey = "team-profiles" | "gallery" | "notebook" | "tracking";
 
@@ -44,7 +47,11 @@ export default function App() {
 
   return (
     <div className="paper">
-      <ConnectBar />
+      <Suspense fallback={<div className="press-bar press-bar-loading">Loading wallet desk...</div>}>
+        <WalletProviders>
+          <ConnectBar />
+        </WalletProviders>
+      </Suspense>
 
       <div className="utility-bar">
         <div className="lang-toggle" role="group" aria-label={t("ui.langLabel")}>
@@ -100,16 +107,38 @@ export default function App() {
       ) : (
         <>
           <div id="newsroom" className="section-anchor">
-            <NewsDeskChat onOpenSettings={() => setSettingsOpen(true)} />
+            <Suspense fallback={<SectionSkeleton title={t("nav.gil")} />}>
+              <WalletProviders>
+                <NewsDeskChat onOpenSettings={() => setSettingsOpen(true)} />
+              </WalletProviders>
+            </Suspense>
           </div>
           <div id="predictions" className="section-anchor">
-            <PredictionsDesk />
+            <DeferredSection fallback={<SectionSkeleton title={t("nav.predictions")} />}>
+              <Suspense fallback={<SectionSkeleton title={t("nav.predictions")} />}>
+                <WalletProviders>
+                  <PredictionsDesk />
+                </WalletProviders>
+              </Suspense>
+            </DeferredSection>
           </div>
           <div id="leaderboard" className="section-anchor">
-            <Leaderboard />
+            <DeferredSection fallback={<SectionSkeleton title={t("nav.leaderboard")} />}>
+              <Suspense fallback={<SectionSkeleton title={t("nav.leaderboard")} />}>
+                <WalletProviders>
+                  <Leaderboard />
+                </WalletProviders>
+              </Suspense>
+            </DeferredSection>
           </div>
           <div id="roasts" className="section-anchor">
-            <RoastWall />
+            <DeferredSection fallback={<SectionSkeleton title={t("nav.roasts")} />}>
+              <Suspense fallback={<SectionSkeleton title={t("nav.roasts")} />}>
+                <WalletProviders>
+                  <RoastWall />
+                </WalletProviders>
+              </Suspense>
+            </DeferredSection>
           </div>
         </>
       )}
@@ -119,7 +148,19 @@ export default function App() {
         <span className="footer-text">{t("footer.text")}</span>
       </footer>
 
-      {settingsOpen && <SettingsPanel onClose={() => setSettingsOpen(false)} />}
+      {settingsOpen && (
+        <Suspense fallback={null}>
+          <SettingsPanel onClose={() => setSettingsOpen(false)} />
+        </Suspense>
+      )}
+    </div>
+  );
+}
+
+function SectionSkeleton({ title }: { title: string }) {
+  return (
+    <div className="section-skeleton" aria-hidden="true">
+      <span>{title}</span>
     </div>
   );
 }
@@ -143,7 +184,11 @@ function ReferencePage({ page }: { page: ReferencePageKey }) {
   const content: Record<ReferencePageKey, ReactNode> = {
     "team-profiles": <TeamProfiles />,
     gallery: <GalleryWall />,
-    notebook: <MemoryNotebook />,
+    notebook: (
+      <WalletProviders>
+        <MemoryNotebook />
+      </WalletProviders>
+    ),
     tracking: <RuntimeTracking />,
   };
 
@@ -157,7 +202,9 @@ function ReferencePage({ page }: { page: ReferencePageKey }) {
         </div>
         <a href="#newsroom">{t("reference.back")}</a>
       </div>
-      <div className="reference-page-body">{content[page]}</div>
+      <div className="reference-page-body">
+        <Suspense fallback={<SectionSkeleton title={t(`reference.${page}.title`)} />}>{content[page]}</Suspense>
+      </div>
     </main>
   );
 }

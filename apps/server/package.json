@@ -11,6 +11,7 @@
     "indexer:replay": "node --env-file=../../.env.local --import tsx src/dev/rebuild-indexer.ts",
     "register:fixtures": "node --env-file=../../.env.local --import tsx src/dev/register-fixtures.ts",
     "score:match": "node --env-file=../../.env.local --import tsx src/dev/score-match.ts",
+    "publish:team-profiles": "node --env-file=../../.env.local --import tsx src/dev/publish-team-profile-blobs.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

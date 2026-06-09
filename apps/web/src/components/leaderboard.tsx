@@ -34,7 +34,6 @@ export function Leaderboard() {
       if (pollId == null) pollId = window.setInterval(() => void refresh(), 10_000);
     };
 
-    void refresh();
     const unsubscribe = subscribeGameSnapshot(
       (next) => {
         setError(null);

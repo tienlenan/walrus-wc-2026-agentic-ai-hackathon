@@ -131,6 +131,25 @@
   letter-spacing: 0;
 }
 
+.fixture-board .fixture-teams {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.4rem;
+}
+
+.fixture-board .fixture-teams i {
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+.fixture-board button.selected .fixture-teams i {
+  color: var(--paper);
+}
+
 .fixture-board small {
   grid-column: 1 / -1;
   color: var(--ink-soft);

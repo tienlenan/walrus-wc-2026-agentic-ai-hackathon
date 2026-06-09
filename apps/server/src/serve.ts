@@ -9,7 +9,7 @@ import { getGameSnapshot } from "./services/game-snapshot.js";
 import { saveMatchVote } from "./services/game-votes.js";
 import { scoreMatch } from "./services/score-keeper.js";
 import { createRoast, listRoasts } from "./services/roast-engine.js";
-import { getWorldCupSnapshot, publishTeamProfileBlob, seedWorldCupData } from "./services/world-cup-data.js";
+import { getWorldCupSnapshotWithProfileBlobs, publishTeamProfileBlob, seedWorldCupData } from "./services/world-cup-data.js";
 import { registerSuiOutputRecord } from "./services/sui-output-records.js";
 import {
   getRuntimeTracking,
@@ -112,7 +112,7 @@ export const server = createServer(async (req, res) => {
       return json(res, 200, await getGameSnapshot(subject?.startsWith("0x") ? subject : null));
     }
     if (req.method === "GET" && req.url?.startsWith("/api/world-cup/snapshot")) {
-      return json(res, 200, getWorldCupSnapshot());
+      return json(res, 200, await getWorldCupSnapshotWithProfileBlobs());
     }
     if (req.method === "GET" && req.url?.startsWith("/api/world-cup/player-roast-traits")) {
       return json(res, 200, { traits: PLAYER_ROAST_TRAITS });

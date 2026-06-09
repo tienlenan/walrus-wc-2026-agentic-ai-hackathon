@@ -8,6 +8,7 @@ import { useSuiOutputRecorder } from "../lib/sui-output-record";
 import { useSuiGasBalance } from "../lib/use-sui-gas-balance";
 import { useVerifiedSession } from "../lib/wallet-session";
 import { useTimeSettings } from "../lib/time-settings";
+import { teamWithFlag } from "../lib/team-flags";
 import "./predictions-desk.css";
 
 type KindKey = "scoreline" | "match_mvp" | "worst_player" | "champion" | "advance";
@@ -41,7 +42,10 @@ type DateTimeFormatter = ReturnType<typeof useTimeSettings>["formatDateTime"];
 function formatFixture(fixture: Fixture, t: (key: string) => string, formatDateTime: DateTimeFormatter): string {
   const kickoff = fixture.kickoff ? formatDateTime(fixture.kickoff) : "kickoff TBA";
   const group = fixture.groupName ? `${t("common.group")} ${fixture.groupName}` : fixture.stage ?? t("pred.filter.knockout");
-  return `M${fixture.matchId} ${fixture.home} vs ${fixture.away} - ${kickoff} - ${group} - ${gateLabel(fixture, t)}`;
+  return `M${fixture.matchId} ${teamWithFlag(fixture.home, fixture.homeTeamCode)} vs ${teamWithFlag(
+    fixture.away,
+    fixture.awayTeamCode,
+  )} - ${kickoff} - ${group} - ${gateLabel(fixture, t)}`;
 }
 
 function groupFilterLabel(filter: GroupFilter, t: (key: string) => string): string {
@@ -268,8 +272,10 @@ export function PredictionsDesk() {
                   onClick={() => setMatchId(fixture.matchId)}
                 >
                   <b>M{fixture.matchId}</b>
-                  <span>
-                    {fixture.home} vs {fixture.away}
+                  <span className="fixture-teams">
+                    <span>{teamWithFlag(fixture.home, fixture.homeTeamCode)}</span>
+                    <i>vs</i>
+                    <span>{teamWithFlag(fixture.away, fixture.awayTeamCode)}</span>
                   </span>
                   <small className={fixture.predictionOpen ? "open" : ""}>{gateLabel(fixture, t)}</small>
                 </button>

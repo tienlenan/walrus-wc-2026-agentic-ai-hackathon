@@ -225,6 +225,35 @@ export function getWorldCupSnapshot(): WorldCupSnapshotDto {
   };
 }
 
+export async function getWorldCupSnapshotWithProfileBlobs(): Promise<WorldCupSnapshotDto> {
+  const snapshot = getWorldCupSnapshot();
+  if (!process.env.DATABASE_URL) return snapshot;
+
+  const { rows } = await getPool().query<{
+    team_code: string;
+    walrus_status: string | null;
+    walrus_blob_id: string | null;
+    walrus_object_id: string | null;
+    profile_hash: string | null;
+  }>(`select team_code, walrus_status, walrus_blob_id, walrus_object_id, profile_hash from team_profiles`);
+
+  const pointers = new Map(rows.map((row) => [row.team_code, row]));
+  return {
+    ...snapshot,
+    teams: snapshot.teams.map((team) => {
+      const pointer = pointers.get(team.code);
+      if (!pointer) return team;
+      return {
+        ...team,
+        walrusStatus: pointer.walrus_status ?? team.walrusStatus,
+        walrusBlobId: pointer.walrus_blob_id,
+        walrusObjectId: pointer.walrus_object_id,
+        profileHash: pointer.profile_hash ?? team.profileHash,
+      };
+    }),
+  };
+}
+
 export async function publishTeamProfileBlob(teamCode: string): Promise<WalrusBlobPointer> {
   const team = getTeamProfiles().find((item) => item.code === teamCode.toUpperCase());
   if (!team) throw new Error(`unknown team ${teamCode}`);

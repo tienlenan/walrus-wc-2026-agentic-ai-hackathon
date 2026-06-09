@@ -134,6 +134,26 @@
   border-style: dashed;
 }
 
+.press-bar-loading {
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.section-skeleton {
+  min-height: 7rem;
+  display: grid;
+  place-items: center;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .reference-icon {
   width: 1rem;
   height: 1rem;
