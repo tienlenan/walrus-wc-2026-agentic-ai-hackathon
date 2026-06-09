@@ -82,7 +82,8 @@ These IDs prove the flow was tested before mainnet. Do not paste them into the f
 - Logo package (icon + wordmark)
 - GitHub repo and live Walrus URL
 - Poster: `apps/web/public/submission/poster-sketchnote.png`
-- Design PDF: `docs/high-level-design-requirements.pdf`
+- Storage and memory explainer: `apps/web/public/submission/storage-memory-explainer.pdf`
+- Short design PDF: `docs/high-level-design-requirements.pdf`
 
 ## 9) Contact
 - Built by: **R-AI Daily Walrus Team**

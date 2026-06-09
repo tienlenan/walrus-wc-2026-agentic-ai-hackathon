@@ -42,6 +42,10 @@
   - `apps/web/public/submission/poster-sketchnote.png`
   - `apps/web/public/submission/poster-sketchnote.pdf`
   - Source: `apps/web/public/submission/poster-sketchnote.html`
+- Storage / memory explainer
+  - `apps/web/public/submission/storage-memory-explainer.pdf`
+  - `apps/web/public/submission/storage-memory-explainer-page-1.png`
+  - `apps/web/public/submission/storage-memory-explainer-page-2.png`
 - Logo package:
   - `logo/icon.svg`
   - `logo/wordmark.svg`

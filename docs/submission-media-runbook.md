@@ -22,6 +22,19 @@ Style:
 - English copy only.
 - Includes product goal, memory spine, roast layer, proof layer, and system structure.
 
+## Storage / Memory Explainer
+Final explainer files:
+- `apps/web/public/submission/storage-memory-explainer.html`
+- `apps/web/public/submission/storage-memory-explainer.pdf`
+- `apps/web/public/submission/storage-memory-explainer-page-1.png`
+- `apps/web/public/submission/storage-memory-explainer-page-2.png`
+
+Message:
+- Walrus Blob stores immutable payloads/media.
+- Walrus Memory stores recallable global and wallet-scoped knowledge.
+- Sui Objects store public receipts, gates, hashes, and blob pointers.
+- Blob data is on Walrus; Sui anchors the proof.
+
 ## Screenshot Workflow
 1. Deploy local environment:
    - `pnpm dev:server` and `pnpm dev:web`
