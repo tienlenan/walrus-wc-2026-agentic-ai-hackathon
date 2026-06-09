@@ -1,0 +1,20 @@
+<svg width="420" height="140" viewBox="0 0 420 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="420" height="140" rx="10" fill="#f4ecd8" stroke="#1a1714" stroke-width="4"/>
+  <rect x="12" y="12" width="396" height="116" rx="6" fill="#fbf7ec" stroke="#1a1714" stroke-width="2"/>
+  <circle cx="80" cy="70" r="28" fill="#1a1714"/>
+  <ellipse cx="80" cy="74" rx="18" ry="17" fill="#f4ecd8"/>
+  <circle cx="73" cy="68" r="4" fill="#1a1714"/>
+  <circle cx="87" cy="68" r="4" fill="#1a1714"/>
+  <path d="M74 79 C74 83 86 83 86 79" stroke="#1a1714" stroke-width="3" stroke-linecap="round"/>
+  <path d="M62 44 C80 30 100 30 118 44" stroke="#1a1714" stroke-width="4" stroke-linecap="round"/>
+  <path d="M62 96 C80 110 100 110 118 96" stroke="#1a1714" stroke-width="4" stroke-linecap="round"/>
+  <path d="M90 57 C97 47 107 45 110 50" stroke="#c8102e" stroke-width="3" stroke-linecap="round"/>
+  <path d="M90 83 C97 93 107 95 110 90" stroke="#1f7a3d" stroke-width="3" stroke-linecap="round"/>
+  <line x1="118" y1="70" x2="170" y2="70" stroke="#1a1714" stroke-width="3"/>
+  <line x1="118" y1="63" x2="170" y2="63" stroke="#1a1714" stroke-width="1.5"/>
+  <line x1="118" y1="77" x2="170" y2="77" stroke="#1a1714" stroke-width="1.5"/>
+  <text x="188" y="58" fill="#1a1714" font-size="24" font-family="Anton, Impact, sans-serif" letter-spacing="0.8">THE DAILY</text>
+  <text x="188" y="96" fill="#0a2540" font-size="30" font-family="Anton, Impact, sans-serif" letter-spacing="1">WALRUS</text>
+  <rect x="188" y="104" width="206" height="18" fill="#37c3b0"/>
+  <text x="196" y="118" fill="#fff" font-size="13" font-family="DM Sans, Arial, sans-serif">WORLD CUP MEMORY EDITION</text>
+</svg>

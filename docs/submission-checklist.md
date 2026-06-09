@@ -16,15 +16,25 @@
 ## Mainnet Proof Fields (pre-fill before submit)
 - Sui network: `mainnet`.
 - Deploy wallet: `0xf5ca4f02cf58d6448b6429c691b53c89c56b30c3ded38b45e73ce78829e99f6d`.
-- Mainnet contract package ID: `TBD after mainnet publish`.
-- Mainnet MatchRegistry: `TBD after mainnet publish`.
-- Mainnet Scoreboard: `TBD after mainnet publish`.
-- Mainnet Walrus Site object: `TBD after mainnet Walrus Sites deploy`.
+- Mainnet publish digest: `68d4RuFpzqNqzXgLum5KQFkd2qCRL137EkyS4YXpipv2`.
+- Mainnet contract package ID: `0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb`.
+- Mainnet MatchRegistry: `0xa992d65237ec8a953f04f0450c39203cc2777b2a67ae61add8c39f74578d3446`.
+- Mainnet Scoreboard: `0xfed0e2738f38965144bdcc840d4bf79ff0c9d75a9afd04753cd4f13c763cec10`.
+- Mainnet AdminCap: `0xd94e85b3a9e06ecd12b9c032412ffaa6d8d7044d9e97214621aad19528171c41`.
+- Mainnet OracleCap: `0x147d6290d21bd01d51a6cdafc2610cfcdb3d4272d7419d57d71df714fa90c25c`.
+- Mainnet Walrus Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`.
+- Mainnet Walrus Sites base36 diagnostic: `5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg`.
 - Mainnet `wal.app` URL / SuiNS: `TBD after SuiNS is configured for the site object`.
 - Memory namespace(es): `daily-walrus:global:world-cup-2026` plus per-user `daily-walrus:user:<sui-address>`
 - Track ID / session evidence
 - Short verification note: "How a judge can verify memory + scoring in 3 clicks"
 - Do not use testnet object IDs in the final form.
+
+## Mainnet Fixture Seed
+- Mainnet MatchRegistry content verified with `match_count=104`.
+- Match 1 register tx: `DXfbZj4U89VgBAxnm2qRAJo5hevwdxHKwW6b3cYh7WXS`
+- Match 2 register tx: `3FzSbYBjEgSswFsRqUk7LmK6sob4ioSxpNsiUvg2XUBB`
+- Match 104 register tx: `3vkHeidnmnYxJe3a9vc1hXTEzWAngv44L4robPxiVSub`
 
 ## Internal Testnet Verification
 - Testnet contract package ID: `0x4e62c20fc179f4492d777046dccd06eebd0cedaa83511ea8fde7b8262c6a58a5`
@@ -63,10 +73,11 @@
   - Duration < 3 minutes
   - Show: connect wallet → submit prediction → settle flow → leaderboard update → memory proof page
 
-## Mainnet Blocker
-- Active deploy wallet currently has no mainnet SUI gas objects.
-- Mainnet Walrus Sites deploy also fails until the wallet has enough WAL.
-- After funding, run `./scripts/deploy-walrus-site.sh` with `WALRUS_SITE_CONTEXT=mainnet`.
+## Remaining Mainnet Blocker
+- Sui contract is published on mainnet.
+- Walrus Sites object is deployed on mainnet.
+- Public `wal.app` browsing still needs a SuiNS name pointed at site object `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`.
+- After SuiNS is configured, record a real sub-3-minute demo video and paste the final public URL into Airtable.
 
 ## Post-Submit Actions
 - Post link with `#Walrus` on X.

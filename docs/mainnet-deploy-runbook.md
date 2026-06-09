@@ -14,8 +14,7 @@ Required keys:
 Funding gate:
 - Active deploy wallet: `0xf5ca4f02cf58d6448b6429c691b53c89c56b30c3ded38b45e73ce78829e99f6d`.
 - The wallet must hold enough mainnet SUI for Move publish and enough WAL for Walrus Sites storage.
-- Current verified state on 2026-06-09: mainnet gas objects are empty, so mainnet publish/deploy is blocked.
-- Mainnet publish dry-run passed on 2026-06-09 with estimated gas `35,820,000 MIST`; dry-run package/object IDs are simulation-only and must not be submitted.
+- Current verified state on 2026-06-09: funded, mainnet package published, Walrus Sites object deployed.
 
 ## 2) Testnet Snapshot (required)
 - Keep testnet package and contract IDs as baseline.
@@ -23,16 +22,13 @@ Funding gate:
 - Treat testnet IDs as internal verification only. Final hackathon submission must use mainnet object IDs and mainnet URL.
 
 ## 3) Mainnet Contract
-1. Switch CLI/network to mainnet.
-2. Build and publish package.
-   ```bash
-   sui client publish move/wc_predict --gas-budget 100000000 --json
-   ```
-3. If package already exists: perform upgrade using upgrade capability.
-4. Verify:
-   - `Prediction` submit,
-   - `register_match`,
-   - `settle_match` + `record_scores`.
+- Publish digest: `68d4RuFpzqNqzXgLum5KQFkd2qCRL137EkyS4YXpipv2`
+- Package: `0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb`
+- MatchRegistry: `0xa992d65237ec8a953f04f0450c39203cc2777b2a67ae61add8c39f74578d3446`
+- Scoreboard: `0xfed0e2738f38965144bdcc840d4bf79ff0c9d75a9afd04753cd4f13c763cec10`
+- AdminCap: `0xd94e85b3a9e06ecd12b9c032412ffaa6d8d7044d9e97214621aad19528171c41`
+- OracleCap: `0x147d6290d21bd01d51a6cdafc2610cfcdb3d4272d7419d57d71df714fa90c25c`
+- Fixture seed: 104/104 registered; MatchRegistry `match_count=104`.
 
 ## 4) Frontend Deploy
 1. Set env vars in root:
@@ -62,8 +58,10 @@ Funding gate:
 4. Start indexer loop + keep-alive.
 
 ## 6) SuiNS / Public URL
-- Attach a readable SuiNS name to the Walrus Sites object. The official Walrus Sites docs require SuiNS for public `wal.app` browsing on mainnet.
-- Keep the raw site object ID and converted base36 subdomain for diagnostics.
+- Mainnet Walrus Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`.
+- Base36 diagnostic: `5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg`.
+- Attach a readable SuiNS name to the Walrus Sites object. The official Walrus Sites flow requires SuiNS for public `wal.app` browsing on mainnet.
+- Current check: `https://5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg.wal.app` returns 404, so do not use it as the final public URL.
 
 ## 7) Final validation
 - Confirm `/api/tracking/runtime` shows mainnet contract + memory sync status.

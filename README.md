@@ -102,7 +102,8 @@ Planning & design (written in English):
 - ✅ Walrus Memory spine via MemWal: per-user notebook + global WC2026 schedule/team memory
 - ✅ Predictions, on-chain gating, oracle scoring, leaderboard, roast wall, team profiles, runtime tracking
 - ✅ Testnet verification completed: 104/104 fixtures registered, prediction submit → score → settle → indexer replay
-- ⏳ Mainnet deploy is blocked until the deploy wallet has SUI gas + WAL for package publish and Walrus Sites
+- ✅ Mainnet contract + Walrus Site object deployed; 104/104 fixtures registered on-chain
+- ⏳ Final public URL is blocked until a SuiNS name points to the Walrus Site object; record the real demo video after that
 
 ## License
 TBD

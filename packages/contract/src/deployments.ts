@@ -17,3 +17,18 @@ export const TESTNET_DEPLOYMENT = {
   oracleCapId: "0x8507abecde0c135926846ca768a6707e5b1e6cce330706d281c45c4b04661a08",
   deployer: "0xf5ca4f02cf58d6448b6429c691b53c89c56b30c3ded38b45e73ce78829e99f6d",
 } as const;
+
+/**
+ * Published to mainnet on 2026-06-09
+ * (digest 68d4RuFpzqNqzXgLum5KQFkd2qCRL137EkyS4YXpipv2).
+ */
+export const MAINNET_DEPLOYMENT = {
+  network: "mainnet",
+  rpc: "https://fullnode.mainnet.sui.io:443",
+  packageId: "0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb",
+  registryId: "0xa992d65237ec8a953f04f0450c39203cc2777b2a67ae61add8c39f74578d3446",
+  scoreboardId: "0xfed0e2738f38965144bdcc840d4bf79ff0c9d75a9afd04753cd4f13c763cec10",
+  adminCapId: "0xd94e85b3a9e06ecd12b9c032412ffaa6d8d7044d9e97214621aad19528171c41",
+  oracleCapId: "0x147d6290d21bd01d51a6cdafc2610cfcdb3d4272d7419d57d71df714fa90c25c",
+  deployer: "0xf5ca4f02cf58d6448b6429c691b53c89c56b30c3ded38b45e73ce78829e99f6d",
+} as const;

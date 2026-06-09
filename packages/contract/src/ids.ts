@@ -1,6 +1,6 @@
-// wc_predict object ids. Server overrides via env (WC_*); the web falls back to the
-// committed testnet deployment. Clock = 0x6 (Sui system object).
-import { TESTNET_DEPLOYMENT as D } from "./deployments.js";
+// wc_predict object ids. Server overrides via env (WC_*); the web chooses by
+// VITE_SUI_NETWORK. Clock = 0x6 (Sui system object).
+import { MAINNET_DEPLOYMENT, TESTNET_DEPLOYMENT } from "./deployments.js";
 
 export const SUI_CLOCK = "0x6";
 
@@ -9,12 +9,18 @@ function fromEnv(key: string): string | undefined {
   return env?.[key];
 }
 
+function deployment() {
+  const viteEnv = (import.meta as unknown as { env?: Record<string, string | undefined> }).env;
+  const network = fromEnv("SUI_NETWORK") ?? viteEnv?.VITE_SUI_NETWORK;
+  return network === "mainnet" ? MAINNET_DEPLOYMENT : TESTNET_DEPLOYMENT;
+}
+
 export const ids = {
-  pkg: () => fromEnv("WC_PACKAGE_ID") ?? D.packageId,
-  registry: () => fromEnv("WC_REGISTRY_ID") ?? D.registryId,
-  scoreboard: () => fromEnv("WC_SCOREBOARD_ID") ?? D.scoreboardId,
-  adminCap: () => fromEnv("WC_ADMIN_CAP_ID") ?? D.adminCapId,
-  oracleCap: () => fromEnv("WC_ORACLE_CAP_ID") ?? D.oracleCapId,
+  pkg: () => fromEnv("WC_PACKAGE_ID") ?? deployment().packageId,
+  registry: () => fromEnv("WC_REGISTRY_ID") ?? deployment().registryId,
+  scoreboard: () => fromEnv("WC_SCOREBOARD_ID") ?? deployment().scoreboardId,
+  adminCap: () => fromEnv("WC_ADMIN_CAP_ID") ?? deployment().adminCapId,
+  oracleCap: () => fromEnv("WC_ORACLE_CAP_ID") ?? deployment().oracleCapId,
 };
 
 /** Kind encoding (matches prediction_game.move). */

@@ -1,0 +1,55 @@
+<svg width="1080" height="1350" viewBox="0 0 1080 1350" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1080" height="1350" fill="#f4ecd8"/>
+  <rect x="42" y="42" width="996" height="1266" fill="#fbf7ec" stroke="#1a1714" stroke-width="6"/>
+  <rect x="70" y="70" width="940" height="120" fill="#1a1714"/>
+  <text x="540" y="150" text-anchor="middle" fill="#f4ecd8" font-size="78" font-family="Anton, Impact, sans-serif" letter-spacing="2">THE DAILY WALRUS</text>
+  <text x="540" y="220" text-anchor="middle" fill="#c8102e" font-size="30" font-family="JetBrains Mono, monospace" letter-spacing="4">WORLD CUP MEMORY EDITION</text>
+
+  <circle cx="175" cy="330" r="86" fill="#1a1714"/>
+  <ellipse cx="175" cy="348" rx="58" ry="48" fill="#f4ecd8"/>
+  <circle cx="154" cy="326" r="10" fill="#1a1714"/>
+  <circle cx="196" cy="326" r="10" fill="#1a1714"/>
+  <path d="M152 365 C152 385 198 385 198 365" stroke="#1a1714" stroke-width="8" stroke-linecap="round"/>
+  <path d="M106 258 C165 206 225 206 282 258" stroke="#1a1714" stroke-width="10" stroke-linecap="round"/>
+  <path d="M106 426 C165 478 225 478 282 426" stroke="#1a1714" stroke-width="10" stroke-linecap="round"/>
+  <path d="M206 292 C245 255 287 257 306 286" stroke="#c8102e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M206 392 C245 429 287 427 306 398" stroke="#1f7a3d" stroke-width="8" stroke-linecap="round"/>
+
+  <text x="360" y="312" fill="#1a1714" font-size="58" font-family="Anton, Impact, sans-serif">PREDICT. REMEMBER. GET ROASTED.</text>
+  <text x="360" y="365" fill="#57514a" font-size="28" font-family="DM Sans, Arial, sans-serif">A Sui + Walrus Memory app where Judge Gil never forgets your bad football takes.</text>
+  <rect x="360" y="405" width="560" height="54" fill="#37c3b0"/>
+  <text x="388" y="441" fill="#ffffff" font-size="24" font-family="JetBrains Mono, monospace">Wallet-gated predictions + on-chain proof</text>
+
+  <g font-family="DM Sans, Arial, sans-serif">
+    <rect x="80" y="540" width="280" height="235" fill="#f4ecd8" stroke="#1a1714" stroke-width="4"/>
+    <text x="110" y="605" fill="#c8102e" font-size="28" font-family="Anton, Impact, sans-serif">1. MAKE PICKS</text>
+    <text x="110" y="655" fill="#1a1714" font-size="23">Submit scorelines, MVPs, worst</text>
+    <text x="110" y="690" fill="#1a1714" font-size="23">players, champions, and group</text>
+    <text x="110" y="725" fill="#1a1714" font-size="23">outcomes through Sui objects.</text>
+
+    <rect x="400" y="540" width="280" height="235" fill="#f4ecd8" stroke="#1a1714" stroke-width="4"/>
+    <text x="430" y="605" fill="#c8102e" font-size="28" font-family="Anton, Impact, sans-serif">2. WALRUS MEMORY</text>
+    <text x="430" y="655" fill="#1a1714" font-size="23">Gil recalls your favorite teams,</text>
+    <text x="430" y="690" fill="#1a1714" font-size="23">past takes, fixture context, and</text>
+    <text x="430" y="725" fill="#1a1714" font-size="23">official squad data globally.</text>
+
+    <rect x="720" y="540" width="280" height="235" fill="#f4ecd8" stroke="#1a1714" stroke-width="4"/>
+    <text x="750" y="605" fill="#c8102e" font-size="28" font-family="Anton, Impact, sans-serif">3. ROASTED EDITION</text>
+    <text x="750" y="655" fill="#1a1714" font-size="23">Team and player roasts use your</text>
+    <text x="750" y="690" fill="#1a1714" font-size="23">record, memory, and official</text>
+    <text x="750" y="725" fill="#1a1714" font-size="23">World Cup 2026 data.</text>
+  </g>
+
+  <rect x="80" y="850" width="920" height="240" fill="#1a1714"/>
+  <text x="120" y="915" fill="#f4ecd8" font-size="34" font-family="Anton, Impact, sans-serif">VERIFIABLE STACK</text>
+  <text x="120" y="970" fill="#37c3b0" font-size="25" font-family="JetBrains Mono, monospace">Walrus Memory</text>
+  <text x="380" y="970" fill="#f4ecd8" font-size="25" font-family="DM Sans, Arial, sans-serif">global schedule + team/player memory</text>
+  <text x="120" y="1020" fill="#37c3b0" font-size="25" font-family="JetBrains Mono, monospace">Sui Move</text>
+  <text x="380" y="1020" fill="#f4ecd8" font-size="25" font-family="DM Sans, Arial, sans-serif">Prediction, OutputRecord, Scoreboard</text>
+  <text x="120" y="1070" fill="#37c3b0" font-size="25" font-family="JetBrains Mono, monospace">Walrus Sites</text>
+  <text x="380" y="1070" fill="#f4ecd8" font-size="25" font-family="DM Sans, Arial, sans-serif">static web app ready for wal.app once funded</text>
+
+  <rect x="80" y="1150" width="920" height="84" fill="#c8102e"/>
+  <text x="540" y="1204" text-anchor="middle" fill="#ffffff" font-size="30" font-family="Anton, Impact, sans-serif" letter-spacing="1">I'M NOT SURE I CAN REMEMBER... JUST KIDDING. GIL REMEMBERS EVERYTHING.</text>
+  <text x="540" y="1284" text-anchor="middle" fill="#57514a" font-size="22" font-family="JetBrains Mono, monospace">GitHub: tienlenan/walrus-wc-2026-agentic-ai-hackathon</text>
+</svg>

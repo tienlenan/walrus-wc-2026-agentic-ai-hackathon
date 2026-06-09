@@ -43,16 +43,25 @@ Core promise: **you can verify the project works from links and object IDs** (no
 Final submission must use mainnet IDs and URLs only.
 
 - Mainnet Sui deploy wallet: `0xf5ca4f02cf58d6448b6429c691b53c89c56b30c3ded38b45e73ce78829e99f6d`.
-- Mainnet contract package ID: `TBD after mainnet publish`.
-- Mainnet MatchRegistry object: `TBD after mainnet publish`.
-- Mainnet Scoreboard object: `TBD after mainnet publish`.
-- Mainnet Walrus Site object: `TBD after mainnet Walrus Sites deploy`.
+- Mainnet publish digest: `68d4RuFpzqNqzXgLum5KQFkd2qCRL137EkyS4YXpipv2`.
+- Mainnet contract package ID: `0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb`.
+- Mainnet MatchRegistry object: `0xa992d65237ec8a953f04f0450c39203cc2777b2a67ae61add8c39f74578d3446`.
+- Mainnet Scoreboard object: `0xfed0e2738f38965144bdcc840d4bf79ff0c9d75a9afd04753cd4f13c763cec10`.
+- Mainnet AdminCap object: `0xd94e85b3a9e06ecd12b9c032412ffaa6d8d7044d9e97214621aad19528171c41`.
+- Mainnet OracleCap object: `0x147d6290d21bd01d51a6cdafc2610cfcdb3d4272d7419d57d71df714fa90c25c`.
+- Mainnet Walrus Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`.
+- Mainnet Walrus Sites base36 diagnostic: `5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg`.
 - Mainnet `wal.app` URL / SuiNS name: `TBD after SuiNS is configured for the site object`.
 - Walrus Memory namespaces:
   - Global schedule memory: `daily-walrus:global:world-cup-2026`.
   - Per-user memory: `daily-walrus:user:<sui-address>`.
 
-Current blocker: the deploy wallet has no mainnet SUI gas objects and no usable WAL balance, so mainnet package publish and Walrus Sites deploy cannot complete from this wallet yet. Mainnet publish dry-run passes with estimated gas `35,820,000 MIST`; dry-run object IDs are simulation-only and must not be submitted.
+Current public URL blocker: the mainnet site object exists, but public `wal.app` browsing requires a SuiNS name pointed at the site object. The base36 subdomain without SuiNS currently returns 404 on `wal.app`.
+
+Mainnet fixture seed status: 104/104 World Cup fixtures registered in the mainnet MatchRegistry. Example txs:
+- Match 1 register: `DXfbZj4U89VgBAxnm2qRAJo5hevwdxHKwW6b3cYh7WXS`
+- Match 2 register: `3FzSbYBjEgSswFsRqUk7LmK6sob4ioSxpNsiUvg2XUBB`
+- Match 104 register: `3vkHeidnmnYxJe3a9vc1hXTEzWAngv44L4robPxiVSub`
 
 ## 6) Judge Verification Trail
 - `/api/tracking/runtime` page contains:
@@ -75,7 +84,7 @@ These IDs prove the flow was tested before mainnet. Do not paste them into the f
   - Settle match 2: `7xhVSDGbR5wocVs8iNMVgB4ZgMSAshZ4uyqX93LtdRDw`
 
 ## 8) Submission Outputs (Ready to Attach)
-- Demo video ≤ 3:00
+- Demo video ≤ 3:00 (record a real walkthrough after SuiNS/public URL is connected)
 - Poster (vertical + optional horizontal)
 - Screenshots pack:
   - home / predictions / leaderboard / roasts / team profiles / gallery / notebook / tracking

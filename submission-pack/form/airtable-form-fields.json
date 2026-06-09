@@ -1,0 +1,46 @@
+{
+  "source": "https://airtable.com/appoDAKpC74UOqoDa/shrIl2BMnzMwpuLhO",
+  "capturedAt": "2026-06-09",
+  "project": {
+    "name": "The Daily Walrus",
+    "session": "Walrus Session 4 - Walrus Memory World Cup",
+    "github": "https://github.com/tienlenan/walrus-wc-2026-agentic-ai-hackathon",
+    "suiAddress": "0xf5ca4f02cf58d6448b6429c691b53c89c56b30c3ded38b45e73ce78829e99f6d",
+    "projectUrl": "TODO: final https://<suins>.wal.app URL",
+    "deepSurgeUrl": "TODO: final DeepSurge project URL",
+    "xTweetUrl": "TODO: final #Walrus tweet URL",
+    "mainnetPublishDigest": "68d4RuFpzqNqzXgLum5KQFkd2qCRL137EkyS4YXpipv2",
+    "mainnetPackageId": "0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb",
+    "mainnetRegistryId": "0xa992d65237ec8a953f04f0450c39203cc2777b2a67ae61add8c39f74578d3446",
+    "mainnetScoreboardId": "0xfed0e2738f38965144bdcc840d4bf79ff0c9d75a9afd04753cd4f13c763cec10",
+    "mainnetWalrusSiteObjectId": "0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158",
+    "mainnetWalrusSiteBase36": "5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg",
+    "mainnetFixtureCount": 104
+  },
+  "requiredHumanFields": [
+    "Team Leader Name",
+    "Team Leader Email",
+    "Discord handle",
+    "Country",
+    "DeepSurge project Link",
+    "Project Link (URL)",
+    "X tweet link",
+    "Mainnet confirmation"
+  ],
+  "uploadFiles": {
+    "visuals": [
+      "submission-pack/assets/posters/poster-sketchnote.png",
+      "submission-pack/assets/docs/high-level-design-requirements.pdf",
+      "submission-pack/assets/docs/storage-memory-explainer.pdf",
+      "submission-pack/assets/screenshots/screenshot-home.png",
+      "submission-pack/assets/screenshots/screenshot-predictions.png",
+      "submission-pack/assets/screenshots/screenshot-leaderboard.png",
+      "submission-pack/assets/screenshots/screenshot-notebook.png",
+      "submission-pack/assets/screenshots/screenshot-roasts.png",
+      "submission-pack/assets/screenshots/screenshot-team-profiles.png",
+      "submission-pack/assets/screenshots/screenshot-gallery.png",
+      "submission-pack/assets/screenshots/screenshot-tracking.png"
+    ],
+    "demoVideo": "TODO: record real sub-3-minute walkthrough after SuiNS is connected"
+  }
+}
