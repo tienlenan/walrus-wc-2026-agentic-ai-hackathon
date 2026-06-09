@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "pnpm -r --parallel dev",
     "dev:web": "pnpm --filter @daily-walrus/web dev",
+    "dev:web:test": "pnpm --filter @daily-walrus/web dev:test",
     "dev:server": "pnpm --filter @daily-walrus/server dev",
     "build": "pnpm -r build",
     "build:web": "pnpm --filter @daily-walrus/web build",

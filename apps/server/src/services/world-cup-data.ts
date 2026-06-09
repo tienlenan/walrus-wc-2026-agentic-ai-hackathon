@@ -1,7 +1,10 @@
 import { getPool } from "@daily-walrus/db";
-import fixtureData from "../data/world-cup-2026-fixtures.generated.json";
-import squadData from "../data/world-cup-2026-squads.generated.json";
+import { createRequire } from "node:module";
 import { contentHash, publishJsonBlob, type WalrusBlobPointer } from "./walrus-blob.js";
+
+const require = createRequire(import.meta.url);
+const fixtureData = require("../data/world-cup-2026-fixtures.generated.json") as unknown;
+const squadData = require("../data/world-cup-2026-squads.generated.json") as unknown;
 
 const SQUAD_SOURCE_URL = "https://fdp.fifa.org/assetspublic/ce281/pdf/SquadLists-English.pdf";
 const FIFA_SCHEDULE_URL =

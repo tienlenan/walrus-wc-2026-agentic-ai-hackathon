@@ -4,6 +4,7 @@ import { getPool } from "@daily-walrus/db";
 import { indexOnce } from "./event-indexer.js";
 import { syncGlobalWorldCupMemory } from "./global-world-cup-memory.js";
 import { getSuiGrpcClient } from "./sui-clients.js";
+import { syncUserPredictionMemory } from "./user-prediction-memory.js";
 
 type PredictionPayload = { a?: number | string; b?: number | string };
 
@@ -259,6 +260,16 @@ async function syncScheduleMemoryAfterScore(matchId: string): Promise<void> {
   }
 }
 
+async function syncUserMemoriesAfterScore(entries: ScoreEntryDto[]): Promise<void> {
+  const users = [...new Set(entries.map((entry) => entry.user).filter((user) => user.startsWith("0x")))];
+  const results = await Promise.allSettled(users.map((user) => syncUserPredictionMemory(user)));
+  for (const result of results) {
+    if (result.status === "rejected") {
+      console.error("[score] user prediction memory sync failed:", result.reason instanceof Error ? result.reason.message : result.reason);
+    }
+  }
+}
+
 export async function scoreMatch(input: ScoreMatchInput): Promise<ScoreMatchResult> {
   const matchId = String(input.matchId ?? "").trim();
   if (!matchId) throw new Error("matchId required");
@@ -346,6 +357,7 @@ export async function scoreMatch(input: ScoreMatchInput): Promise<ScoreMatchResu
 
     const { indexed } = await indexOnce();
     await syncScheduleMemoryAfterScore(matchId);
+    await syncUserMemoriesAfterScore(entries);
     return { mode, matchId, entries, skipped, txDigest, settleTxDigest, totalPoints, indexed };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

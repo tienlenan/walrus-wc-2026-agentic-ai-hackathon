@@ -6,7 +6,7 @@ import { getSession } from "./auth";
 const BASE = import.meta.env.VITE_MASTRA_URL ?? "http://localhost:4111";
 
 export type OutputKindKey = "chat" | "roast" | "match_vote" | "notebook_query" | "profile_pointer";
-export type ResourceType = "chat_message" | "roast" | "match_vote" | "notebook_query" | "team_profile";
+export type ResourceType = "chat_message" | "roast" | "match_vote" | "notebook_query" | "team_profile" | "gift_reveal";
 
 export interface WalrusOutputPointer {
   status: "not_configured" | "published" | "already_certified" | "failed";

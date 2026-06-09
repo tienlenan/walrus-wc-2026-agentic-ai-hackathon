@@ -1,0 +1,16 @@
+{
+  "buildCommand": "echo backend-only",
+  "outputDirectory": "public",
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 60,
+      "includeFiles": "{apps/server/src/data/**,packages/**}"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api?path=:path*"
+    }
+  ]
+}

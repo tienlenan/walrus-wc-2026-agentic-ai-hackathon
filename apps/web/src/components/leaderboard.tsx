@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getGameSnapshot, subscribeGameSnapshot, type GameSnapshot, type LeaderboardRow } from "../lib/game-api";
 import { useI18n } from "../lib/i18n";
+import { GiftRevealStrip } from "./gift-reveal-strip";
 import "./leaderboard.css";
 
 function shortAddress(address: string): string {
@@ -61,24 +62,27 @@ export function Leaderboard() {
       </div>
 
       {record && (
-        <div className="my-record-strip">
-          <div>
-            <span>{t("board.myPoints")}</span>
-            <strong>{record.totalPoints}</strong>
+        <>
+          <div className="my-record-strip">
+            <div>
+              <span>{t("board.myPoints")}</span>
+              <strong>{record.totalPoints}</strong>
+            </div>
+            <div>
+              <span>{t("board.accuracy")}</span>
+              <strong>{record.accuracy == null ? "-" : `${record.accuracy}%`}</strong>
+            </div>
+            <div>
+              <span>{t("board.streak")}</span>
+              <strong>{record.streak}</strong>
+            </div>
+            <div>
+              <span>{t("board.receipts")}</span>
+              <strong>{record.predictions.length}</strong>
+            </div>
           </div>
-          <div>
-            <span>{t("board.accuracy")}</span>
-            <strong>{record.accuracy == null ? "-" : `${record.accuracy}%`}</strong>
-          </div>
-          <div>
-            <span>{t("board.streak")}</span>
-            <strong>{record.streak}</strong>
-          </div>
-          <div>
-            <span>{t("board.receipts")}</span>
-            <strong>{record.predictions.length}</strong>
-          </div>
-        </div>
+          <GiftRevealStrip predictions={record.predictions} walletAddress={record.address} />
+        </>
       )}
 
       <div className="leaderboard-table-wrap">

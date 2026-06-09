@@ -1,6 +1,7 @@
 import { ids, Kind } from "@daily-walrus/contract";
 import { getPool } from "@daily-walrus/db";
 import { queryMoveEvents, type ChainEvent, type ChainEventCursor } from "./sui-events.js";
+import { syncUserPredictionMemory } from "./user-prediction-memory.js";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -147,6 +148,9 @@ async function handlePredictionSubmitted(event: ChainEvent): Promise<void> {
       event.id.txDigest,
       dateFromMs(json.created_ms ?? json.createdMs),
     ],
+  );
+  void syncUserPredictionMemory(owner).catch((error) =>
+    console.error("[indexer] prediction memory sync failed:", error instanceof Error ? error.message : error),
   );
 }
 

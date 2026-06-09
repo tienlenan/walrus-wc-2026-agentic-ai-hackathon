@@ -5,7 +5,7 @@
  * custom instructions, and recalled memory.
  */
 
-import type { RoastSeverity } from "./types";
+import type { RoastSeverity } from "./types.js";
 
 export const GIL_NAME = "Gil";
 

@@ -60,7 +60,10 @@ export default function App() {
 
       <header className="masthead">
         <div className="eyebrow">{t("brand.eyebrow")}</div>
-        <h1 className="nameplate">The Daily Walrus</h1>
+        <div className="masthead-brand-row">
+          <img className="app-logo-mark" src="/app-icon.svg" alt="" aria-hidden="true" />
+          <h1 className="nameplate">Gil's VAR Shamebook</h1>
+        </div>
         <div className="tagline">{t("brand.tagline")}</div>
         <div className="dateline">
           <span>{t("brand.est")}</span>

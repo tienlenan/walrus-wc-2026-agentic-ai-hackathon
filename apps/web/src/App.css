@@ -1,4 +1,4 @@
-/* The Daily Walrus — front page (skeleton) */
+/* Gil's VAR Shamebook — front page shell. */
 
 .paper {
   width: 100%;
@@ -33,13 +33,29 @@
   margin: 0 0.6rem;
 }
 
+.masthead-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  margin: 0.65rem 0 0.25rem;
+}
+
+.app-logo-mark {
+  flex: 0 0 auto;
+  width: clamp(4.25rem, 8vw, 6.25rem);
+  height: clamp(4.25rem, 8vw, 6.25rem);
+  filter: drop-shadow(3px 3px 0 color-mix(in srgb, var(--ink) 18%, transparent));
+}
+
 .nameplate {
   font-family: var(--font-masthead);
   font-weight: 900;
-  font-size: clamp(2.6rem, 9vw, 5.5rem);
+  font-size: clamp(2rem, 5.8vw, 4.2rem);
   line-height: 0.95;
-  margin: 0.4rem 0 0.2rem;
+  margin: 0;
   letter-spacing: -0.02em;
+  text-align: left;
 }
 
 .tagline {
@@ -65,6 +81,22 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink-soft);
+}
+
+@media (max-width: 720px) {
+  .masthead-brand-row {
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .app-logo-mark {
+    width: 3.7rem;
+    height: 3.7rem;
+  }
+
+  .nameplate {
+    font-size: clamp(1.75rem, 9vw, 2.65rem);
+  }
 }
 
 .edition-nav {

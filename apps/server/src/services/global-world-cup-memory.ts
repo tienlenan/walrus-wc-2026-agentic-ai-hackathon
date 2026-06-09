@@ -211,6 +211,32 @@ function buildMemoryDocuments(fixtures: FixtureDto[]): string[] {
   return docs;
 }
 
+function buildTeamMemoryDocuments(): string[] {
+  const teams = [...getWorldCupSnapshot().teams].sort((a, b) => a.groupName.localeCompare(b.groupName) || a.name.localeCompare(b.name));
+  const docs = [
+    [
+      "Daily Walrus global World Cup 2026 team profile memory.",
+      `There are ${teams.length} team profiles and ${teams.reduce((sum, team) => sum + team.squad.length, 0)} listed players.`,
+      "When a user asks about a team, coach, squad, flag, group, or player list, answer from this global memory first.",
+    ].join(" "),
+  ];
+
+  for (const team of teams) {
+    const squad = team.squad
+      .map((player) => `${player.number}. ${player.playerName} (${player.position}, ${player.club})`)
+      .join("; ");
+    docs.push(
+      [
+        `${team.flagEmoji} ${team.name} (${team.code}) plays in Group ${team.groupName}, ${team.confederation}.`,
+        `Coach: ${team.coach ?? "TBA"}${team.coachNationality ? ` (${team.coachNationality})` : ""}.`,
+        `Official squad: ${squad}.`,
+      ].join(" "),
+    );
+  }
+
+  return docs;
+}
+
 async function previousHash(memoryKind = "world_cup_schedule"): Promise<string | null> {
   if (!process.env.DATABASE_URL) return null;
   await ensureGlobalMemoryTable();
@@ -306,6 +332,85 @@ export async function recordGlobalTeamMemorySync(input: {
     ],
   );
   return getGlobalWorldCupMemoryStatus("not_synced", "world_cup_teams");
+}
+
+export async function syncGlobalTeamMemory(options: SyncOptions = {}): Promise<GlobalMemoryStatusDto> {
+  const reason = options.reason ?? "manual";
+  const memoryKind = "world_cup_teams";
+  const snapshot = getWorldCupSnapshot();
+  const docs = buildTeamMemoryDocuments();
+  const stablePayload = {
+    kind: memoryKind,
+    sources: snapshot.sources,
+    teams: snapshot.teams.map((team) => ({
+      code: team.code,
+      name: team.name,
+      groupName: team.groupName,
+      confederation: team.confederation,
+      coach: team.coach,
+      coachNationality: team.coachNationality,
+      flagEmoji: team.flagEmoji,
+      squad: team.squad,
+    })),
+  };
+  const hash = contentHash(stablePayload);
+
+  if (!options.force && (await previousHash(memoryKind)) === hash) {
+    return getGlobalWorldCupMemoryStatus("unchanged", memoryKind);
+  }
+
+  const pointer = await publishJsonBlob("global-world-cup-team-profiles", stablePayload);
+  let status = "memory_not_configured";
+  let error: string | null = null;
+
+  try {
+    if (isMemoryEnabled()) {
+      const accepted = await rememberBulk(WORLD_CUP_GLOBAL_NAMESPACE, docs);
+      status = accepted.jobIds.length > 0 ? "synced" : "memory_not_configured";
+    }
+  } catch (err) {
+    status = "failed";
+    error = err instanceof Error ? err.message : String(err);
+  }
+
+  if (process.env.DATABASE_URL) {
+    await ensureGlobalMemoryTable();
+    await getPool().query(
+      `insert into global_memory_syncs(
+         namespace, memory_kind, content_hash, status, reason, error,
+         walrus_blob_id, walrus_object_id, walrus_status, team_count, player_count, memory_docs, updated_at
+       )
+       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,now())
+       on conflict (namespace, memory_kind) do update set
+         content_hash = excluded.content_hash,
+         status = excluded.status,
+         reason = excluded.reason,
+         error = excluded.error,
+         walrus_blob_id = excluded.walrus_blob_id,
+         walrus_object_id = excluded.walrus_object_id,
+         walrus_status = excluded.walrus_status,
+         team_count = excluded.team_count,
+         player_count = excluded.player_count,
+         memory_docs = excluded.memory_docs,
+         updated_at = now()`,
+      [
+        WORLD_CUP_GLOBAL_NAMESPACE,
+        memoryKind,
+        hash,
+        status,
+        reason,
+        error,
+        pointer.blobId,
+        pointer.objectId,
+        pointer.status,
+        snapshot.teams.length,
+        snapshot.teams.reduce((sum, team) => sum + team.squad.length, 0),
+        docs.length,
+      ],
+    );
+  }
+
+  return getGlobalWorldCupMemoryStatus(status, memoryKind);
 }
 
 export async function syncGlobalPlayerRoastMemory(options: SyncOptions = {}): Promise<GlobalMemoryStatusDto> {

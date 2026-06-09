@@ -4,6 +4,7 @@ import { buildSessionContext } from "@daily-walrus/shared";
 import { recallGlobalWorldCupMemory } from "./global-world-cup-memory.js";
 import { publishJsonBlob, type WalrusBlobPointer } from "./walrus-blob.js";
 import { findPlayerRoastTraits } from "../data/player-roast-traits.js";
+import { getUserPredictionMemoryFacts, syncUserPredictionMemory } from "./user-prediction-memory.js";
 
 export interface ChatOptions {
   /** Response language ("vi" | "en"). */
@@ -34,12 +35,19 @@ export async function chatWithGil(
 ): Promise<ChatResult> {
   const ns = memNamespace(resourceId);
 
-  const [userMemories, globalMemories] = await Promise.all([
+  const [predictionFacts, userMemories, globalMemories] = await Promise.all([
+    getUserPredictionMemoryFacts(resourceId).catch(() => [] as string[]),
     recall(ns, message).catch(() => [] as string[]),
     recallGlobalWorldCupMemory(message).catch(() => [] as string[]),
   ]);
+  if (predictionFacts.length > 0) {
+    await syncUserPredictionMemory(resourceId).catch((error) =>
+      console.error("[memory] prediction sync failed:", error?.message ?? error),
+    );
+  }
   const memories = [
     ...globalMemories.map((memory) => `[Global WC2026 memory] ${memory}`),
+    ...predictionFacts.map((memory) => `[Live prediction record] ${memory}`),
     ...findPlayerRoastTraits(message).map(
       (trait) =>
         `[Player roast trait] ${trait.playerName} (${trait.teamCode}): ${trait.roastAngles.join(" ")} Safe lines: ${trait.safeLines.join(" ")} Avoid: ${trait.avoid.join(" ")}`,
@@ -66,6 +74,7 @@ export async function chatWithGil(
     message,
     reply: res.text,
     globalMemories,
+    predictionFacts,
     userMemories,
     usedMemories: memories,
     createdAt: new Date().toISOString(),

@@ -1,6 +1,8 @@
 import { getSession } from "./auth";
 
 const BASE = import.meta.env.VITE_MASTRA_URL ?? "http://localhost:4111";
+const DEMO_GAME_SNAPSHOT = import.meta.env.VITE_DEMO_GAME_SNAPSHOT === "1";
+const DISABLE_GAME_STREAM = import.meta.env.VITE_DISABLE_GAME_STREAM === "1";
 
 export interface Fixture {
   matchId: string;
@@ -92,7 +94,102 @@ export interface GameSnapshot {
   updatedAt: string;
 }
 
+function demoGameSnapshot(): GameSnapshot {
+  const now = new Date().toISOString();
+  return {
+    fixtures: [
+      {
+        matchId: "demo-arg-bra",
+        stage: "group",
+        groupName: "Group D",
+        home: "Argentina",
+        away: "Brazil",
+        homeTeamCode: "ARG",
+        awayTeamCode: "BRA",
+        venue: "Demo Bowl",
+        city: "Walrus City",
+        kickoff: "2026-06-15T01:00:00.000Z",
+        status: "finished",
+        homeScore: 2,
+        awayScore: 1,
+        chainRegistered: true,
+        predictionOpen: false,
+        predictionStatus: "closed_finished",
+        predictionClosesAt: "2026-06-15T01:00:00.000Z",
+        predictionLockedReason: "demo match is settled on-chain",
+      },
+    ],
+    leaderboard: [
+      {
+        userId: "demo-user",
+        displayName: "0xRoastDoctor",
+        suiAddress: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+        totalPoints: 10,
+        streak: 1,
+        bestStreak: 2,
+        graded: 2,
+        correct: 1,
+        accuracy: 50,
+      },
+      {
+        userId: "demo-rival",
+        displayName: "PenaltyIntoRowZ",
+        suiAddress: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+        totalPoints: 3,
+        streak: 0,
+        bestStreak: 1,
+        graded: 2,
+        correct: 0,
+        accuracy: 0,
+      },
+    ],
+    votes: [],
+    myRecord: {
+      address: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+      totalPoints: 10,
+      streak: 1,
+      bestStreak: 2,
+      graded: 2,
+      correct: 1,
+      accuracy: 50,
+      predictions: [
+        {
+          id: "demo-correct-scoreline",
+          matchId: "demo-arg-bra",
+          kind: "scoreline",
+          payload: { home: 2, away: 1 },
+          result: "correct",
+          chainStatus: "submitted",
+          txDigest: "DEMO_TX_CORRECT",
+          oracleStatus: "recorded",
+          oraclePoints: 10,
+          oracleCorrect: true,
+          oracleTxDigest: "DEMO_ORACLE_CORRECT",
+          createdAt: now,
+        },
+        {
+          id: "demo-wrong-mvp",
+          matchId: "demo-arg-bra",
+          kind: "match_mvp",
+          payload: { target: "Ronaldo free kick committee" },
+          result: "wrong",
+          chainStatus: "submitted",
+          txDigest: "DEMO_TX_WRONG",
+          oracleStatus: "recorded",
+          oraclePoints: 0,
+          oracleCorrect: false,
+          oracleTxDigest: "DEMO_ORACLE_WRONG",
+          createdAt: now,
+        },
+      ],
+    },
+    updatedAt: now,
+  };
+}
+
 export async function getGameSnapshot(): Promise<GameSnapshot> {
+  if (DEMO_GAME_SNAPSHOT) return demoGameSnapshot();
+
   const headers: Record<string, string> = {};
   const session = getSession();
   if (session?.token) headers.Authorization = `Bearer ${session.token}`;
@@ -126,6 +223,28 @@ export function subscribeGameSnapshot(
   onSnapshot: (snapshot: GameSnapshot) => void,
   onError?: () => void,
 ): () => void {
+  if (DEMO_GAME_SNAPSHOT) {
+    window.setTimeout(() => onSnapshot(demoGameSnapshot()), 0);
+    return () => undefined;
+  }
+  if (DISABLE_GAME_STREAM) {
+    let cancelled = false;
+    let timer: number | null = null;
+    const poll = async () => {
+      try {
+        onSnapshot(await getGameSnapshot());
+      } catch {
+        onError?.();
+      }
+      if (!cancelled) timer = window.setTimeout(() => void poll(), 10_000);
+    };
+    void poll();
+    return () => {
+      cancelled = true;
+      if (timer != null) window.clearTimeout(timer);
+    };
+  }
+
   const source = new EventSource(`${BASE}/api/game/stream`);
   source.addEventListener("snapshot", (event) => {
     onSnapshot(JSON.parse((event as MessageEvent<string>).data) as GameSnapshot);

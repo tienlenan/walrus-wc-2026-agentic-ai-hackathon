@@ -2,6 +2,11 @@
 .env
 .env.*
 !.env.example
+!apps/web/env/
+!apps/web/env/test/
+!apps/web/env/test/.env.test
+!apps/web/env/production/
+!apps/web/env/production/.env.production
 *.key
 *.pem
 secrets/
@@ -31,3 +36,4 @@ coverage/
 .turbo/
 .codex/
 .agents/skills
+.vercel
