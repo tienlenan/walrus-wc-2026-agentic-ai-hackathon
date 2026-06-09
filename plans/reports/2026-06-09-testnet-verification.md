@@ -73,6 +73,8 @@
 - Cleanup now advances indexer cursors to skip historical chain events, so old test predictions do not reappear on server restart.
 - `/api/tracking/runtime`: ✅ PASS; explorer links use `https://suiscan.xyz/testnet/object/...`, no `suiexplorer.com`; team memory shows 48 teams / 1,248 players.
 - `/api/game/snapshot`: ✅ PASS; 104 fixtures, match 1 open on-chain, other base fixtures preserved.
+- Player roast trait memory: ✅ PASS; 8 player roast profiles synced into `daily-walrus:global:world-cup-2026` under `player_roast_traits`.
+- Player roast trait Walrus testnet blob: ✅ PASS (`TFT-5KpH07fTI83PdZ_i6869RNzG2aj_d_YxbiBjSHw`, object `0x6c5c938a0a04b190498ce19253a0caf27b86e4a592381cc7f3cb249f7ed8312a`).
 
 ## Known Blockers
 - On-chain execute operations requiring admin oracle/deployer wallet fail unless matching signer key is loaded.

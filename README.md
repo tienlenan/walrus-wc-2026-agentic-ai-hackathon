@@ -84,7 +84,7 @@ pnpm --filter @daily-walrus/server ping "Who wins WC 2026?"   # Gil replies (no 
 | `pnpm --filter @daily-walrus/server ping` | One‑shot Gil reply (bypasses HTTP) |
 
 ## 📚 Docs
-Planning & design (written in Vietnamese):
+Planning & design (written in English):
 
 | Doc | Contents |
 |---|---|
@@ -95,6 +95,7 @@ Planning & design (written in Vietnamese):
 | [05-design-direction](docs/05-design-direction.md) | Theme, Gil mascot, design tokens, roast card |
 | [06-research-notes](docs/06-research-notes.md) | SDK / CLI reference + sources |
 | [07-runtime-tracking-design](docs/07-runtime-tracking-design.md) | Global schedule memory + contract/Walrus tracking page |
+| [high-level-design-requirements](docs/high-level-design-requirements.md) | Short English design/requirements summary with PDF export |
 
 ## 🗺️ Status
 - ✅ Web app · server · Supabase schema · Gil persona · wallet session · i18n/settings

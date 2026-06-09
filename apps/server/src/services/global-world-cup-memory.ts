@@ -5,6 +5,7 @@ import { getGameSnapshot, type FixtureDto } from "./game-snapshot.js";
 import { SUI_NETWORK } from "./sui-clients.js";
 import { contentHash, publishJsonBlob, type WalrusBlobPointer } from "./walrus-blob.js";
 import { getWorldCupSnapshot } from "./world-cup-data.js";
+import { PLAYER_ROAST_TRAITS, buildPlayerRoastMemoryDocuments } from "../data/player-roast-traits.js";
 
 export const WORLD_CUP_GLOBAL_NAMESPACE = "daily-walrus:global:world-cup-2026";
 
@@ -43,6 +44,7 @@ export interface RuntimeTrackingDto {
     globalNamespaceUrl: string | null;
     lastSync: GlobalMemoryStatusDto;
     teamSync: GlobalMemoryStatusDto;
+    playerRoastSync: GlobalMemoryStatusDto;
   };
   contracts: Array<{
     key: string;
@@ -306,6 +308,75 @@ export async function recordGlobalTeamMemorySync(input: {
   return getGlobalWorldCupMemoryStatus("not_synced", "world_cup_teams");
 }
 
+export async function syncGlobalPlayerRoastMemory(options: SyncOptions = {}): Promise<GlobalMemoryStatusDto> {
+  const reason = options.reason ?? "manual";
+  const memoryKind = "player_roast_traits";
+  const docs = buildPlayerRoastMemoryDocuments();
+  const stablePayload = {
+    kind: memoryKind,
+    updatedAt: new Date().toISOString(),
+    traits: PLAYER_ROAST_TRAITS,
+  };
+  const hash = contentHash({ kind: memoryKind, traits: PLAYER_ROAST_TRAITS });
+
+  if (!options.force && (await previousHash(memoryKind)) === hash) {
+    return getGlobalWorldCupMemoryStatus("unchanged", memoryKind);
+  }
+
+  const pointer = await publishJsonBlob("global-player-roast-traits", stablePayload);
+  let status = "memory_not_configured";
+  let error: string | null = null;
+
+  try {
+    if (isMemoryEnabled()) {
+      const accepted = await rememberBulk(WORLD_CUP_GLOBAL_NAMESPACE, docs);
+      status = accepted.jobIds.length > 0 ? "synced" : "memory_not_configured";
+    }
+  } catch (err) {
+    status = "failed";
+    error = err instanceof Error ? err.message : String(err);
+  }
+
+  if (process.env.DATABASE_URL) {
+    await ensureGlobalMemoryTable();
+    await getPool().query(
+      `insert into global_memory_syncs(
+         namespace, memory_kind, content_hash, status, reason, error,
+         walrus_blob_id, walrus_object_id, walrus_status, team_count, player_count, memory_docs, updated_at
+       )
+       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,now())
+       on conflict (namespace, memory_kind) do update set
+         content_hash = excluded.content_hash,
+         status = excluded.status,
+         reason = excluded.reason,
+         error = excluded.error,
+         walrus_blob_id = excluded.walrus_blob_id,
+         walrus_object_id = excluded.walrus_object_id,
+         walrus_status = excluded.walrus_status,
+         team_count = excluded.team_count,
+         player_count = excluded.player_count,
+         memory_docs = excluded.memory_docs,
+         updated_at = now()`,
+      [
+        WORLD_CUP_GLOBAL_NAMESPACE,
+        memoryKind,
+        hash,
+        status,
+        reason,
+        error,
+        pointer.blobId,
+        pointer.objectId,
+        pointer.status,
+        new Set(PLAYER_ROAST_TRAITS.map((trait) => trait.teamCode)).size,
+        PLAYER_ROAST_TRAITS.length,
+        docs.length,
+      ],
+    );
+  }
+
+  return getGlobalWorldCupMemoryStatus(status, memoryKind);
+}
+
 export async function syncGlobalWorldCupMemory(options: SyncOptions = {}): Promise<GlobalMemoryStatusDto> {
   const reason = options.reason ?? "manual";
   const snapshot = await getGameSnapshot(null);
@@ -449,10 +520,11 @@ async function outputRecordCount(): Promise<number> {
 }
 
 export async function getRuntimeTracking(): Promise<RuntimeTrackingDto> {
-  const [snapshot, memoryStatus, teamMemoryStatus, profiles, outputs] = await Promise.all([
+  const [snapshot, memoryStatus, teamMemoryStatus, playerRoastMemoryStatus, profiles, outputs] = await Promise.all([
     getGameSnapshot(null),
     getGlobalWorldCupMemoryStatus(),
     getGlobalWorldCupMemoryStatus("not_synced", "world_cup_teams"),
+    getGlobalWorldCupMemoryStatus("not_synced", "player_roast_traits"),
     profileBlobCount().catch(() => 0),
     outputRecordCount().catch(() => 0),
   ]);
@@ -479,6 +551,7 @@ export async function getRuntimeTracking(): Promise<RuntimeTrackingDto> {
       globalNamespaceUrl: memoryNamespaceUrl(),
       lastSync: memoryStatus,
       teamSync: teamMemoryStatus,
+      playerRoastSync: playerRoastMemoryStatus,
     },
     contracts: contractIds.map(([key, label, objectId]) => ({
       key,

@@ -5,6 +5,7 @@ import { isMemoryEnabled, memNamespace, recall, remember } from "@daily-walrus/w
 import { normalizeRoastSeverity } from "@daily-walrus/shared";
 import { getTeamProfiles } from "./world-cup-data.js";
 import { publishJsonBlob, type WalrusBlobPointer } from "./walrus-blob.js";
+import { findPlayerRoastTraits } from "../data/player-roast-traits.js";
 
 export interface RoastInput {
   targetType: "team" | "player";
@@ -131,6 +132,7 @@ export async function createRoast(identity: string, input: RoastInput): Promise<
   const target = normalizeTarget(input);
   const ns = memNamespace(identity);
   const memories = await recall(ns, `roast ${target.targetName}`).catch(() => [] as string[]);
+  const playerRoastTraits = target.targetType === "player" ? findPlayerRoastTraits(target.targetName, target.teamCode) : [];
   const severity = normalizeRoastSeverity(input.roastSeverity);
   const roastDirectionVi =
     severity === "light"
@@ -147,8 +149,8 @@ export async function createRoast(identity: string, input: RoastInput): Promise<
 
   const prompt =
     input.lang === "vi"
-      ? `Viết một roast bóng đá ngắn bằng tiếng Việt cho ${target.targetName}. Giọng Gil: ${roastDirectionVi} Giữ ranh giới: không thù ghét, không nhắm vào protected class, không bôi nhọ đời tư. Dựa trên context JSON và memory nếu có. 2-4 câu, có punchline.`
-      : `Write a short football roast in English for ${target.targetName}. Gil voice: ${roastDirectionEn} Keep boundaries: no hate, no protected-class attacks, no private-life claims. Use the JSON context and memory if relevant. 2-4 sentences with a punchline.`;
+      ? `Viết một roast bóng đá ngắn bằng tiếng Việt cho ${target.targetName}. Giọng Gil: ${roastDirectionVi} Giữ ranh giới: không thù ghét, không nhắm vào protected class, không bôi nhọ đời tư. Nếu JSON có playerRoastTraits, ưu tiên roastAngles/safeLines và tuân thủ avoid. Dựa trên context JSON và memory nếu có. 2-4 câu, có punchline.`
+      : `Write a short football roast in English for ${target.targetName}. Gil voice: ${roastDirectionEn} Keep boundaries: no hate, no protected-class attacks, no private-life claims. If JSON includes playerRoastTraits, prioritize roastAngles/safeLines and obey avoid. Use the JSON context and memory if relevant. 2-4 sentences with a punchline.`;
 
   let roastText: string;
   try {
@@ -159,6 +161,7 @@ export async function createRoast(identity: string, input: RoastInput): Promise<
         content: JSON.stringify({
           target,
           memories,
+          playerRoastTraits,
         }),
       },
     ]);
@@ -172,6 +175,7 @@ export async function createRoast(identity: string, input: RoastInput): Promise<
   const sourceContext = {
     target: target.context,
     memoriesUsed: memories.length,
+    playerRoastTraits,
     roastSeverity: severity,
   };
   const outputPointer = await publishJsonBlob("roast-output", {

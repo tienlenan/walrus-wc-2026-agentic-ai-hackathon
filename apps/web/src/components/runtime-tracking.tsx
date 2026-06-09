@@ -44,6 +44,7 @@ export function RuntimeTracking() {
 
   const memory = tracking?.memory.lastSync;
   const teamMemory = tracking?.memory.teamSync;
+  const playerRoastMemory = tracking?.memory.playerRoastSync;
   const closedCount = useMemo(() => {
     if (!tracking) return 0;
     return tracking.fixtures.closedFinished + tracking.fixtures.closedKickoff + tracking.fixtures.unknown;
@@ -152,6 +153,18 @@ export function RuntimeTracking() {
                       `${teamMemory?.memoryDocs ?? 0} ${t("tracking.docs")} · ${teamMemory?.teamCount ?? 0} ${t("tracking.teams")} · ${
                         teamMemory?.playerCount ?? 0
                       } ${t("tracking.players")}`}
+                  </small>
+                </div>
+                <div className="tracking-row">
+                  <div>
+                    <span>{t("tracking.playerRoastMemory")}</span>
+                    <strong>{playerRoastMemory?.status ?? "not_synced"}</strong>
+                  </div>
+                  <small>
+                    {playerRoastMemory?.error ??
+                      `${playerRoastMemory?.memoryDocs ?? 0} ${t("tracking.docs")} · ${playerRoastMemory?.playerCount ?? 0} ${t(
+                        "tracking.players",
+                      )}`}
                   </small>
                 </div>
               </div>

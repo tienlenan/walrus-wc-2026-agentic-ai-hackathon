@@ -3,6 +3,7 @@ import { recall, remember, memNamespace, isMemoryEnabled } from "@daily-walrus/w
 import { buildSessionContext } from "@daily-walrus/shared";
 import { recallGlobalWorldCupMemory } from "./global-world-cup-memory.js";
 import { publishJsonBlob, type WalrusBlobPointer } from "./walrus-blob.js";
+import { findPlayerRoastTraits } from "../data/player-roast-traits.js";
 
 export interface ChatOptions {
   /** Response language ("vi" | "en"). */
@@ -39,6 +40,10 @@ export async function chatWithGil(
   ]);
   const memories = [
     ...globalMemories.map((memory) => `[Global WC2026 memory] ${memory}`),
+    ...findPlayerRoastTraits(message).map(
+      (trait) =>
+        `[Player roast trait] ${trait.playerName} (${trait.teamCode}): ${trait.roastAngles.join(" ")} Safe lines: ${trait.safeLines.join(" ")} Avoid: ${trait.avoid.join(" ")}`,
+    ),
     ...userMemories.map((memory) => `[User memory] ${memory}`),
   ];
 

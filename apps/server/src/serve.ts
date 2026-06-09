@@ -11,7 +11,8 @@ import { scoreMatch } from "./services/score-keeper.js";
 import { createRoast, listRoasts } from "./services/roast-engine.js";
 import { getWorldCupSnapshot, publishTeamProfileBlob, seedWorldCupData } from "./services/world-cup-data.js";
 import { registerSuiOutputRecord } from "./services/sui-output-records.js";
-import { getRuntimeTracking, syncGlobalWorldCupMemory } from "./services/global-world-cup-memory.js";
+import { getRuntimeTracking, syncGlobalPlayerRoastMemory, syncGlobalWorldCupMemory } from "./services/global-world-cup-memory.js";
+import { PLAYER_ROAST_TRAITS } from "./data/player-roast-traits.js";
 
 const PORT = Number(process.env.PORT ?? 4111);
 const ALLOWED = (
@@ -104,6 +105,9 @@ const server = createServer(async (req, res) => {
     if (req.method === "GET" && req.url?.startsWith("/api/world-cup/snapshot")) {
       return json(res, 200, getWorldCupSnapshot());
     }
+    if (req.method === "GET" && req.url?.startsWith("/api/world-cup/player-roast-traits")) {
+      return json(res, 200, { traits: PLAYER_ROAST_TRAITS });
+    }
     if (req.method === "GET" && req.url?.startsWith("/api/tracking/runtime")) {
       return json(res, 200, await getRuntimeTracking());
     }
@@ -179,6 +183,11 @@ const server = createServer(async (req, res) => {
       const body = JSON.parse((await readBody(req)) || "{}") as { reason?: string; force?: boolean };
       return json(res, 200, await syncGlobalWorldCupMemory({ reason: body.reason ?? "oracle", force: Boolean(body.force) }));
     }
+    if (req.method === "POST" && req.url === "/api/oracle/player-roast-memory-sync") {
+      if (!oracleAuthorized(req)) return json(res, 401, { error: "oracle token required" });
+      const body = JSON.parse((await readBody(req)) || "{}") as { reason?: string; force?: boolean };
+      return json(res, 200, await syncGlobalPlayerRoastMemory({ reason: body.reason ?? "oracle", force: Boolean(body.force) }));
+    }
 
     // --- Auth: sign-in-with-Sui ---
     if (req.method === "POST" && req.url === "/api/auth/nonce") {
@@ -245,6 +254,8 @@ server.listen(PORT, () => {
       }
       const status = await syncGlobalWorldCupMemory({ reason: "startup" });
       console.log(`[world-cup] global memory ${status.status} (${status.fixtureCount} fixtures)`);
+      const playerStatus = await syncGlobalPlayerRoastMemory({ reason: "startup" });
+      console.log(`[world-cup] player roast memory ${playerStatus.status} (${playerStatus.playerCount} players)`);
     })
     .catch((error) => console.error("[world-cup] seed failed:", error instanceof Error ? error.message : error));
   startEventIndexer();

@@ -95,6 +95,7 @@ export interface RuntimeTracking {
     globalNamespaceUrl: string | null;
     lastSync: GlobalMemoryStatus;
     teamSync: GlobalMemoryStatus;
+    playerRoastSync: GlobalMemoryStatus;
   };
   contracts: Array<{
     key: string;
