@@ -2,16 +2,25 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { askGil } from "../lib/gil-api";
 import { useI18n } from "../lib/i18n";
 import { loadAiSettings, resolveAiLang } from "../lib/ai-settings";
+import { useSuiOutputRecorder } from "../lib/sui-output-record";
+import { useVerifiedSession } from "../lib/wallet-session";
 import "./news-desk-chat.css";
 
 interface Msg {
   role: "user" | "gil";
   text: string;
   memories?: string[];
+  proofDigest?: string;
 }
 
-export function NewsDeskChat() {
+function shortDigest(digest: string): string {
+  return `${digest.slice(0, 10)}...${digest.slice(-6)}`;
+}
+
+export function NewsDeskChat({ onOpenSettings }: { onOpenSettings: () => void }) {
   const { t, lang } = useI18n();
+  const { signedIn } = useVerifiedSession();
+  const recordOutput = useSuiOutputRecorder();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,6 +36,10 @@ export function NewsDeskChat() {
   async function send(text: string) {
     const msg = text.trim();
     if (!msg || loading) return;
+    if (!signedIn) {
+      setError("Connect wallet and sign in first.");
+      return;
+    }
     setInput("");
     setError(null);
     setMessages((m) => [...m, { role: "user", text: msg }]);
@@ -35,11 +48,19 @@ export function NewsDeskChat() {
       const ai = loadAiSettings();
       const reply = await askGil(msg, {
         lang: resolveAiLang(ai.aiLang, lang),
+        roastSeverity: ai.roastSeverity,
         instructions: ai.instructions || undefined,
       });
-      setMessages((m) => [...m, { role: "gil", text: reply.text, memories: reply.usedMemories }]);
-    } catch {
-      setError(t("chat.error"));
+      const proof = await recordOutput({
+        outputKind: "chat",
+        resourceType: "chat_message",
+        resourceId: `chat-${Date.now().toString(36)}`,
+        payload: { message: msg, reply: reply.text, usedMemories: reply.usedMemories },
+        pointer: reply.outputPointer,
+      });
+      setMessages((m) => [...m, { role: "gil", text: reply.text, memories: reply.usedMemories, proofDigest: proof.txDigest }]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("chat.error"));
     } finally {
       setLoading(false);
     }
@@ -52,7 +73,16 @@ export function NewsDeskChat() {
 
   return (
     <section className="newsroom">
+      <div className="ai-tip">
+        {t("set.tip")}{" "}
+        <button type="button" className="ai-tip-link" onClick={onOpenSettings}>
+          {t("set.open")}
+        </button>
+      </div>
       <div className="newsroom-head">
+        <button type="button" className="newsroom-settings" onClick={onOpenSettings}>
+          ⚙ {t("set.open")}
+        </button>
         <span>{t("chat.live")}</span>
         <span className="live-dot">● LIVE</span>
       </div>
@@ -63,7 +93,7 @@ export function NewsDeskChat() {
             <p>{t("chat.empty")}</p>
             <div className="starters">
               {starters.map((s) => (
-                <button key={s} className="starter" onClick={() => void send(s)} disabled={loading}>
+                <button key={s} className="starter" onClick={() => void send(s)} disabled={loading || !signedIn}>
                   {s}
                 </button>
               ))}
@@ -80,6 +110,7 @@ export function NewsDeskChat() {
                 {t("chat.remembers")} {m.memories.join(" · ")}
               </div>
             )}
+            {m.proofDigest && <div className="mem-note">Sui OutputRecord {shortDigest(m.proofDigest)}</div>}
           </div>
         ))}
 
@@ -93,11 +124,11 @@ export function NewsDeskChat() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={t("chat.placeholder")}
-          disabled={loading}
+          disabled={loading || !signedIn}
           aria-label={t("chat.placeholder")}
         />
-        <button type="submit" disabled={loading || !input.trim()}>
-          {t("chat.send")}
+        <button type="submit" disabled={loading || !signedIn || !input.trim()}>
+          {signedIn ? t("chat.send") : "Sign in first"}
         </button>
       </form>
     </section>

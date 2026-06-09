@@ -24,14 +24,14 @@ dependencies: []
 
 ## Related Code Files
 - Create: `apps/web/src/providers.tsx` (provider tree), `apps/web/src/components/connect-bar.tsx`, `apps/web/src/lib/sui-tx.ts` (sponsored + fallback execute), `apps/server/src/services/gas-station.ts`, `apps/server/src/routes/tx.ts`
-- Modify: `apps/web/src/main.tsx` (bọc providers), `apps/web/src/lib/identity.ts` (resourceId = address), `apps/server/src/serve.ts` (mount /api/tx/*), `.env.example` (+ENOKI keys, +SPONSOR_WALLET_KEY, +VITE_GOOGLE_CLIENT_ID), `apps/web/package.json` (deps)
+- Modify: `apps/web/src/main.tsx` (bọc providers), `apps/web/src/lib/auth.ts` + `wallet-session.ts` (resourceId = verified address), `apps/server/src/serve.ts` (mount /api/tx/*), `.env.example` (+ENOKI keys, +SPONSOR_WALLET_KEY, +VITE_GOOGLE_CLIENT_ID), `apps/web/package.json` (deps)
 - Delete: —
 
 ## Implementation Steps
 1. `pnpm --filter @daily-walrus/web add @mysten/dapp-kit @mysten/enoki @tanstack/react-query` (sui đã có). Import `@mysten/dapp-kit/dist/index.css`.
 2. Provider tree + `RegisterEnokiWallets` (guard `isEnokiNetwork`); Google clientId + redirectUrl (whitelist ở Google Cloud + Enoki Portal + `localhost:5173`).
 3. `ConnectBar`: `ConnectButton` + nút Google (`isEnokiWallet`/`provider==='google'`); hiển thị address rút gọn + disconnect.
-4. `identity.ts`: `resourceId = useCurrentAccount().address` (bỏ localStorage random; vẫn fallback nếu chưa login = guest read-only).
+4. Auth/session: `resourceId = verified Sui address` from sign-in-with-Sui. No localStorage random identity for write/personalized endpoints; public data is read-only.
 5. Backend `gas-station.ts`: ví sponsor (SPONSOR_WALLET_KEY), build `GasData` + co-sign sponsored tx (`@mysten/sui` Transaction `setSender`/`setGasOwner`); quota counter (Supabase `sponsor_usage`).
 6. Routes `/api/tx/sponsor` (kind bytes → sponsored bytes+digest) + `/api/tx/execute` (digest+signature → executeTransactionBlock). Xác thực sender == authed address; whitelist target package.
 7. `sui-tx.ts` client: `executeMoveCall(tx)` → thử sponsored; nếu 4xx/quota → fallback `useSignAndExecuteTransaction`.

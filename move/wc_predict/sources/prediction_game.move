@@ -24,6 +24,13 @@ module wc_predict::prediction_game {
     const K_CHAMPION: u8 = 3;
     const K_ADVANCE: u8 = 4;
 
+    // ---- user output kinds ----
+    const O_CHAT: u8 = 0;
+    const O_ROAST: u8 = 1;
+    const O_MATCH_VOTE: u8 = 2;
+    const O_NOTEBOOK_QUERY: u8 = 3;
+    const O_PROFILE_POINTER: u8 = 4;
+
     // ---- capabilities ----
     public struct AdminCap has key, store { id: UID }
     public struct OracleCap has key, store { id: UID }
@@ -69,6 +76,16 @@ module wc_predict::prediction_game {
         created_ms: u64,
     }
 
+    // ---- owned: per-user output pointer ----
+    public struct OutputRecord has key, store {
+        id: UID,
+        owner: address,
+        kind: u8,
+        blob_id: String,
+        content_hash: String,
+        created_ms: u64,
+    }
+
     // ---- events (leaderboard + indexer source) ----
     public struct MatchRegistered has copy, drop { match_id: u64, label: String, kickoff_ms: u64, round: u8 }
     public struct MatchSettled has copy, drop { match_id: u64, settled_ms: u64 }
@@ -87,6 +104,14 @@ module wc_predict::prediction_game {
         streak: u64,
         total_points: u64,
         scored_ms: u64,
+    }
+    public struct OutputRecordCreated has copy, drop {
+        output_id: ID,
+        owner: address,
+        kind: u8,
+        blob_id: String,
+        content_hash: String,
+        created_ms: u64,
     }
 
     fun init(ctx: &mut TxContext) {
@@ -127,6 +152,35 @@ module wc_predict::prediction_game {
             created_ms: pred.created_ms,
         });
         transfer::public_transfer(pred, ctx.sender());
+    }
+
+    /// User creates an owned pointer for app output. The raw payload should live on Walrus;
+    /// this object anchors ownership plus the blob id/content hash on Sui.
+    public fun submit_output_record(
+        kind: u8,
+        blob_id: String,
+        content_hash: String,
+        clock: &Clock,
+        ctx: &mut TxContext,
+    ) {
+        assert!(kind <= O_PROFILE_POINTER, EBadKind);
+        let record = OutputRecord {
+            id: object::new(ctx),
+            owner: ctx.sender(),
+            kind,
+            blob_id,
+            content_hash,
+            created_ms: clock::timestamp_ms(clock),
+        };
+        event::emit(OutputRecordCreated {
+            output_id: object::id(&record),
+            owner: record.owner,
+            kind,
+            blob_id: record.blob_id,
+            content_hash: record.content_hash,
+            created_ms: record.created_ms,
+        });
+        transfer::public_transfer(record, ctx.sender());
     }
 
     /// Admin registers a match (with kickoff lock time).

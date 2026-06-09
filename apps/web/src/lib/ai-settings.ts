@@ -1,7 +1,8 @@
-// Per-user AI settings (reply language + custom instructions), persisted in localStorage.
+// Per-user AI settings (reply language + custom instructions + roast severity), persisted in localStorage.
 // "auto" follows the app i18n language; otherwise the explicit choice wins.
 export interface AiSettings {
   aiLang: "auto" | "vi" | "en";
+  roastSeverity: "light" | "standard" | "savage";
   instructions: string;
 }
 
@@ -12,10 +13,12 @@ export function loadAiSettings(): AiSettings {
     const j = JSON.parse(localStorage.getItem(LS_KEY) || "{}") as Partial<AiSettings>;
     return {
       aiLang: j.aiLang === "vi" || j.aiLang === "en" ? j.aiLang : "auto",
+      roastSeverity:
+        j.roastSeverity === "light" || j.roastSeverity === "standard" || j.roastSeverity === "savage" ? j.roastSeverity : "standard",
       instructions: typeof j.instructions === "string" ? j.instructions : "",
     };
   } catch {
-    return { aiLang: "auto", instructions: "" };
+    return { aiLang: "auto", roastSeverity: "standard", instructions: "" };
   }
 }
 

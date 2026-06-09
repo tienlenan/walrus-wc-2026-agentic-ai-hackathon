@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@daily-walrus/contract": "workspace:*",
     "@mysten/dapp-kit": "^1",
     "@mysten/sui": "2.17.0",
     "@tanstack/react-query": "^5",

@@ -9,6 +9,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
   background: var(--ink);
   color: var(--paper);
   font-family: var(--font-display);
@@ -16,6 +17,22 @@
   letter-spacing: 0.04em;
   padding: 0.5rem 0.9rem;
   font-size: 1.15rem;
+}
+
+.newsroom-settings {
+  border: 1.5px solid var(--paper, #f4f1ea);
+  background: var(--paper, #f4f1ea);
+  color: var(--ink, #1a1a1a);
+  font: 700 0.72rem/1.1 system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.55rem;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.newsroom-settings:hover {
+  background: var(--red, #b91c1c);
+  color: var(--paper, #f4f1ea);
 }
 
 .live-dot {

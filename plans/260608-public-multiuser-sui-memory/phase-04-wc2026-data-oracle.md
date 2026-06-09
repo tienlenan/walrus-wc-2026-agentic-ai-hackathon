@@ -1,7 +1,7 @@
 ---
 phase: 4
 title: "WC2026 Data & Oracle"
-status: pending
+status: in-progress
 priority: P2
 effort: "1.5d"
 dependencies: [2]
@@ -36,9 +36,11 @@ Nạp lịch/kết quả/rating cầu thủ từ **API-Football** (free) + **ope
 6. Verify: fixtures đầy; 1 trận finished → settle on-chain; MVP/worst có giá trị.
 
 ## Success Criteria
-- [ ] `fixtures` Supabase đầy lịch + cập nhật kết quả ≥1 trận thật.
-- [ ] 1 trận `settle_match` thành công on-chain (MatchSettled emit).
-- [ ] MVP/worst seed từ rating; bảng vote ghi nhận được vote.
+- [x] Supabase seeded **72 WC2026 group fixtures** + source metadata.
+- [x] Supabase seeded **48 team profiles / 1,248 official squad rows** from FIFA FDP squad PDF.
+- [x] Fixture rows distinguish `chain_registered=true` on Move-indexed matches from schedule-only real fixtures.
+- [x] MVP/worst vote table + UI write path works.
+- [ ] Live result/rating poll + automatic `settle_match` waits real API key/in-play data.
 
 ## Risk Assessment
 - Rating trống trước giải → ưu tiên vote; chốt rule rating-vs-vote cấu hình được.

@@ -1,9 +1,10 @@
 /* The Daily Walrus — front page (skeleton) */
 
 .paper {
-  max-width: 1040px;
+  width: 100%;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(0.75rem, 1.4vw, 1.5rem);
   background: var(--paper-2);
   min-height: 100vh;
   border-left: 1px solid var(--rule);
@@ -66,10 +67,48 @@
   color: var(--ink-soft);
 }
 
+.edition-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin: 0.8rem 0 1.2rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--ink);
+  background: color-mix(in srgb, var(--paper-2) 94%, transparent);
+}
+
+.edition-nav a {
+  min-height: 2.05rem;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--ink);
+  padding: 0.35rem 0.55rem;
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--paper);
+}
+
+.edition-nav a:hover,
+.edition-nav a:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.section-anchor {
+  scroll-margin-top: 5rem;
+}
+
 /* ---------- Front page lead ---------- */
 .lead-block {
   margin: 1.75rem 0 1rem;
-  max-width: 64ch;
+  max-width: 86ch;
 }
 
 .frontpage {
@@ -174,7 +213,7 @@
 /* ---------- Section teasers ---------- */
 .sections {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
   border-top: 4px double var(--ink);
   padding-top: 1.25rem;

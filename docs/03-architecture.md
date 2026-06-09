@@ -1,10 +1,13 @@
 # Architecture — The Daily Walrus
 
 > Links: [plan](01-plan.md) · [requirements](02-requirements.md) · [user-flows](04-user-flows.md) · [research-notes](06-research-notes.md) (SDK details + sources)
+> Runtime tracking + global schedule memory: [07-runtime-tracking-design](07-runtime-tracking-design.md)
 
 ## 0. Core design principle
 > **Walrus = the source of truth for memory. Supabase = a rebuildable index/cache.**
 > This is the crux for meeting the "all agent state and memory on Walrus" criterion while still using Supabase for fast queries. If Supabase is lost, we **restore from Walrus**.
+> **Wallet-required writes:** every user-facing output action uses a verified Sui session. Raw output payloads go to Walrus when a publisher is configured; an owned Sui `OutputRecord` stores `blobId + contentHash` as the public proof. Supabase only indexes the proof.
+> **Global schedule memory:** WC2026 fixture memory lives in `daily-walrus:global:world-cup-2026`; Gil recalls it alongside per-user memory so schedule Q&A does not depend on a single user's notebook. Runtime proof/status is exposed at `/api/tracking/runtime` and the `#tracking` UI page.
 
 ## 1. System diagram
 ```
@@ -46,6 +49,7 @@
 - Static SPA, built to `dist/`. Deployed with `site-builder ... deploy --epochs N ./dist`.
 - **SPA routing**: add `ws-resources.json` at the build root with `{"routes": {"/*": "/index.html"}}` (Walrus Sites is static, no server fallback → missing this file means a 404 when refreshing a sub-route).
 - Calls the Mastra server via `@mastra/client-js`; **sends `{ memory: { resource: <suiAddress>, thread: <id> } }`** on every request → this is how memory follows the user.
+- Chat, roast, match vote, and predictions require wallet connect + sign-in-with-Sui. Predictions create dedicated owned `Prediction` objects; chat/roast/vote create owned `OutputRecord` pointer objects.
 - Holds no secrets. All keys live on the server.
 
 ### 2.2 Mastra server (Hono on Railway)
@@ -89,6 +93,13 @@ const r = await memwal.recall({ query: "What do we know about this user's footba
 | **Memory items** | facts/opinions/predictions in semantic form | MemWal `remember` (encrypted blob + on-chain index) |
 | **Profile snapshot** | fan profile (JSON) at a point in time | raw `writeBlob`/Quilt from the session wallet; pointer in Supabase |
 | **Predictions snapshot** | prediction ledger (JSON) | periodic Quilt batch |
+| **Output payload** | Gil chat replies, roast cards, vote payload hashes | raw Walrus publisher when configured; Sui `OutputRecord` always anchors hash/pointer |
+
+### 3.1.1 On Sui (owned proof objects)
+| Object | Owner | Content |
+|---|---|---|
+| `Prediction` | user address | match/kind/payload for scoreable predictions |
+| `OutputRecord` | user address | `kind`, `blob_id`, `content_hash`, `created_ms` for chat/roast/vote/profile pointers |
 
 ### 3.2 On Supabase (index/cache — rebuildable from Walrus)
 ```sql
@@ -113,6 +124,12 @@ fixtures(match_id text pk, stage text, home text, away text,
 walrus_index(id uuid pk, user_id uuid fk, kind text,   -- 'profile'|'predictions'|'memory'
       blob_id text, object_id text, epoch int, hash text, updated_at timestamptz)
 
+-- Sui output object proof index
+sui_output_records(id uuid pk, user_id uuid fk, output_kind text,
+      resource_type text, resource_id text, sui_object_id text,
+      tx_digest text, blob_id text, content_hash text, walrus_status text,
+      created_at timestamptz)
+
 -- leaderboard (materialized view from predictions)
 leaderboard_mv(user_id, display_name, total, correct, accuracy, streak)
 ```
@@ -123,9 +140,11 @@ leaderboard_mv(user_id, display_name, total, correct, accuracy, streak)
 
 ### 4.1 Write (when the user interacts)
 ```
-user sends a message / places a prediction
+verified wallet user sends a message / roast / vote / prediction
   → Mastra agent processes
-  → write structured data to Supabase (predictions/users)    [sync, fast]
+  → publish/hash output payload for Walrus                     [sync for hash, optional publisher]
+  → client signs Sui tx: Prediction or OutputRecord             [user-owned proof object]
+  → write structured data/proof index to Supabase               [sync, fast]
   → memwal.remember(fact)                                    [async]
   → (periodically) snapshot profile+predictions → Walrus blob/Quilt (session wallet)
   → store blobId in walrus_index

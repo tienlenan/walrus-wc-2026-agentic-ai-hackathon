@@ -2,7 +2,7 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import { getPool } from "@daily-walrus/db";
 
-/** Đọc lịch/kết quả từ cache Supabase (bảng fixtures). */
+/** Read schedule/results from the Supabase fixtures cache. */
 export const getFixturesTool = createTool({
   id: "get-fixtures",
   description: "Lấy lịch/kết quả các trận World Cup 2026 (lọc theo đội hoặc trạng thái).",

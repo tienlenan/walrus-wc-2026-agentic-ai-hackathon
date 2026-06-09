@@ -1,0 +1,257 @@
+.team-profiles {
+  border-top: 4px double var(--ink);
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+}
+
+.profile-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1rem;
+}
+
+.profile-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  line-height: 1;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.profile-kicker {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  color: var(--red);
+  margin-bottom: 0.35rem;
+}
+
+.profile-head button,
+.team-picker button {
+  font-family: var(--font-mono);
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 2.25rem;
+  cursor: pointer;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: minmax(170px, 240px) 1fr;
+  gap: 1rem;
+}
+
+.team-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem;
+  align-content: start;
+  max-height: 44rem;
+  overflow: auto;
+  border: 1px solid var(--ink);
+  padding: 0.55rem;
+  background: var(--paper);
+}
+
+.team-picker button {
+  display: grid;
+  grid-template-columns: 1.9rem minmax(2.8rem, 1fr);
+  align-items: center;
+  gap: 0.2rem 0.5rem;
+  min-height: 4.4rem;
+  padding: 0.6rem 0.55rem;
+  text-align: left;
+  overflow: hidden;
+}
+
+.team-picker button.selected {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.team-picker small {
+  grid-column: 1 / -1;
+  color: inherit;
+  opacity: 0.72;
+  font-size: 0.68rem;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.team-picker b {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.team-flag {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.profile-detail {
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  padding: 1rem;
+  box-shadow: var(--shadow-print);
+}
+
+.profile-title-row {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.75rem;
+}
+
+.profile-flag {
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.profile-title-row h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  line-height: 1;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.profile-title-row p {
+  margin: 0.2rem 0 0;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.profile-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0.85rem 0;
+}
+
+.profile-facts div {
+  border: 1px solid var(--rule);
+  padding: 0.55rem;
+  min-width: 0;
+}
+
+.profile-facts span {
+  display: block;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.profile-facts strong {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 0.92rem;
+  margin-top: 0.15rem;
+}
+
+.fixture-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.fixture-chip {
+  border-left: 3px solid var(--teal);
+  background: var(--paper-2);
+  padding: 0.55rem;
+}
+
+.fixture-chip b,
+.fixture-chip span {
+  display: block;
+}
+
+.fixture-chip span {
+  margin-top: 0.2rem;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.squad-table-wrap {
+  max-height: 24rem;
+  overflow: auto;
+  border: 1px solid var(--ink);
+}
+
+.squad-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+.squad-table th,
+.squad-table td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.45rem 0.55rem;
+  text-align: left;
+}
+
+.squad-table th {
+  position: sticky;
+  top: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+}
+
+.data-sources,
+.profile-error {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+
+.data-sources span,
+.profile-error {
+  border: 1px dashed var(--rule);
+  padding: 0.35rem 0.5rem;
+  background: var(--paper);
+}
+
+@media (max-width: 760px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .team-picker {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-height: 13rem;
+  }
+
+  .profile-facts,
+  .fixture-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .team-picker,
+  .profile-facts,
+  .fixture-strip {
+    grid-template-columns: 1fr;
+  }
+}

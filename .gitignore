@@ -29,3 +29,5 @@ coverage/
 .vscode/
 .idea/
 .turbo/
+.codex/
+.agents/skills

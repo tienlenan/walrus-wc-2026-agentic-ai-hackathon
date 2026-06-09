@@ -1,8 +1,9 @@
-// Domain types dùng chung giữa server, web, db.
+// Domain types shared by server, web, and db.
 
 export type PredictionKind = "winner" | "scoreline" | "tournament";
 export type PredictionResult = "pending" | "correct" | "wrong";
 export type FixtureStatus = "scheduled" | "live" | "finished";
+export type RoastSeverity = "light" | "standard" | "savage";
 
 export interface User {
   id: string;
@@ -36,7 +37,7 @@ export interface Prediction {
   scoredAt?: string;
 }
 
-/** Con trỏ tới blob/đối tượng trên Walrus (verify on-chain). */
+/** Pointer to a Walrus blob/object for on-chain verification. */
 export interface WalrusPointer {
   kind: "profile" | "predictions" | "memory";
   blobId: string;
@@ -45,7 +46,7 @@ export interface WalrusPointer {
   hash?: string;
 }
 
-/** Một mẩu ký ức Gil lưu qua Walrus Memory. */
+/** A memory fact stored by Gil through Walrus Memory. */
 export interface MemoryFact {
   text: string;
   tags?: string[];

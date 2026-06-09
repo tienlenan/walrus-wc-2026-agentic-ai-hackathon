@@ -1,4 +1,3 @@
-/* Thanh "press bar" trên cùng — gọn, khớp theme tabloid The Daily Walrus. */
 .press-bar {
   display: flex;
   align-items: center;
@@ -25,7 +24,6 @@
   flex-wrap: wrap;
 }
 
-/* Đồng bộ dapp-kit ConnectButton + nút custom theo theme (ink/teal, mono, góc cứng). */
 .press-actions button {
   font-family: var(--font-mono) !important;
   font-size: 0.72rem !important;
@@ -43,11 +41,33 @@
   cursor: pointer;
   transition: background 0.12s ease;
 }
-/* Connected state: ép chữ (địa chỉ ví) + icon thành trắng/kem trên nền đen → đọc rõ. */
+
 .press-actions button * {
   color: inherit !important;
   background: transparent !important;
   fill: currentColor !important;
+}
+
+.wallet-control {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.wallet-control select {
+  min-height: 2rem;
+  max-width: min(44vw, 22rem);
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.55rem;
 }
 
 .press-actions button:hover {
@@ -64,23 +84,4 @@
 .press-btn.primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.press-signed {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: var(--green);
-  font-weight: 600;
-  text-transform: none;
-  letter-spacing: 0;
-}
-.press-link {
-  cursor: pointer;
-  color: var(--ink-soft);
-  text-decoration: underline;
-  font-size: 0.68rem;
-}
-.press-link:hover {
-  color: var(--red);
 }

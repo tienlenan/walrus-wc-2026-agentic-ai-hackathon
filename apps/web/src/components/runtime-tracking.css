@@ -1,0 +1,200 @@
+.runtime-tracking {
+  border-top: 4px double var(--ink);
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+}
+
+.tracking-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tracking-kicker {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  color: var(--red);
+}
+
+.tracking-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  line-height: 1;
+  text-transform: uppercase;
+  margin: 0.25rem 0 0;
+}
+
+.tracking-head button,
+.tracking-actions button {
+  min-height: 2.25rem;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+
+.tracking-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.tracking-summary > div,
+.tracking-panel {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+
+.tracking-summary > div {
+  padding: 0.65rem;
+}
+
+.tracking-summary span,
+.tracking-row span,
+.tracking-panel h3,
+.tracking-metrics span {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  color: var(--ink-soft);
+}
+
+.tracking-summary strong,
+.tracking-row strong {
+  display: block;
+  margin-top: 0.2rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tracking-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.tracking-panel {
+  padding: 0.85rem;
+}
+
+.tracking-panel h3 {
+  color: var(--red);
+  margin: 0 0 0.65rem;
+  letter-spacing: 0.08em;
+}
+
+.tracking-rows {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tracking-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 0.75rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.55rem;
+}
+
+.tracking-row > div:first-child {
+  min-width: 0;
+}
+
+.tracking-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.tracking-row small,
+.tracking-muted {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+
+.tracking-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: nowrap;
+  justify-content: end;
+  white-space: nowrap;
+}
+
+.tracking-actions a,
+.tracking-panel a {
+  color: var(--teal-deep);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.tracking-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.tracking-metrics div {
+  border: 1px dashed var(--rule);
+  padding: 0.55rem;
+  min-width: 0;
+}
+
+.tracking-metrics strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.tracking-sources {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+}
+
+.tracking-error {
+  margin-top: 0.75rem;
+  border: 1px solid var(--red);
+  background: var(--paper);
+  color: var(--red);
+  padding: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 760px) {
+  .tracking-summary,
+  .tracking-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .tracking-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .tracking-row {
+    grid-template-columns: 1fr;
+  }
+
+  .tracking-actions {
+    justify-content: start;
+  }
+
+  .tracking-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}

@@ -1,5 +1,6 @@
-// Sign-in-with-Sui ở client: lấy nonce → ký personal message → verify → lưu session token.
+// Client-side Sign-in-with-Sui: fetch nonce, sign personal message, verify, then store session token.
 const KEY = "daily-walrus:session";
+const SESSION_EVENT = "daily-walrus:session-changed";
 const BASE = import.meta.env.VITE_MASTRA_URL ?? "http://localhost:4111";
 
 export interface Session {
@@ -18,9 +19,23 @@ export function getSession(): Session | null {
 
 export function signOut(): void {
   localStorage.removeItem(KEY);
+  notifySessionChanged();
 }
 
-/** signMessage: nhận bytes, trả signature (base64) — adapter từ dapp-kit useSignPersonalMessage. */
+export function notifySessionChanged(): void {
+  window.dispatchEvent(new Event(SESSION_EVENT));
+}
+
+export function subscribeSession(listener: () => void): () => void {
+  window.addEventListener(SESSION_EVENT, listener);
+  window.addEventListener("storage", listener);
+  return () => {
+    window.removeEventListener(SESSION_EVENT, listener);
+    window.removeEventListener("storage", listener);
+  };
+}
+
+/** Adapter for dapp-kit useSignPersonalMessage. */
 export async function signIn(
   address: string,
   signMessage: (bytes: Uint8Array) => Promise<string>,
@@ -45,5 +60,6 @@ export async function signIn(
 
   const session: Session = { token, address };
   localStorage.setItem(KEY, JSON.stringify(session));
+  notifySessionChanged();
   return session;
 }

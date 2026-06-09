@@ -6,7 +6,7 @@ description: >-
   Public multi-user WC2026 app: Sui wallet/zkLogin auth, Move contract for
   predictions+scoring, per-user Walrus Memory, event-indexed leaderboard, Gil
   troll mechanics.
-status: pending
+status: in-progress
 priority: P2
 branch: main
 tags:
@@ -49,12 +49,13 @@ Biến The Daily Walrus (demo 1 user) thành **public multi-user app** xoay quan
 |---|---|---|
 | Identity | Sui address | Supabase `users` |
 | Predictions | **Sui Move contract** (owned `Prediction`) | Supabase mirror (event) |
+| Chat/roast/vote output proof | **Sui Move contract** (owned `OutputRecord` pointer: `blob_id + content_hash`) | Supabase `sui_output_records` |
 | Scoring / points / streak | **Sui Move contract** — shared `Scoreboard` ghi bởi **OracleCap** (server-driven) | Supabase mirror |
 | Leaderboard | derived từ events | Supabase view + realtime |
 | Agent memory | **Walrus Memory (MemWal)** ⭐ | Supabase `walrus_index` (pointers) |
 | Fixtures / results | API-Football → on-chain chỉ outcome (oracle) | Supabase `fixtures` |
 
-> Nguyên tắc: **Sui contract = truth cho predictions/scoring · Walrus Memory = ngôi sao cho ký ức · Supabase = index/cache dựng lại được.**
+> Nguyên tắc: **Sui contract = truth cho predictions/scoring + output ownership proof · Walrus/Walrus Memory = payload/ký ức · Supabase = index/cache dựng lại được.**
 
 ## Architecture (flow)
 ```
@@ -63,26 +64,26 @@ Browser (React+Vite → Walrus Sites)
      │ build tx (kind-only)              │ chat (remember/recall)
      ▼                                   ▼
 Node server (tsx)  ── sponsor gas (gas-station) / fallback user-pays
-  ├─ Move calls: submit_prediction / score_prediction   → Sui Move contract (truth, events)
+  ├─ Move calls: submit_prediction / submit_output_record / record_scores → Sui Move contract (truth, events)
   ├─ Gil (Gemini) + chat-with-gil                       → Walrus Memory (per-user MemWalAccount) ⭐
   └─ oracle: settle_match (kết quả từ API-Football)
         events │
         ▼
-  Indexer (queryEvents) → Supabase (predictions mirror, leaderboard, fixtures, walrus_index) → realtime UI
+  Indexer (Sui GraphQL events) → Supabase (predictions mirror, leaderboard, fixtures, walrus_index) → SSE realtime UI
 ```
 
 ## Phases
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | [Auth & Identity](./phase-01-auth-identity.md) | Pending |
-| 2 | [Move Contract](./phase-02-move-contract.md) | Pending |
-| 3 | [Per-User Walrus Memory](./phase-03-per-user-walrus-memory.md) | Pending |
-| 4 | [WC2026 Data & Oracle](./phase-04-wc2026-data-oracle.md) | Pending |
-| 5 | [Predictions & Scoring](./phase-05-predictions-scoring.md) | Pending |
-| 6 | [Leaderboard & Indexer](./phase-06-leaderboard-indexer.md) | Pending |
-| 7 | [Realtime Roast Engine ⭐](./phase-07-realtime-roast-engine.md) | Pending |
-| 8 | [Deploy & Submission](./phase-08-deploy-submission.md) | Pending |
+| 1 | [Auth & Identity](./phase-01-auth-identity.md) | Baseline verified; sponsored/zkLogin deferred |
+| 2 | [Move Contract](./phase-02-move-contract.md) | Testnet published + verified |
+| 3 | [Per-User Walrus Memory](./phase-03-per-user-walrus-memory.md) | Namespace fallback verified; user-owned stretch |
+| 4 | [WC2026 Data & Oracle](./phase-04-wc2026-data-oracle.md) | Implemented: 72 group fixtures + 48 official squad profiles; live oracle/rating waits API key/in-play data |
+| 5 | [Predictions & Scoring](./phase-05-predictions-scoring.md) | Implemented: submit UI + vote + guarded oracle scoring |
+| 6 | [Leaderboard & Indexer](./phase-06-leaderboard-indexer.md) | Implemented: GraphQL indexer + leaderboard SSE |
+| 7 | [Realtime Roast Engine ⭐](./phase-07-realtime-roast-engine.md) | Implemented: on-demand text/card Roast Wall + Walrus memory tie-in; AI image remains stretch |
+| 8 | [Deploy & Submission](./phase-08-deploy-submission.md) | Readiness implemented; live deploy blocked by Walrus/Railway credentials |
 
 ## Dependencies
 - P1 (Auth) → nền cho P3, P5 (cần identity + sponsored tx).
@@ -121,6 +122,31 @@ Node server (tsx)  ── sponsor gas (gas-station) / fallback user-pays
 - **Scoring:** **Shared `Scoreboard` + OracleCap** — server grade off-chain rồi GHI điểm on-chain (không cần user ký score).
 - **Contract testnet-first (user, 2026-06-08):** build/test/deploy contract trên **Sui Testnet** trước (gas free → dev/demo gasless, **bỏ SPOF ví sponsor mainnet** → giải red-team #4/#10 lúc dev); **migrate Mainnet ở Phase 8** khi nộp. ⇒ Phase 1 gas-station/sponsored **hoãn** (testnet faucet lo gas khi dev; chỉ cần khi lên mainnet).
 
+## Session progress — 2026-06-09
+- Added web **Predictions Desk**: 5 prediction kinds, dapp-kit `useSignAndExecuteTransaction`, contract `buildSubmitPrediction`, lock warning from kickoff.
+- Added server `/api/game/snapshot`: fixtures + leaderboard + my record + vote summaries; falls back to Sui GraphQL `MatchRegistered` events when DB empty.
+- Added GraphQL event indexer: `MatchRegistered`, `MatchSettled`, `PredictionSubmitted`, `Scored`; durable cursors; idempotent `scoring_events`; users totals/streak mirror.
+- Added `/api/oracle/score` + `score-match` script: dry-run default, execute requires `ORACLE_ADMIN_TOKEN`, execution uses `SuiGrpcClient`.
+- Added MVP/worst vote API/UI and SSE leaderboard stream with polling fallback.
+- Updated Supabase schema and applied it; cursor reset replay indexed current testnet events: `indexed: 3`; snapshot now shows 1 fixture + leaderboard row with 10 points.
+- Verified no app imports of deprecated `SuiJsonRpcClient/queryEvents`; event filtering uses `SuiGraphQLClient`, execution uses `SuiGrpcClient`.
+
+## Session progress — 2026-06-09 (P7/P8 + data expansion)
+- Added WC2026 data seed from current sources: **48 teams**, **1,248 official squad rows** parsed from FIFA FDP squad PDF, **72 group-stage fixtures** seeded into Supabase.
+- Added `team_profiles` + `team_players` schema, fixture metadata (`group_name`, team codes, venue/city, source URL), and `chain_registered` guard so real schedule does not get submitted to unregistered Move matches.
+- Added `/api/world-cup/snapshot`, `/api/world-cup/publish-profile`, and Walrus blob publisher adapter (`PUT /v1/blobs`) with deterministic profile hash fallback.
+- Added Team Profiles UI: coach, squad, flag, fixture strip, Walrus blob/hash status.
+- Added Roast Engine MVP: `/api/roast`, `/api/roasts`, DB `roasts`, Gil prompt guardrail, Walrus Memory remember callback, and Roast Wall UI for team/player roasts.
+- Replaced Coming Soon Before/After + Gil Notebook cards with live Notebook UI (`/api/gil/notebook`) and before/after memory panel.
+- Added deploy readiness: `apps/server/Dockerfile`, `scripts/deploy-walrus-site.sh`, `scripts/keep-alive.ts`, Walrus Sites SPA resource already verified.
+- Verified schema apply, seed counts, indexer replay, server/web typecheck, and Vite build.
+
+## Session progress — 2026-06-09 (wallet + output object proof)
+- Removed guest `reader-*` write path. Chat, roast, notebook, vote, and prediction actions now require wallet connect + sign-in-with-Sui session.
+- Added Move `OutputRecord` + TS `buildSubmitOutputRecord` so chat/roast/vote/profile outputs are user-owned Sui objects pointing to Walrus `blob_id` and deterministic `content_hash`.
+- Added `/api/outputs/register` and `sui_output_records` as proof index/cache; roasts and match votes mirror `output_object_id`, `tx_digest`, and hash.
+- Caveat: current published testnet package predates `submit_output_record`; redeploy/upgrade is needed before object-proof txs land live.
+
 ## Red Team Review
 ### Session — 2026-06-08 · 15 findings (15 accepted) · 8 Critical, 7 High
 | # | Finding | Sev | Disposition | Phase |
@@ -133,7 +159,7 @@ Node server (tsx)  ── sponsor gas (gas-station) / fallback user-pays
 | 6 | Rotation secret 1 dòng; key đã qua chat, repo sắp public | Crit | Accept → **P0 gate** trước public | P8 |
 | 7 | Memory #1 chưa verify + scope 2× / 16 ngày | Crit | Accept → Pre-flight memory-first | Pre |
 | 8 | Pipeline gen ảnh chưa tồn tại (ai-multimodal = CLI skill) | Crit | Accept → STRETCH + text/HTML card MVP | P7 |
-| 9 | Score-keeper loop vô hạn, no recovery | High | Accept → reconciliation sweep idempotent + balance watchdog | P5 |
+| 9 | Score-keeper loop vô hạn, no recovery | High | Accept → dry-run default + guarded execute + score_runs trace | P5 |
 | 10 | 1 ví sponsor/oracle/keeper = SPOF, cạn âm thầm | High | Accept → watchdog + reserve + alert | P1,P4,P8 |
 | 11 | Indexer non-monotonic upsert + schema chưa có cột points | High | Accept → monotonic fold + migration cột + heartbeat | P6 |
 | 12 | API-Football 100/ngày đụng realtime polling | High | Accept → rate budget + 1 featured match + SLA thật | P4,P7 |
@@ -143,11 +169,11 @@ Node server (tsx)  ── sponsor gas (gas-station) / fallback user-pays
 
 ### Per-phase deltas (áp dụng khi cook)
 - **P1:** auth **sign-in-with-Sui** (client ký nonce → server `verifyPersonalMessageSignature` → session; identity từ session, KHÔNG từ body); CORS allowlist (bỏ `*`); sponsor: per-address quota + global SUI ceiling + whitelist `pkg::module::fn` + kill-switch (check TRƯỚC co-sign); Spike A trước UI.
-- **P2:** scoring → **shared `Scoreboard` ghi bởi OracleCap**; `Prediction` vẫn owned (user submit + event); bỏ "score_prediction by user/keeper"; unit test owner-binding/double-score.
+- **P2:** scoring → **shared `Scoreboard` ghi bởi OracleCap**; `Prediction` vẫn owned (user submit + event); `OutputRecord` owned cho chat/roast/vote/profile pointer; bỏ "score_prediction by user/keeper"; unit test owner-binding/double-score.
 - **P3:** GIỮ namespace single-account = **fallback luôn-chạy**; user-owned account = additive **sau Spike B** (không xoá namespace path); APP_DELEGATE_KEY → secret store + rotation.
 - **P4:** giữ oracle settle/register_match; **rate budget** (poll featured/live + cache); alert match quá kickoff+3h chưa settle.
-- **P5:** scoring = **server grade off-chain → ghi shared Scoreboard (OracleCap)**; **reconciliation sweep idempotent** thay one-shot; sponsor balance watchdog.
-- **P6:** migration cột `users.total_points/streak/best_streak` + view points (KHÔNG "chỉnh view accuracy"); indexer **monotonic**; heartbeat `last_indexed_at` + UI "as of HH:MM".
+- **P5:** scoring = **server grade off-chain → ghi shared Scoreboard (OracleCap)**; dry-run before execute; HTTP execute guarded by `ORACLE_ADMIN_TOKEN`.
+- **P6:** migration cột `users.total_points/streak/best_streak` + view points; GraphQL event indexer + cursor replay; UI "as of HH:MM".
 - **P7:** **realtime AI gen ảnh = STRETCH** (sau Spike C). MVP = **text + HTML/CSS report card** (mascot asset + record + memory callback → screenshot, IP-safe, $0). Nếu gen ảnh: chỉ mascot/template composite, hard ceiling, bounded queue, rate-limit on-demand, moderation trước publish.
 - **P8:** **rotation secret = P0 GATE** trước public (rotate Sui/Supabase/DB/gateway + `gitleaks`); tách HTTP khỏi workers (hoặc `process.on('unhandledRejection')` + try/catch mỗi loop); **pin version** (bỏ `latest`) + `--frozen-lockfile`.
 

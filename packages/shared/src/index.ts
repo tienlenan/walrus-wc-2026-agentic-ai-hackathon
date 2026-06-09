@@ -3,6 +3,7 @@ export {
   GIL_NAME,
   GIL_PERSONA,
   buildSessionContext,
+  normalizeRoastSeverity,
   GIL_COLD_OPENER_VI,
   GIL_COLD_OPENER_EN,
   type SessionContextOptions,

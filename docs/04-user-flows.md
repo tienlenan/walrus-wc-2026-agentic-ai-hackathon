@@ -9,7 +9,7 @@ Notation: **Gil** = mascot/agent. `resourceId` = the user's Sui address (anchors
 ## Screen map
 ```
 Landing ("THE DAILY WALRUS" front page)
- ├─ Onboard / Connect (create or connect a Sui wallet → resourceId)
+ ├─ Connect + Sign in with Sui (wallet address → resourceId)
  ├─ Newsroom (main chat with Gil)            ← core screen
  ├─ Predictions desk (place & view predictions)
  ├─ My Record / Gil's Notebook (memory panel + history)
@@ -23,8 +23,7 @@ Landing ("THE DAILY WALRUS" front page)
 ## Flow 1 — Onboarding & identity (first day)
 **Goal:** get a stable `resourceId` for memory to follow.
 1. User opens `https://<suins>.wal.app` → the "newspaper" front page with Gil's greeting.
-2. Choose **"Step into the newsroom"** → create a Sui wallet right in the app *or* connect an existing one.
-   - Create new: the app generates an Ed25519 keypair → that is the `resourceId`; prompt the user to back it up.
+2. Connect an existing Sui wallet, then sign the nonce message. The verified address becomes the `resourceId`.
 3. (Optional) declare a **favorite team** → `remember("Fan of <team>")` + save `users.favorite_team`.
 4. Gil greets tabloid-style: *"Another rookie tipster. Let's see how many times these tusks get it wrong…"*
 > The day-1 baseline is captured here (empty memory) to build the Before/After later.
@@ -36,8 +35,8 @@ Landing ("THE DAILY WALRUS" front page)
 4. Gil `recall`s before answering → injects personal context if any ("Your beloved team is playing again").
 
 ## Flow 3 — Placing a prediction (P0)
-1. At the **Predictions desk** (or right in the chat) the user picks a match → predicts the **winner/draw** and (optionally) the **scoreline**.
-2. `makePrediction` → writes `predictions` (Supabase) + `remember("Prediction <match>: <payload>")` (MemWal).
+1. At the **Predictions desk** the signed-in user picks a match → predicts scoreline/MVP/worst/champion/advance.
+2. Wallet signs a Sui tx → owned `Prediction` object. Supabase mirrors the event and `remember("Prediction <match>: <payload>")` runs through MemWal.
 3. Gil reacts instantly based on **history**: *"Betting on the favorite again? Last time you tipped like this you whiffed."*
 4. The prediction is **locked** at kickoff (`locked_at`).
 
@@ -69,8 +68,8 @@ Landing ("THE DAILY WALRUS" front page)
 3. Download the image / **"Post #Walrus"** button (opens X with a prepared caption).
 
 ## Flow 8 — Verify on Walrus (trust & technical points)
-1. In the Memory panel / Report card → a **"Verify on Walrus"** button.
-2. Opens the `blobId`/`objectId` on a Mainnet aggregator/explorer → shows the real memory/snapshot living on-chain.
+1. In the Memory panel / Report card → a **"Verify on Walrus/Sui"** button.
+2. Opens the Walrus `blobId` and/or Sui `OutputRecord`/`Prediction` object → shows the real memory/snapshot/output proof.
 3. Serves NF-5 (verifiability) & builds trust at judging time.
 
 ---

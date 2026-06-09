@@ -1,7 +1,7 @@
 ---
 phase: 7
 title: "Realtime Roast Engine"
-status: pending
+status: completed
 priority: P1
 effort: "2.5d"
 dependencies: [3, 4]
@@ -29,7 +29,7 @@ Gil **roast cầu thủ / cả đội theo thời gian thực** khi trận đang
 ## Architecture
 - **Live signal:** mở rộng ingest (P4) poll `fixtures/{id}/events` + `players` khi trận live → bảng `match_events`. **Roastable detector** (rule-based) tạo job roast `{target_type, target, event, match_id}`.
 - **Web fetch enrichment:** `web-fetch-facts.ts` lấy tin/phong độ/chấn thương/chuyển nhượng cho target (API-Football transfers/injuries + 1 news source nhẹ) → cache `roast_facts` trong DB. Gil dùng làm nguyên liệu (đúng yêu cầu "web fetch hoặc thông tin load vào db").
-- **Roast text:** Gil (Gemini) viết roast từ `event + roast_facts + memory(recall)` → lưu `roasts`.
+- **Roast text:** Gil (Gemini) viết roast từ `event + roast_facts + memory(recall)` → publish/hash payload → user ký `OutputRecord` object → lưu `roasts` + proof index.
 - **Roast image:** `roast-image.ts` gọi **ai-multimodal skill (Gemini "Nano Banana" / Imagen)** sinh ảnh: Gil mascot phản ứng (cầm thẻ đỏ, facepalm, "I told you so"), hoặc thẻ meme chữ (WANTED/CLOWN/"L") với tên text + bóng generic. Cache theo `(event_type, target)`; lưu Supabase Storage hoặc Walrus blob (verify on-chain bonus).
 - **Realtime feed:** `roasts` → Supabase realtime → **Roast Wall** + ticker. On-demand: nút roast → job ngay.
 - **Memory tie-in:** mỗi roast `remember(accountId, ns, "Đã roast <target>: <gist>")` → Gil callback ở chat + roast sau.
@@ -50,10 +50,12 @@ Gil **roast cầu thủ / cả đội theo thời gian thực** khi trận đang
 8. Guardrail test: nội dung vui-không-thù-ghét; ảnh không mặt thật/logo thật.
 
 ## Success Criteria
-- [ ] Sự kiện roastable (live/test) → sinh **roast text + ảnh troll** trong vài giây, hiện realtime trên Roast Wall.
-- [ ] User request roast 1 cầu thủ/đội → nhận roast + ảnh on-demand.
-- [ ] Ảnh **IP-safe** (mascot/caricature/text, không mặt/logo thật); nội dung vui không thù ghét (guardrail).
-- [ ] Gil **nhớ đã roast** (callback từ Walrus Memory); web fetch facts nạp vào DB và được dùng.
+- [x] User request roast 1 cầu thủ/đội → nhận roast text/card on-demand via `/api/roast`.
+- [x] Roast Wall renders recent roasts from `/api/roasts`.
+- [x] On-demand roast requires verified Sui session and records `OutputRecord` proof metadata after wallet signature.
+- [x] Nội dung roast có prompt guardrail: vui, không thù ghét, không bôi nhọ đời tư/protected class.
+- [x] Gil nhớ đã roast bằng Walrus Memory callback khi MemWal env bật.
+- [ ] Realtime live-event detector + AI image troll remains stretch until live data/image quota is configured.
 
 ## Risk Assessment
 - **IP/likeness (mặt cầu thủ, logo, áo đấu thật)** → chỉ mascot Gil/caricature/text-meme + motif generic; review prompt + (tùy) filter ảnh. Đây là rủi ro pháp lý chính.

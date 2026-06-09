@@ -84,3 +84,22 @@ export function buildRecordScores(input: {
   });
   return tx;
 }
+
+/** User creates an owned Sui object that points to a Walrus blob/hash for app output. */
+export function buildSubmitOutputRecord(input: {
+  kind: number;
+  blobId?: string | null;
+  contentHash: string;
+}): Transaction {
+  const tx = new Transaction();
+  tx.moveCall({
+    target: target("submit_output_record"),
+    arguments: [
+      tx.pure.u8(input.kind),
+      tx.pure.string(input.blobId ?? ""),
+      tx.pure.string(input.contentHash),
+      tx.object(SUI_CLOCK),
+    ],
+  });
+  return tx;
+}

@@ -8,10 +8,14 @@
     "start": "node --import tsx src/serve.ts",
     "ping": "node --env-file=../../.env.local --import tsx src/dev/ping-gil.ts",
     "before-after": "node --env-file=../../.env.local --import tsx src/dev/before-after.ts",
+    "indexer:replay": "node --env-file=../../.env.local --import tsx src/dev/rebuild-indexer.ts",
+    "register:fixtures": "node --env-file=../../.env.local --import tsx src/dev/register-fixtures.ts",
+    "score:match": "node --env-file=../../.env.local --import tsx src/dev/score-match.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ai-sdk/gateway": "latest",
+    "@daily-walrus/contract": "workspace:*",
     "@daily-walrus/db": "workspace:*",
     "@daily-walrus/shared": "workspace:*",
     "@daily-walrus/walrus": "workspace:*",

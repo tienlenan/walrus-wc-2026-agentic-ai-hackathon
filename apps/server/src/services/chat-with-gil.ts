@@ -1,10 +1,14 @@
 import { gil } from "../mastra/agents/gil.js";
 import { recall, remember, memNamespace, isMemoryEnabled } from "@daily-walrus/walrus";
 import { buildSessionContext } from "@daily-walrus/shared";
+import { recallGlobalWorldCupMemory } from "./global-world-cup-memory.js";
+import { publishJsonBlob, type WalrusBlobPointer } from "./walrus-blob.js";
 
 export interface ChatOptions {
   /** Response language ("vi" | "en"). */
   lang?: string;
+  /** Roast severity: light/standard/savage. */
+  roastSeverity?: string;
   /** Optional user-provided extra instructions. */
   customInstructions?: string;
 }
@@ -13,6 +17,7 @@ export interface ChatResult {
   text: string;
   usedMemories: string[];
   memoryEnabled: boolean;
+  outputPointer: WalrusBlobPointer;
 }
 
 /**
@@ -28,12 +33,20 @@ export async function chatWithGil(
 ): Promise<ChatResult> {
   const ns = memNamespace(resourceId);
 
-  const memories = await recall(ns, message).catch(() => [] as string[]);
+  const [userMemories, globalMemories] = await Promise.all([
+    recall(ns, message).catch(() => [] as string[]),
+    recallGlobalWorldCupMemory(message).catch(() => [] as string[]),
+  ]);
+  const memories = [
+    ...globalMemories.map((memory) => `[Global WC2026 memory] ${memory}`),
+    ...userMemories.map((memory) => `[User memory] ${memory}`),
+  ];
 
-  // Inject current time + language + custom instructions + memory as the session context.
+  // Inject current time + language + roast severity + custom instructions + memory as the session context.
   const context = buildSessionContext({
     lang: opts.lang,
     now: new Date().toString(),
+    roastSeverity: opts.roastSeverity,
     customInstructions: opts.customInstructions,
     memories,
   });
@@ -43,6 +56,16 @@ export async function chatWithGil(
     { role: "user", content: message },
   ]);
 
+  const outputPointer = await publishJsonBlob("chat-output", {
+    resourceId,
+    message,
+    reply: res.text,
+    globalMemories,
+    userMemories,
+    usedMemories: memories,
+    createdAt: new Date().toISOString(),
+  });
+
   // Remember the user's message (do not block the response).
   if (isMemoryEnabled()) {
     void remember(ns, `User said: "${message}"`).catch((e) =>
@@ -50,5 +73,5 @@ export async function chatWithGil(
     );
   }
 
-  return { text: res.text, usedMemories: memories, memoryEnabled: isMemoryEnabled() };
+  return { text: res.text, usedMemories: memories, memoryEnabled: isMemoryEnabled(), outputPointer };
 }

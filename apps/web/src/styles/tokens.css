@@ -1,16 +1,16 @@
-/* The Daily Walrus — design tokens (xem docs/05-design-direction.md) */
+/* The Daily Walrus design tokens. See docs/05-design-direction.md. */
 :root {
   /* Surfaces */
-  --paper: #f4ecd8; /* newsprint ngả vàng */
-  --paper-2: #fbf7ec; /* giấy trắng */
-  --ink: #1a1714; /* mực in */
-  --ink-soft: #57514a; /* mực nhạt */
+  --paper: #f4ecd8; /* aged newsprint */
+  --paper-2: #fbf7ec; /* clean paper */
+  --ink: #1a1714; /* press ink */
+  --ink-soft: #57514a; /* muted ink */
 
   /* Brand / status */
-  --teal: #37c3b0; /* teal Walrus thật */
-  --teal-deep: #0a2540; /* xanh mực đậm */
-  --red: #c8102e; /* đỏ tabloid */
-  --green: #1f7a3d; /* dự đoán đúng */
+  --teal: #37c3b0; /* Walrus teal */
+  --teal-deep: #0a2540; /* deep ink blue */
+  --red: #c8102e; /* tabloid red */
+  --green: #1f7a3d; /* correct prediction */
 
   /* Lines */
   --rule: #d8cdb4;

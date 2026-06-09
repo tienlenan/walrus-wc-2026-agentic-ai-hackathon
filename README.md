@@ -94,6 +94,7 @@ Planning & design (written in Vietnamese):
 | [04-user-flows](docs/04-user-flows.md) | User journeys incl. the before/after memory demo |
 | [05-design-direction](docs/05-design-direction.md) | Theme, Gil mascot, design tokens, roast card |
 | [06-research-notes](docs/06-research-notes.md) | SDK / CLI reference + sources |
+| [07-runtime-tracking-design](docs/07-runtime-tracking-design.md) | Global schedule memory + contract/Walrus tracking page |
 
 ## 🗺️ Status
 - ✅ Monorepo · web (themed landing) · db (live schema) · shared (Gil persona) · server (Gil on Gemini)

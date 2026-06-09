@@ -2,6 +2,12 @@ import { useState } from "react";
 import { NewsDeskChat } from "./components/news-desk-chat";
 import { ConnectBar } from "./components/connect-bar";
 import { SettingsPanel } from "./components/settings-panel";
+import { PredictionsDesk } from "./components/predictions-desk";
+import { Leaderboard } from "./components/leaderboard";
+import { TeamProfiles } from "./components/team-profiles";
+import { RoastWall } from "./components/roast-wall";
+import { MemoryNotebook } from "./components/memory-notebook";
+import { RuntimeTracking } from "./components/runtime-tracking";
 import { useI18n } from "./lib/i18n";
 import "./styles/ui-controls.css";
 
@@ -16,13 +22,6 @@ export default function App() {
     day: "numeric",
   });
 
-  const sections = [
-    { k: t("sec.pred.k"), b: t("sec.pred.b") },
-    { k: t("sec.board.k"), b: t("sec.board.b") },
-    { k: t("sec.ba.k"), b: t("sec.ba.b") },
-    { k: t("sec.note.k"), b: t("sec.note.b") },
-  ];
-
   return (
     <div className="paper">
       <ConnectBar />
@@ -36,9 +35,6 @@ export default function App() {
             EN
           </button>
         </div>
-        <button className="settings-btn" onClick={() => setSettingsOpen(true)}>
-          ⚙ {t("set.open")}
-        </button>
       </div>
 
       <header className="masthead">
@@ -52,13 +48,6 @@ export default function App() {
         </div>
       </header>
 
-      <div className="ai-tip">
-        {t("set.tip")}{" "}
-        <button className="ai-tip-link" onClick={() => setSettingsOpen(true)}>
-          {t("set.open")}
-        </button>
-      </div>
-
       <main className="lead-block">
         <div className="kicker">{t("lead.kicker")}</div>
         <h2 className="headline">{t("lead.headline")}</h2>
@@ -68,17 +57,37 @@ export default function App() {
         </p>
       </main>
 
-      <NewsDeskChat />
+      <nav className="edition-nav" aria-label="Edition sections">
+        <a href="#newsroom">{t("nav.gil")}</a>
+        <a href="#predictions">{t("nav.predictions")}</a>
+        <a href="#leaderboard">{t("nav.leaderboard")}</a>
+        <a href="#team-profiles">{t("nav.teams")}</a>
+        <a href="#roasts">{t("nav.roasts")}</a>
+        <a href="#notebook">{t("nav.notebook")}</a>
+        <a href="#tracking">{t("nav.tracking")}</a>
+      </nav>
 
-      <section className="sections">
-        {sections.map((s) => (
-          <div className="section-card" key={s.k}>
-            <div className="section-kicker">{s.k}</div>
-            <p className="section-blurb">{s.b}</p>
-            <div className="soon">{t("sec.soon")}</div>
-          </div>
-        ))}
-      </section>
+      <div id="newsroom" className="section-anchor">
+        <NewsDeskChat onOpenSettings={() => setSettingsOpen(true)} />
+      </div>
+      <div id="predictions" className="section-anchor">
+        <PredictionsDesk />
+      </div>
+      <div id="leaderboard" className="section-anchor">
+        <Leaderboard />
+      </div>
+      <div id="team-profiles" className="section-anchor">
+        <TeamProfiles />
+      </div>
+      <div id="roasts" className="section-anchor">
+        <RoastWall />
+      </div>
+      <div id="notebook" className="section-anchor">
+        <MemoryNotebook />
+      </div>
+      <div id="tracking" className="section-anchor">
+        <RuntimeTracking />
+      </div>
 
       <footer className="footer">
         <span className="stamp">{t("footer.stamp")}</span>

@@ -3,7 +3,7 @@ import { useI18n } from "../lib/i18n";
 import { loadAiSettings, saveAiSettings, type AiSettings } from "../lib/ai-settings";
 import "../styles/ui-controls.css";
 
-/** AI settings modal: reply language + custom instructions for Gil. */
+/** AI settings modal: language, roast severity, and custom instructions for Gil. */
 export function SettingsPanel({ onClose }: { onClose: () => void }) {
   const { t } = useI18n();
   const [s, setS] = useState<AiSettings>(() => loadAiSettings());
@@ -34,6 +34,23 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
             <option value="auto">{t("set.auto")}</option>
             <option value="vi">{t("set.vi")}</option>
             <option value="en">{t("set.en")}</option>
+          </select>
+        </label>
+
+        <label className="settings-field">
+          <span>{t("set.severity")}</span>
+          <select
+            value={s.roastSeverity}
+            onChange={(e) =>
+              setS({
+                ...s,
+                roastSeverity: e.target.value as AiSettings["roastSeverity"],
+              })
+            }
+          >
+            <option value="light">{t("set.sevLight")}</option>
+            <option value="standard">{t("set.sevStandard")}</option>
+            <option value="savage">{t("set.sevSavage")}</option>
           </select>
         </label>
 

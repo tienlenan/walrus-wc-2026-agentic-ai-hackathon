@@ -1,7 +1,7 @@
 ---
 phase: 8
 title: "Deploy & Submission"
-status: pending
+status: in-progress
 priority: P1
 effort: "1.5d"
 dependencies: [5, 6, 7]
@@ -36,9 +36,12 @@ Deploy site lên **Walrus Sites Mainnet** + server host; gắn SuiNS; chống pa
 6. Submission: DeepSurge + Airtable form + video ≤3' + post #Walrus trên X + **Walrus Memory feedback form** + GitHub public + logo/mô tả/website/contact + ví riêng cho session.
 
 ## Success Criteria
-- [ ] Site **live Walrus Mainnet** (URL SuiNS), SPA routing OK; server ổn định (chat + roast + leaderboard realtime).
-- [ ] Before/after thuyết phục + roast realtime + roast card chia sẻ được.
-- [ ] Hoàn tất toàn bộ checklist nộp bài (xem `docs/02-requirements.md §2`).
+- [x] SPA routing resource exists: `apps/web/public/ws-resources.json`.
+- [x] Server deploy container added: `apps/server/Dockerfile`.
+- [x] Walrus Sites deploy helper added: `scripts/deploy-walrus-site.sh`.
+- [x] Keep-alive helper added: `scripts/keep-alive.ts`.
+- [ ] Site **live Walrus Mainnet** + Railway server waits funded deploy wallet, site-builder, Railway env.
+- [ ] Submission checklist/video/post waits live URL and final credentials.
 
 ## Risk Assessment
 - Deploy Walrus Sites / Railway quirks → thử sớm; `ws-resources.json` bắt buộc cho SPA.

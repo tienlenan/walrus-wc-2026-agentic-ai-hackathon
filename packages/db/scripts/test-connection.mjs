@@ -1,9 +1,9 @@
-// Test kết nối Postgres (Supabase). Chạy: pnpm --filter @daily-walrus/db test:connection
+// Test the Postgres connection. Run: pnpm --filter @daily-walrus/db test:connection
 import pg from "pg";
 
 const url = process.env.DATABASE_URL;
 if (!url) {
-  console.error("✗ DATABASE_URL chưa set (cần --env-file=../../.env.local)");
+  console.error("DATABASE_URL is not set. Run with --env-file=../../.env.local.");
   process.exit(1);
 }
 
@@ -16,7 +16,7 @@ const client = new pg.Client({
 try {
   await client.connect();
   const { rows } = await client.query("select version() as v, current_database() as db");
-  console.log("✓ Kết nối Supabase OK");
+  console.log("Supabase connection OK");
   console.log("  database:", rows[0].db);
   console.log("  server  :", String(rows[0].v).split(" on ")[0]);
   const t = await client.query(
@@ -24,12 +24,12 @@ try {
   );
   console.log(
     "  public tables:",
-    t.rows.length ? t.rows.map((r) => r.tablename).join(", ") : "(chưa có — chạy db:push)",
+    t.rows.length ? t.rows.map((r) => r.tablename).join(", ") : "(none yet, run db:push)",
   );
 } catch (e) {
   console.error("✗ FAIL:", e.message);
   if (/ENETUNREACH|ETIMEDOUT|EAI_AGAIN|EHOSTUNREACH/.test(String(e.message))) {
-    console.error("  → direct connection là IPv6. Đổi DATABASE_URL sang Session pooler (IPv4).");
+    console.error("  Direct connection is IPv6. Use the Session pooler URL for IPv4.");
   }
   process.exitCode = 1;
 } finally {

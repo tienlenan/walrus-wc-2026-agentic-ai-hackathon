@@ -42,6 +42,22 @@ export async function remember(namespace: string, text: string): Promise<void> {
   await clientFor(namespace).rememberAndWait(text);
 }
 
+export async function rememberBulk(namespace: string, texts: string[]): Promise<{ jobIds: string[]; total: number }> {
+  const clean = texts.map((text) => text.trim()).filter(Boolean);
+  if (!isMemoryEnabled() || clean.length === 0) return { jobIds: [], total: 0 };
+  const jobIds: string[] = [];
+  for (let i = 0; i < clean.length; i += 20) {
+    const accepted = await clientFor(namespace).rememberBulk(
+      clean.slice(i, i + 20).map((text) => ({
+        text,
+        namespace,
+      })),
+    );
+    jobIds.push(...accepted.job_ids);
+  }
+  return { jobIds, total: clean.length };
+}
+
 /** Recall relevant memories → array of text. Empty if not configured/none found. */
 export async function recall(namespace: string, query: string, topK = 5): Promise<string[]> {
   if (!isMemoryEnabled()) return [];

@@ -1,9 +1,9 @@
-// Sign-in-with-Sui (Red Team #3/#4/#7): chứng minh quyền sở hữu địa chỉ Sui trước khi
-// tin nó là identity. KHÔNG bao giờ nhận địa chỉ trực tiếp từ body.
+// Sign-in-with-Sui: prove ownership of the Sui address before using it as identity.
+// Never trust an address submitted directly in the request body.
 import { createHmac, timingSafeEqual, randomBytes } from "node:crypto";
 import { verifyPersonalMessageSignature } from "@mysten/sui/verify";
 
-// Session secret: nên set env SESSION_SECRET ở prod; fallback random theo mỗi lần boot (session reset khi restart — chấp nhận cho hackathon).
+// Set SESSION_SECRET in production. The random fallback resets sessions on restart.
 const SESSION_SECRET = process.env.SESSION_SECRET ?? randomBytes(32).toString("hex");
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const NONCE_TTL_MS = 5 * 60 * 1000;
@@ -19,14 +19,14 @@ function makeToken(subject: string): string {
   return `${Buffer.from(payload).toString("base64url")}.${signPayload(payload)}`;
 }
 
-/** Trả message để user ký (personal message). */
+/** Return the personal-message payload that the user signs. */
 export function issueNonce(address: string): string {
   const nonce = randomBytes(16).toString("hex");
   nonces.set(address, { nonce, exp: Date.now() + NONCE_TTL_MS });
   return `The Daily Walrus sign-in\naddress: ${address}\nnonce: ${nonce}`;
 }
 
-/** Verify chữ ký personal-message → cấp session token (subject = địa chỉ đã verify). */
+/** Verify the personal-message signature and issue a session token for the verified address. */
 export async function verifyAndIssueSession(address: string, signature: string): Promise<string | null> {
   const rec = nonces.get(address);
   if (!rec || Date.now() > rec.exp) return null;
@@ -41,7 +41,7 @@ export async function verifyAndIssueSession(address: string, signature: string):
   }
 }
 
-/** token → subject (địa chỉ Sui đã verify, hoặc "guest:..."). null nếu sai/hết hạn. */
+/** Convert a token to a verified Sui address, or null when invalid/expired. */
 export function verifySession(token?: string | null): string | null {
   if (!token) return null;
   const dot = token.indexOf(".");
@@ -60,7 +60,7 @@ export function verifySession(token?: string | null): string | null {
   return subject;
 }
 
-/** Lấy token từ header Authorization: Bearer <token>. */
+/** Extract the token from Authorization: Bearer <token>. */
 export function bearer(req: { headers: Record<string, string | string[] | undefined> }): string | null {
   const h = req.headers["authorization"];
   const v = Array.isArray(h) ? h[0] : h;

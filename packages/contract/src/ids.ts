@@ -5,7 +5,8 @@ import { TESTNET_DEPLOYMENT as D } from "./deployments.js";
 export const SUI_CLOCK = "0x6";
 
 function fromEnv(key: string): string | undefined {
-  return typeof process !== "undefined" && process.env ? process.env[key] : undefined;
+  const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env;
+  return env?.[key];
 }
 
 export const ids = {
@@ -23,4 +24,13 @@ export const Kind = {
   WorstPlayer: 2,
   Champion: 3,
   Advance: 4,
+} as const;
+
+/** User output kind encoding (matches prediction_game.move). */
+export const OutputKind = {
+  Chat: 0,
+  Roast: 1,
+  MatchVote: 2,
+  NotebookQuery: 3,
+  ProfilePointer: 4,
 } as const;

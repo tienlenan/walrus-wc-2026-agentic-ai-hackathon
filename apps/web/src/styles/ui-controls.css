@@ -5,8 +5,8 @@
   align-items: center;
   justify-content: flex-end;
   gap: 0.5rem;
-  max-width: 980px;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   padding: 0.4rem 1rem 0;
 }
 
@@ -46,8 +46,9 @@
 }
 
 .ai-tip {
-  max-width: 720px;
-  margin: 0.8rem auto 0;
+  width: fit-content;
+  max-width: min(720px, calc(100% - 2rem));
+  margin: 0.8rem auto;
   padding: 0.55rem 0.9rem;
   border: 1px dashed var(--teal, #1f7a6b);
   border-radius: 3px;
@@ -81,8 +82,9 @@
   border: 2px solid var(--ink, #1a1a1a);
   border-radius: 4px;
   box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 460px;
+  width: fit-content;
+  min-width: min(360px, 100%);
+  max-width: min(460px, calc(100vw - 2rem));
   padding: 1.1rem 1.2rem 1.3rem;
 }
 .settings-head {

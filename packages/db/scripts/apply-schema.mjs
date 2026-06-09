@@ -1,4 +1,4 @@
-// Apply sql/schema.sql lên Supabase. Chạy: pnpm --filter @daily-walrus/db db:push
+// Apply sql/schema.sql to Supabase. Run: pnpm --filter @daily-walrus/db db:push
 import pg from "pg";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -9,7 +9,7 @@ const sql = await readFile(join(here, "..", "sql", "schema.sql"), "utf8");
 
 const url = process.env.DATABASE_URL;
 if (!url) {
-  console.error("✗ DATABASE_URL chưa set (cần --env-file=../../.env.local)");
+  console.error("DATABASE_URL is not set. Run with --env-file=../../.env.local.");
   process.exit(1);
 }
 
@@ -22,7 +22,7 @@ const client = new pg.Client({
 try {
   await client.connect();
   await client.query(sql);
-  console.log("✓ Đã apply schema.sql");
+  console.log("Applied schema.sql");
   const t = await client.query(
     "select tablename from pg_tables where schemaname = 'public' order by 1",
   );

@@ -1,0 +1,117 @@
+.leaderboard-section {
+  margin: 1.5rem 0;
+  border-bottom: 4px double var(--ink);
+  padding-bottom: 1.25rem;
+}
+
+.leaderboard-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(1.35rem, 4vw, 2rem);
+  margin-bottom: 0.85rem;
+}
+
+.leaderboard-title button {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.72rem;
+}
+
+.my-record-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--ink);
+  margin-bottom: 0.85rem;
+}
+
+.my-record-strip div {
+  padding: 0.7rem;
+  border-right: 1px solid var(--rule);
+}
+
+.my-record-strip div:last-child {
+  border-right: none;
+}
+
+.my-record-strip span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
+.my-record-strip strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  line-height: 1.05;
+}
+
+.leaderboard-table-wrap {
+  overflow-x: auto;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  min-width: 560px;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  border: 1px solid var(--rule);
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.leaderboard-table th {
+  background: var(--ink);
+  color: var(--paper);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+}
+
+.leaderboard-error,
+.leaderboard-asof {
+  margin-top: 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+}
+
+.leaderboard-error {
+  color: var(--red);
+}
+
+.leaderboard-asof {
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .my-record-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .my-record-strip div:nth-child(2) {
+    border-right: none;
+  }
+
+  .my-record-strip div:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--rule);
+  }
+}
