@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useCallback, type ReactNode } from
 
 export type Lang = "vi" | "en";
 
-// Flat dictionary keyed by string id. Add UI strings here; t() falls back vi → key.
+// Flat dictionary keyed by string id. Add UI strings here; t() falls back en -> vi -> key.
 const DICT: Record<Lang, Record<string, string>> = {
   vi: {
     "brand.eyebrow": "Chạy bằng Walrus · biên lai Walrus · không khoan nhượng",
@@ -515,9 +515,9 @@ function initialLang(): Lang {
   try {
     const saved = localStorage.getItem(LS_KEY);
     if (saved === "vi" || saved === "en") return saved;
-    return navigator.language?.toLowerCase().startsWith("en") ? "en" : "vi";
+    return "en";
   } catch {
-    return "vi";
+    return "en";
   }
 }
 
@@ -531,7 +531,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       /* ignore */
     }
   }, []);
-  const t = useCallback((key: string) => DICT[lang][key] ?? DICT.vi[key] ?? key, [lang]);
+  const t = useCallback((key: string) => DICT[lang][key] ?? DICT.en[key] ?? DICT.vi[key] ?? key, [lang]);
   return <I18nContext.Provider value={{ lang, setLang, t }}>{children}</I18nContext.Provider>;
 }
 
