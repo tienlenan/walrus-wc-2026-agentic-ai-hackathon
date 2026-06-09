@@ -13,6 +13,7 @@
 | Storage and memory explainer PDF | `submission-pack/assets/docs/storage-memory-explainer.pdf` |
 | Storage explainer page 1 PNG | `submission-pack/assets/docs/storage-memory-explainer-page-1.png` |
 | Storage explainer page 2 PNG | `submission-pack/assets/docs/storage-memory-explainer-page-2.png` |
+| App icon | `submission-pack/assets/logo/app-icon.svg` |
 | Logo mark | `submission-pack/assets/logo/logo-troll.svg` |
 | Walrus mark | `submission-pack/assets/logo/walrus.svg` |
 
