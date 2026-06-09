@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Offside subscription</title>
+  <desc id="desc">A troll card for a striker caught offside repeatedly.</desc>
+  <rect width="1200" height="800" fill="#fbf7ec"/>
+  <rect x="56" y="56" width="1088" height="688" fill="#f4ecd8" stroke="#1a1714" stroke-width="8"/>
+  <text x="600" y="140" text-anchor="middle" fill="#1a1714" font-family="Impact,sans-serif" font-size="78">TIỀN ĐẠO GÓI OFFSIDE+</text>
+  <g transform="translate(150 230)">
+    <rect x="0" y="0" width="900" height="250" fill="#1a1714"/>
+    <line x1="450" y1="0" x2="450" y2="250" stroke="#c8102e" stroke-width="10"/>
+    <circle cx="515" cy="125" r="58" fill="#37c3b0"/>
+    <text x="515" y="147" text-anchor="middle" fill="#1a1714" font-family="Impact,sans-serif" font-size="58">9</text>
+    <circle cx="410" cy="145" r="22" fill="#fbf7ec"/>
+    <text x="180" y="145" fill="#fbf7ec" font-family="Impact,sans-serif" font-size="46">HÀNG THỦ</text>
+    <text x="590" y="145" fill="#fbf7ec" font-family="Impact,sans-serif" font-size="46">LẠI VƯỢT SỚM</text>
+  </g>
+  <g transform="translate(370 550) rotate(-3)">
+    <rect x="0" y="0" width="460" height="88" fill="none" stroke="#c8102e" stroke-width="8"/>
+    <text x="230" y="60" text-anchor="middle" fill="#c8102e" font-family="Impact,sans-serif" font-size="50">AUTO-RENEWED</text>
+  </g>
+  <text x="600" y="710" text-anchor="middle" fill="#1a1714" font-family="Arial,sans-serif" font-size="30">Đứng dưới hàng thủ như đang chờ xe buýt.</text>
+</svg>

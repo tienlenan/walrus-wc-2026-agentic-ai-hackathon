@@ -56,6 +56,14 @@
   - `prediction-booth-closed.svg`: `2_GSVBEv8svCU7OqhugOvG6ObzVfbe1wNUk-fvgfSX8`
   - `bad-take-receipt.svg`: `PnG-6aw9qFYHy30Z2c52ncgb8SFaicsNeAhuoeIIA8U`
   - `oracle-roast-room.svg`: `OL4eWqRjomprlIT8NpimO8jORFjSnYySP_WRZ48tt2A`
+  - `player-no10-dribble-loop.svg`: `vXxTlj34SJCvwaTViZ6W3-W-WCvjtk58tV6NwwdJQGo`
+  - `goalkeeper-loading-screen.svg`: `WVwXkzU_UsgGpnn7RJdnaYusyUwWldZRNC5lY3fdvrM`
+  - `striker-offside-subscription.svg`: `bQTrFc38zHS8XpGpqjASfjIytklAMTWy_X53ERCNnBA`
+  - `var-first-touch-review.svg`: `6AqcSIWPoJWiCIPuTHmVcCNsltZjneO1AD9go-cX3UM`
+  - `captain-excuse-armband.svg`: `-6SefYATCnHx-hRzom2N1R_1EAcfokPXIdKfyahZQhE`
+  - `bench-legend-warmup.svg`: `o3xlMjnCh34YaNw_cZTG1qe-mMbu4Z0QGJWsUk04XtE`
+  - `fan-hopium-meter.svg`: `v7-5GAmmax_EvyvXHfsj4KhapWPM6HDfNaZoSYj95iU`
+  - `tactical-masterplan-napkin.svg`: `s7cRASleiQDFHOU6P3apq6oMJX-EZKY8_wpBABZOTm8`
 - `score:match --match=2 --home=1 --away=0`: ✅ PASS (dry-run returns empty entries because no scorable pending scoreline state).
 - `before-after verify-user`: ✅ PASS (cold/warm memory flow successful; "User said/ used memories" update path works).
 - `ping`: ✅ PASS (Gil returns roast response).
