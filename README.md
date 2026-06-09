@@ -100,7 +100,7 @@ Planning & design (written in Vietnamese):
 - ✅ Web app · server · Supabase schema · Gil persona · wallet session · i18n/settings
 - ✅ Walrus Memory spine via MemWal: per-user notebook + global WC2026 schedule/team memory
 - ✅ Predictions, on-chain gating, oracle scoring, leaderboard, roast wall, team profiles, runtime tracking
-- ✅ Testnet verification completed for prediction submit → score → settle → indexer replay
+- ✅ Testnet verification completed: 104/104 fixtures registered, prediction submit → score → settle → indexer replay
 - ⏳ Mainnet deploy is blocked until the deploy wallet has SUI gas + WAL for package publish and Walrus Sites
 
 ## License

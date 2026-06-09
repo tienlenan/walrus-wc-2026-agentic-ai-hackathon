@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Prediction booth closed</title>
+  <desc id="desc">A troll card saying predictions close after kickoff.</desc>
+  <rect width="1200" height="800" fill="#fbf7ec"/>
+  <rect x="58" y="58" width="1084" height="684" fill="#f4ecd8" stroke="#1a1714" stroke-width="8"/>
+  <text x="600" y="130" text-anchor="middle" fill="#1a1714" font-family="Georgia,serif" font-size="44" font-weight="900">KÈO MÕM CÓ GIỜ ĐÓNG CỬA</text>
+  <path d="M165 245h870v280H165z" fill="#1a1714"/>
+  <path d="M200 280h800v210H200z" fill="#fbf7ec" stroke="#37c3b0" stroke-width="10"/>
+  <text x="600" y="370" text-anchor="middle" fill="#c8102e" font-family="Impact,sans-serif" font-size="92">BOOTH CLOSED</text>
+  <text x="600" y="445" text-anchor="middle" fill="#1a1714" font-family="Arial,sans-serif" font-size="34">Bóng lăn rồi mới dự đoán?</text>
+  <text x="600" y="488" text-anchor="middle" fill="#1a1714" font-family="Arial,sans-serif" font-size="34">Gil gọi đó là “phân tích sau trận”.</text>
+  <g transform="translate(260 575)">
+    <circle cx="40" cy="40" r="38" fill="#37c3b0" stroke="#1a1714" stroke-width="5"/>
+    <circle cx="900" cy="40" r="38" fill="#37c3b0" stroke="#1a1714" stroke-width="5"/>
+    <path d="M90 40h800" stroke="#1a1714" stroke-width="8" stroke-dasharray="20 18"/>
+    <text x="470" y="120" text-anchor="middle" fill="#0a2540" font-family="Impact,sans-serif" font-size="42">ON-CHAIN GATE SAYS NO</text>
+  </g>
+</svg>

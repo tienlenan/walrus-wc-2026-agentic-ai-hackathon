@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Gil memory snitch card</title>
+  <desc id="desc">A tabloid troll card about Walrus remembering bad predictions.</desc>
+  <rect width="1200" height="800" fill="#fbf7ec"/>
+  <path d="M50 54h1100v692H50z" fill="#f4ecd8" stroke="#1a1714" stroke-width="8"/>
+  <path d="M82 92h1036v74H82z" fill="#1a1714"/>
+  <text x="600" y="143" text-anchor="middle" fill="#fbf7ec" font-family="Georgia,serif" font-weight="900" font-size="52">THE DAILY WALRUS</text>
+  <g transform="translate(92 212)">
+    <rect x="0" y="0" width="430" height="420" fill="#0a2540" stroke="#1a1714" stroke-width="5"/>
+    <circle cx="215" cy="160" r="88" fill="#37c3b0"/>
+    <ellipse cx="174" cy="154" rx="22" ry="16" fill="#1a1714"/>
+    <ellipse cx="256" cy="154" rx="22" ry="16" fill="#1a1714"/>
+    <path d="M168 216c45 38 95 38 140 0" fill="none" stroke="#1a1714" stroke-width="14" stroke-linecap="round"/>
+    <path d="M172 190c-52 18-87 46-105 86" fill="none" stroke="#fbf7ec" stroke-width="24" stroke-linecap="round"/>
+    <path d="M258 190c52 18 87 46 105 86" fill="none" stroke="#fbf7ec" stroke-width="24" stroke-linecap="round"/>
+    <rect x="70" y="306" width="290" height="62" fill="#fbf7ec" stroke="#1a1714" stroke-width="4"/>
+    <text x="215" y="347" text-anchor="middle" fill="#c8102e" font-family="Impact,sans-serif" font-size="36">GIL KNOWS</text>
+  </g>
+  <text x="568" y="270" fill="#1a1714" font-family="Impact,sans-serif" font-size="82">I FORGOT?</text>
+  <text x="568" y="360" fill="#c8102e" font-family="Impact,sans-serif" font-size="92">WALRUS DIDN'T.</text>
+  <text x="570" y="430" fill="#1a1714" font-family="Arial,sans-serif" font-size="36">“Tôi không nhớ” là câu nói.</text>
+  <text x="570" y="480" fill="#1a1714" font-family="Arial,sans-serif" font-size="36">Blob ID mới là bằng chứng.</text>
+  <g transform="translate(570 545) rotate(-4)">
+    <rect x="0" y="0" width="440" height="88" fill="none" stroke="#c8102e" stroke-width="7"/>
+    <text x="220" y="58" text-anchor="middle" fill="#c8102e" font-family="Impact,sans-serif" font-size="44">BAD TAKE ARCHIVED</text>
+  </g>
+</svg>

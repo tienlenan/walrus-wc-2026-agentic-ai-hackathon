@@ -6,6 +6,7 @@ import { PredictionsDesk } from "./components/predictions-desk";
 import { Leaderboard } from "./components/leaderboard";
 import { TeamProfiles } from "./components/team-profiles";
 import { RoastWall } from "./components/roast-wall";
+import { GalleryWall } from "./components/gallery-wall";
 import { MemoryNotebook } from "./components/memory-notebook";
 import { RuntimeTracking } from "./components/runtime-tracking";
 import { useI18n } from "./lib/i18n";
@@ -63,6 +64,7 @@ export default function App() {
         <a href="#leaderboard">{t("nav.leaderboard")}</a>
         <a href="#team-profiles">{t("nav.teams")}</a>
         <a href="#roasts">{t("nav.roasts")}</a>
+        <a href="#gallery">{t("nav.gallery")}</a>
         <a href="#notebook">{t("nav.notebook")}</a>
         <a href="#tracking">{t("nav.tracking")}</a>
       </nav>
@@ -81,6 +83,9 @@ export default function App() {
       </div>
       <div id="roasts" className="section-anchor">
         <RoastWall />
+      </div>
+      <div id="gallery" className="section-anchor">
+        <GalleryWall />
       </div>
       <div id="notebook" className="section-anchor">
         <MemoryNotebook />
