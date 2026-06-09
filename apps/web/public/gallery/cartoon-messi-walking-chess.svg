@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">Cartoon walking chess roast</title>
+  <desc id="desc">Cartoon number ten walking across a chessboard pitch while defenders become chess pieces.</desc>
+  <rect width="1200" height="820" fill="#f8fbff"/>
+  <path d="M54 62c260-34 830-34 1094 8 36 180 30 486-18 680-280 36-792 34-1076-10C18 530 14 244 54 62Z" fill="#fffdf3" stroke="#141414" stroke-width="7"/>
+  <g transform="translate(100 276)">
+    <g>
+      <rect x="0" y="0" width="900" height="360" fill="#e9f4e4" stroke="#141414" stroke-width="6"/>
+      <g fill="#c9dfc1">
+        <rect x="0" y="0" width="112.5" height="90"/><rect x="225" y="0" width="112.5" height="90"/><rect x="450" y="0" width="112.5" height="90"/><rect x="675" y="0" width="112.5" height="90"/>
+        <rect x="112.5" y="90" width="112.5" height="90"/><rect x="337.5" y="90" width="112.5" height="90"/><rect x="562.5" y="90" width="112.5" height="90"/><rect x="787.5" y="90" width="112.5" height="90"/>
+        <rect x="0" y="180" width="112.5" height="90"/><rect x="225" y="180" width="112.5" height="90"/><rect x="450" y="180" width="112.5" height="90"/><rect x="675" y="180" width="112.5" height="90"/>
+        <rect x="112.5" y="270" width="112.5" height="90"/><rect x="337.5" y="270" width="112.5" height="90"/><rect x="562.5" y="270" width="112.5" height="90"/><rect x="787.5" y="270" width="112.5" height="90"/>
+      </g>
+    </g>
+    <path d="M655 112h62l-18 132h-24l-20-132Z" fill="#96a3b8" stroke="#141414" stroke-width="5"/>
+    <circle cx="687" cy="76" r="35" fill="#96a3b8" stroke="#141414" stroke-width="5"/>
+    <path d="M760 162h70l-20 126h-30l-20-126Z" fill="#96a3b8" stroke="#141414" stroke-width="5"/>
+    <circle cx="795" cy="124" r="32" fill="#96a3b8" stroke="#141414" stroke-width="5"/>
+  </g>
+  <g transform="translate(363 180)">
+    <circle cx="118" cy="70" r="54" fill="#f2bd7c" stroke="#141414" stroke-width="6"/>
+    <path d="M74 56c28-35 91-35 113 6-32-16-69-13-113-6Z" fill="#3b2b21"/>
+    <path d="M100 92c16 13 38 13 54 0" stroke="#141414" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M109 112c30 16 50 26 60 48" stroke="#3b2b21" stroke-width="9" stroke-linecap="round"/>
+    <path d="M74 138h98l26 164H48l26-164Z" fill="#9bd6ff" stroke="#141414" stroke-width="7" stroke-linejoin="round"/>
+    <text x="123" y="248" text-anchor="middle" fill="#141414" font-family="Arial Black, Arial, sans-serif" font-size="76">10</text>
+    <path d="M72 313 26 440M167 313l86 112" stroke="#141414" stroke-width="20" stroke-linecap="round"/>
+    <path d="M22 446h74M250 430h72" stroke="#141414" stroke-width="18" stroke-linecap="round"/>
+    <path d="M60 164-16 214M182 165l80 52" stroke="#141414" stroke-width="17" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(82 78)">
+    <rect width="476" height="128" rx="24" fill="#f8c54f" stroke="#141414" stroke-width="6"/>
+    <text x="26" y="48" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="34" font-weight="900">WALKING CHESS MODE</text>
+    <text x="26" y="92" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="25">Three steps. One beard stroke. Checkmate.</text>
+  </g>
+  <path d="M920 210c84 18 132 70 142 152" fill="none" stroke="#e85b45" stroke-width="7" stroke-dasharray="14 16"/>
+  <text x="930" y="188" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="31" font-weight="900">Defence buffering...</text>
+</svg>

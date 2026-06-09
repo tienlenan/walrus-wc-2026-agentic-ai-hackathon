@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">Cartoon free-kick airmail roast</title>
+  <desc id="desc">Cartoon footballer number seven blasting a free kick into the sky while Judge Gil records the receipt.</desc>
+  <rect width="1200" height="820" fill="#fff7df"/>
+  <path d="M50 72c180-42 865-52 1085 10 28 170 30 472-15 653-250 45-810 42-1066-8C18 520 16 244 50 72Z" fill="#fffdf3" stroke="#141414" stroke-width="7"/>
+  <path d="M70 616h1060" stroke="#1f7a3d" stroke-width="8" stroke-dasharray="18 18"/>
+  <ellipse cx="610" cy="646" rx="470" ry="70" fill="#b7e4d2" opacity=".7"/>
+  <g transform="translate(404 220)">
+    <circle cx="126" cy="74" r="58" fill="#f5bf7c" stroke="#141414" stroke-width="6"/>
+    <path d="M82 58c28-38 86-44 120-6-20-8-45-8-73 0-19 5-35 7-47 6Z" fill="#1a1714"/>
+    <path d="M100 82c12 16 35 16 49 0" fill="none" stroke="#141414" stroke-width="5" stroke-linecap="round"/>
+    <path d="M76 148h107l35 174H38l38-174Z" fill="#e85b45" stroke="#141414" stroke-width="7" stroke-linejoin="round"/>
+    <text x="130" y="253" text-anchor="middle" fill="#fffdf3" font-family="Arial Black, Arial, sans-serif" font-size="96">7</text>
+    <path d="M80 332 25 480M172 332l86 138" stroke="#141414" stroke-width="22" stroke-linecap="round"/>
+    <path d="M22 485h92M254 476l88-22" stroke="#141414" stroke-width="20" stroke-linecap="round"/>
+    <path d="M55 166-24 246M190 166l104 84" stroke="#141414" stroke-width="18" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(790 118)">
+    <path d="M0 300c96-92 166-180 217-298" fill="none" stroke="#0a2540" stroke-width="8" stroke-dasharray="20 18"/>
+    <circle cx="226" cy="0" r="34" fill="#fffdf3" stroke="#141414" stroke-width="5"/>
+    <path d="M197-8h58M209-28l34 56M209 22l34-56" stroke="#141414" stroke-width="4"/>
+    <path d="M308 10c38-18 71-9 90 22-42-7-79 12-105 56 0-34 5-60 15-78Z" fill="#8ad0ff" stroke="#141414" stroke-width="5"/>
+    <text x="345" y="118" text-anchor="middle" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="27" font-weight="700">ROW Z</text>
+  </g>
+  <g transform="translate(75 80)">
+    <rect width="378" height="124" rx="22" fill="#f8c54f" stroke="#141414" stroke-width="6"/>
+    <text x="24" y="48" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="34" font-weight="900">FREE KICK AIRMAIL</text>
+    <text x="24" y="90" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="25">Destination: not the goal.</text>
+  </g>
+  <g transform="translate(746 535)">
+    <ellipse cx="108" cy="116" rx="112" ry="34" fill="#d8c3a5"/>
+    <path d="M40 44c34-52 113-52 143 4 25 46-2 110-69 124C42 158 9 93 40 44Z" fill="#6f4d36" stroke="#141414" stroke-width="6"/>
+    <path d="M63 83c18 15 78 15 96-1" fill="none" stroke="#fffdf3" stroke-width="8" stroke-linecap="round"/>
+    <path d="M50 42 17 12M171 42l37-30" stroke="#fffdf3" stroke-width="10" stroke-linecap="round"/>
+    <text x="108" y="224" text-anchor="middle" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="28" font-weight="900">Gil: receipt stored.</text>
+  </g>
+</svg>

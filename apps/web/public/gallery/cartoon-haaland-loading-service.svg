@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">Cartoon striker loading service roast</title>
+  <desc id="desc">Cartoon giant striker waiting for service while a football delivery app is stuck loading.</desc>
+  <rect width="1200" height="820" fill="#eef8ff"/>
+  <path d="M58 62c260-38 820-32 1082 8 40 170 38 500-18 682-280 36-790 34-1062-8C20 520 18 240 58 62Z" fill="#fffdf3" stroke="#141414" stroke-width="7"/>
+  <g transform="translate(420 118)">
+    <circle cx="130" cy="78" r="60" fill="#f2bd7c" stroke="#141414" stroke-width="6"/>
+    <path d="M75 52c38-55 94-55 122-5-30-12-76-10-122 5Z" fill="#f5cf49"/>
+    <path d="M106 98c13 10 36 10 50-1" stroke="#141414" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M64 150h132l40 236H24l40-236Z" fill="#8ad0ff" stroke="#141414" stroke-width="7" stroke-linejoin="round"/>
+    <text x="130" y="286" text-anchor="middle" fill="#141414" font-family="Arial Black, Arial, sans-serif" font-size="74">9</text>
+    <path d="M69 399 12 600M195 399l78 184" stroke="#141414" stroke-width="24" stroke-linecap="round"/>
+    <path d="M8 606h102M274 588h102" stroke="#141414" stroke-width="20" stroke-linecap="round"/>
+    <path d="M58 180-36 250M203 180l112 58" stroke="#141414" stroke-width="20" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(96 118)">
+    <rect width="330" height="214" rx="28" fill="#141414" stroke="#141414" stroke-width="6"/>
+    <text x="165" y="56" text-anchor="middle" fill="#fffdf3" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="31" font-weight="900">SERVICE APP</text>
+    <rect x="45" y="92" width="240" height="34" rx="17" fill="#fffdf3"/>
+    <rect x="45" y="92" width="88" height="34" rx="17" fill="#e85b45"/>
+    <text x="165" y="164" text-anchor="middle" fill="#f8c54f" font-family="Arial Black, Arial, sans-serif" font-size="28">37%</text>
+    <text x="165" y="194" text-anchor="middle" fill="#fffdf3" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="20">Cross not found</text>
+  </g>
+  <g transform="translate(790 180)">
+    <circle cx="86" cy="86" r="58" fill="#fffdf3" stroke="#141414" stroke-width="6"/>
+    <path d="M38 78h96M52 50l68 68M52 118l68-68" stroke="#141414" stroke-width="6"/>
+    <path d="M105 150c36 34 62 82 78 144" stroke="#e85b45" stroke-width="8" fill="none" stroke-dasharray="16 12"/>
+  </g>
+  <g transform="translate(82 606)">
+    <rect width="620" height="106" rx="24" fill="#f8c54f" stroke="#141414" stroke-width="6"/>
+    <text x="28" y="44" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="34" font-weight="900">GOAL ROBOT: WAITING FOR DELIVERY</text>
+    <text x="28" y="78" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="24">Feed him or enjoy Scandinavian furniture.</text>
+  </g>
+</svg>

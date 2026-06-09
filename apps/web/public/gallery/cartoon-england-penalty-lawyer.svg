@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">England penalty lawyer cartoon</title>
+  <desc id="desc">Cartoon penalty spot hiring a lawyer before England takes a kick.</desc>
+  <rect width="1200" height="820" fill="#eef8ff"/>
+  <path d="M54 62c250-38 830-34 1090 8 38 178 34 496-20 682-284 40-790 36-1070-8C18 524 18 238 54 62Z" fill="#fffdf3" stroke="#141414" stroke-width="7"/>
+  <g transform="translate(112 86)">
+    <rect width="625" height="126" rx="24" fill="#8ad0ff" stroke="#141414" stroke-width="6"/>
+    <text x="28" y="50" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="36" font-weight="900">THE PENALTY SPOT LAWYERED UP</text>
+    <text x="28" y="90" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="25">England confidence enters the witness box.</text>
+  </g>
+  <circle cx="290" cy="530" r="52" fill="#fffdf3" stroke="#141414" stroke-width="6"/>
+  <path d="M248 526h84M262 496l56 64M262 560l56-64" stroke="#141414" stroke-width="6"/>
+  <g transform="translate(520 246)">
+    <circle cx="96" cy="70" r="52" fill="#f1bd7c" stroke="#141414" stroke-width="6"/>
+    <path d="M57 58c26-34 72-34 103 0-34-10-68-9-103 0Z" fill="#caa76b"/>
+    <path d="M76 91c12 10 32 10 44 0" fill="none" stroke="#141414" stroke-width="5" stroke-linecap="round"/>
+    <path d="M44 136h104l30 172H16l28-172Z" fill="#e85b45" stroke="#141414" stroke-width="7"/>
+    <text x="96" y="244" text-anchor="middle" fill="#fffdf3" font-family="Arial Black, Arial, sans-serif" font-size="70">9</text>
+    <path d="M48 320 10 466M144 320l74 124" stroke="#141414" stroke-width="21" stroke-linecap="round"/>
+    <path d="M8 472h84M218 450h88" stroke="#141414" stroke-width="18" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(760 388)">
+    <rect width="300" height="144" rx="24" fill="#141414" stroke="#141414" stroke-width="6"/>
+    <text x="150" y="54" text-anchor="middle" fill="#fffdf3" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="29" font-weight="900">LEGAL NOTICE</text>
+    <text x="150" y="94" text-anchor="middle" fill="#f8c54f" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="24">No guarantees after 12 yards.</text>
+  </g>
+</svg>

@@ -44,6 +44,19 @@
   overflow-y: auto;
 }
 
+.suggestion-rail {
+  border-bottom: 1px solid var(--ink);
+  background: color-mix(in srgb, var(--paper) 78%, var(--teal) 22%);
+  padding: 0.75rem 0.9rem 0.85rem;
+}
+.suggestion-title {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+}
+
 .chat-empty {
   color: var(--ink-soft);
 }
@@ -61,6 +74,9 @@
   border: 1px solid var(--ink);
   padding: 0.35rem 0.6rem;
   border-radius: 2px;
+  max-width: min(100%, 34rem);
+  text-align: left;
+  line-height: 1.35;
 }
 .starter:hover:not(:disabled) {
   background: var(--teal);

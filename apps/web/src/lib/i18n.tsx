@@ -61,6 +61,8 @@ const DICT: Record<Lang, Record<string, string>> = {
     "chat.error": "Gil mất trí tạm thời... server đã bật chưa?",
     "chat.placeholder": "Hỏi Gil, phán kèo, hoặc tự nộp mình cho cà khịa...",
     "chat.send": "Gửi",
+    "chat.suggestions": "Gợi ý nhanh",
+    "chat.suggestionsContext": "Gợi ý theo ngữ cảnh",
     "starter.1": "World Cup 2026 ai vô địch?",
     "starter.2": "Tôi là fan Brazil, Brazil sẽ vô địch!",
     "starter.3": "Cà khịa tuyển Anh giùm tôi.",
@@ -226,7 +228,7 @@ const DICT: Record<Lang, Record<string, string>> = {
     "gallery.openBlob": "Mở blob",
     "gallery.copyBlob": "Sao chép blob",
     "gallery.pending": "Chưa xuất bản blob",
-    "gallery.badge": "đã lưu testnet",
+    "gallery.badge": "đã lưu mainnet",
   },
   en: {
     "brand.eyebrow": "Powered by Walrus · Walrus receipts · No mercy",
@@ -285,6 +287,8 @@ const DICT: Record<Lang, Record<string, string>> = {
     "chat.error": "Gil has temporary amnesia... is the server running?",
     "chat.placeholder": "Ask Gil, call a bet, or volunteer for the roast...",
     "chat.send": "Send",
+    "chat.suggestions": "Quick suggestions",
+    "chat.suggestionsContext": "Context suggestions",
     "starter.1": "Who wins World Cup 2026?",
     "starter.2": "I'm a Brazil fan — Brazil takes it all!",
     "starter.3": "Roast England for me.",
@@ -450,7 +454,7 @@ const DICT: Record<Lang, Record<string, string>> = {
     "gallery.openBlob": "Open blob",
     "gallery.copyBlob": "Copy blob",
     "gallery.pending": "Blob pending",
-    "gallery.badge": "stored on testnet",
+    "gallery.badge": "stored on mainnet",
   },
 };
 

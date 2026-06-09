@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">Cartoon midfielder interviewing the ball</title>
+  <desc id="desc">Cartoon midfielder with clipboard interviewing a football before passing.</desc>
+  <rect width="1200" height="820" fill="#fff7df"/>
+  <path d="M58 60c250-34 816-28 1086 8 40 186 34 492-22 684-286 38-784 36-1064-8C18 524 18 238 58 60Z" fill="#fffdf3" stroke="#141414" stroke-width="7"/>
+  <g transform="translate(405 182)">
+    <circle cx="118" cy="70" r="54" fill="#f2bd7c" stroke="#141414" stroke-width="6"/>
+    <path d="M76 54c24-38 82-42 112 2-28-9-67-8-112-2Z" fill="#d7ad61"/>
+    <path d="M97 91c13 11 36 11 50 0" stroke="#141414" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M64 138h112l36 184H30l34-184Z" fill="#e85b45" stroke="#141414" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M54 164-34 230M186 164l98 72" stroke="#141414" stroke-width="18" stroke-linecap="round"/>
+    <path d="M284 236h122v94H284z" fill="#fffdf3" stroke="#141414" stroke-width="5"/>
+    <path d="M304 262h76M304 292h55" stroke="#141414" stroke-width="5" stroke-linecap="round"/>
+    <path d="M74 334 28 500M170 334l74 148" stroke="#141414" stroke-width="21" stroke-linecap="round"/>
+    <path d="M24 506h88M244 488h88" stroke="#141414" stroke-width="18" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(756 456)">
+    <circle cx="90" cy="90" r="66" fill="#fffdf3" stroke="#141414" stroke-width="6"/>
+    <path d="M43 86h92M58 55l62 70M58 125l62-70" stroke="#141414" stroke-width="6"/>
+    <path d="M34 8c-56-28-108-10-138 42" fill="none" stroke="#0a2540" stroke-width="6" stroke-dasharray="12 10"/>
+    <rect x="-270" y="-80" width="294" height="102" rx="22" fill="#b7e4d2" stroke="#141414" stroke-width="5"/>
+    <text x="-246" y="-42" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="26" font-weight="900">References?</text>
+    <text x="-246" y="-12" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="21">Previous pass history?</text>
+  </g>
+  <g transform="translate(82 80)">
+    <rect width="545" height="124" rx="24" fill="#8ad0ff" stroke="#141414" stroke-width="6"/>
+    <text x="26" y="48" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="34" font-weight="900">THE BALL IS IN AN INTERVIEW</text>
+    <text x="26" y="90" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="25">Pass pending background check.</text>
+  </g>
+</svg>

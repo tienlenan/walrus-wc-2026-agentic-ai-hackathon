@@ -4,10 +4,8 @@ import "./gallery-wall.css";
 
 interface GalleryItem {
   id: string;
-  titleVi: string;
-  titleEn: string;
-  captionVi: string;
-  captionEn: string;
+  title: string;
+  caption: string;
   src: string;
   blobId: string | null;
   blobUrl: string | null;
@@ -15,124 +13,100 @@ interface GalleryItem {
 
 const ITEMS: GalleryItem[] = [
   {
-    id: "gil-memory-snitch",
-    titleVi: "Gil nói quên, Walrus nói không",
-    titleEn: "Gil forgot. Walrus did not.",
-    captionVi: "Dành cho mọi pha giả vờ mất trí sau khi kèo đi vào lòng đất.",
-    captionEn: "For every convenient memory loss after a prediction face-plants.",
-    src: "/gallery/gil-memory-snitch.svg",
-    blobId: "wYPcd-z5TFCcKBS0iLqEXpHHvok8qlN_vxj5OjoaUzU",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/wYPcd-z5TFCcKBS0iLqEXpHHvok8qlN_vxj5OjoaUzU",
+    id: "cartoon-walrus-better-than-idols",
+    title: "Gil kicks better than your idol",
+    caption: "Cartoon roast: Gil bicycle-kicks into every idol debate Walrus Memory refuses to forget.",
+    src: "/gallery/cartoon-walrus-better-than-idols.svg",
+    blobId: "cbqHFwl4XMnsokNRbH5NLBBA1aLeiSwQU50gpHUM54I",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/cbqHFwl4XMnsokNRbH5NLBBA1aLeiSwQU50gpHUM54I",
   },
   {
-    id: "prediction-booth-closed",
-    titleVi: "Quầy kèo đã đóng",
-    titleEn: "Prediction booth closed",
-    captionVi: "Bóng lăn rồi mới phán thì Gil gọi đó là đọc tường thuật.",
-    captionEn: "Calling it after kickoff is just commentary wearing a fake moustache.",
-    src: "/gallery/prediction-booth-closed.svg",
-    blobId: "2_GSVBEv8svCU7OqhugOvG6ObzVfbe1wNUk-fvgfSX8",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/2_GSVBEv8svCU7OqhugOvG6ObzVfbe1wNUk-fvgfSX8",
+    id: "cartoon-ronaldo-airmail",
+    title: "Ronaldo free-kick airmail",
+    caption: "Cartoon roast: number seven requests a launch window and the goal is not the destination.",
+    src: "/gallery/cartoon-ronaldo-airmail.svg",
+    blobId: "E33WFoY9f0slnYJ3SsEHlLLO2pJAK0HrOk8V0QHU7Tk",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/E33WFoY9f0slnYJ3SsEHlLLO2pJAK0HrOk8V0QHU7Tk",
   },
   {
-    id: "bad-take-receipt",
-    titleVi: "Biên lai kèo lỗi",
-    titleEn: "Bad take receipt",
-    captionVi: "Không hoàn tiền, không xoá lịch sử, không thương lượng với Gil.",
-    captionEn: "No refunds, no erasing history, no negotiating with Gil.",
-    src: "/gallery/bad-take-receipt.svg",
-    blobId: "PnG-6aw9qFYHy30Z2c52ncgb8SFaicsNeAhuoeIIA8U",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/PnG-6aw9qFYHy30Z2c52ncgb8SFaicsNeAhuoeIIA8U",
+    id: "cartoon-messi-walking-chess",
+    title: "Messi walking chess mode",
+    caption: "Cartoon roast: three steps, one beard stroke, and the back line becomes paperwork.",
+    src: "/gallery/cartoon-messi-walking-chess.svg",
+    blobId: "mbAuccmovf7ZNUbu1YdW85e-ePXivHEat-XS3gxTThg",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/mbAuccmovf7ZNUbu1YdW85e-ePXivHEat-XS3gxTThg",
   },
   {
-    id: "oracle-roast-room",
-    titleVi: "Oracle gõ búa",
-    titleEn: "Oracle bangs the gavel",
-    captionVi: "Trận đã chốt. Điểm đã tính. Sĩ diện tự lo.",
-    captionEn: "Match settled. Points counted. Pride left unsponsored.",
-    src: "/gallery/oracle-roast-room.svg",
-    blobId: "OL4eWqRjomprlIT8NpimO8jORFjSnYySP_WRZ48tt2A",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/OL4eWqRjomprlIT8NpimO8jORFjSnYySP_WRZ48tt2A",
+    id: "cartoon-gyokeres-hair-xg",
+    title: "Gyokeres hair-check xG",
+    caption: "Cartoon roast: if hair checks counted as xG, Sweden would already be top.",
+    src: "/gallery/cartoon-gyokeres-hair-xg.svg",
+    blobId: "OW8ij-GYSAW1Ufi-pKome0RFo_2fJLya6ujjxiNUNrU",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/OW8ij-GYSAW1Ufi-pKome0RFo_2fJLya6ujjxiNUNrU",
   },
   {
-    id: "player-no10-dribble-loop",
-    titleVi: "Số 10 rê bóng vào bộ nhớ đệm",
-    titleEn: "No. 10 dribbles into cache",
-    captionVi: "Highlight thì đẹp, quyết định cuối cùng thì cần Walrus kiểm toán.",
-    captionEn: "Lovely highlights, final decision pending Walrus audit.",
-    src: "/gallery/player-no10-dribble-loop.svg",
-    blobId: "vXxTlj34SJCvwaTViZ6W3-W-WCvjtk58tV6NwwdJQGo",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/vXxTlj34SJCvwaTViZ6W3-W-WCvjtk58tV6NwwdJQGo",
+    id: "cartoon-haaland-loading-service",
+    title: "Haaland waiting for service",
+    caption: "Cartoon roast: the goal robot is ready, but the delivery app is stuck at 37%.",
+    src: "/gallery/cartoon-haaland-loading-service.svg",
+    blobId: "PPhfVjOivHB3AlJi778DOFncNPqEmyg79fkhpczxMvE",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/PPhfVjOivHB3AlJi778DOFncNPqEmyg79fkhpczxMvE",
   },
   {
-    id: "goalkeeper-loading-screen",
-    titleVi: "Thủ môn đang tải phản xạ",
-    titleEn: "Goalkeeper loading reflexes",
-    captionVi: "Bóng tới rồi, thanh tiến trình vẫn ở 37%.",
-    captionEn: "The shot arrived; the progress bar stayed at 37%.",
-    src: "/gallery/goalkeeper-loading-screen.svg",
-    blobId: "WVwXkzU_UsgGpnn7RJdnaYusyUwWldZRNC5lY3fdvrM",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/WVwXkzU_UsgGpnn7RJdnaYusyUwWldZRNC5lY3fdvrM",
+    id: "cartoon-odegaard-ball-interview",
+    title: "Odegaard interviews the ball",
+    caption: "Cartoon roast: the pass is pending background check while the defence buys anxiety premium.",
+    src: "/gallery/cartoon-odegaard-ball-interview.svg",
+    blobId: "bozWsYWA5mqcAY1NO37BsMmzudbJ83Va0njEbxV8EwY",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/bozWsYWA5mqcAY1NO37BsMmzudbJ83Va0njEbxV8EwY",
   },
   {
-    id: "striker-offside-subscription",
-    titleVi: "Tiền đạo mua gói việt vị năm",
-    titleEn: "Striker bought annual offside",
-    captionVi: "Vị trí đẹp, mỗi tội đẹp ở sai dòng thời gian.",
-    captionEn: "Great position, unfortunately from the wrong timeline.",
-    src: "/gallery/striker-offside-subscription.svg",
-    blobId: "bQTrFc38zHS8XpGpqjASfjIytklAMTWy_X53ERCNnBA",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/bQTrFc38zHS8XpGpqjASfjIytklAMTWy_X53ERCNnBA",
+    id: "cartoon-brazil-samba-audit",
+    title: "Brazil samba confidence audit",
+    caption: "Cartoon roast: evidence requested before dancing through July.",
+    src: "/gallery/cartoon-brazil-samba-audit.svg",
+    blobId: "h8buzNUdOUmGr3L5K2csOh7LURtARvNqX0WXFcVg_OA",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/h8buzNUdOUmGr3L5K2csOh7LURtARvNqX0WXFcVg_OA",
   },
   {
-    id: "var-first-touch-review",
-    titleVi: "VAR soi pha chạm bóng đầu tiên",
-    titleEn: "VAR reviews first touch",
-    captionVi: "Pha khống chế bóng cần ba góc quay và một lời xin lỗi.",
-    captionEn: "That first touch needs three camera angles and an apology.",
-    src: "/gallery/var-first-touch-review.svg",
-    blobId: "6AqcSIWPoJWiCIPuTHmVcCNsltZjneO1AD9go-cX3UM",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/6AqcSIWPoJWiCIPuTHmVcCNsltZjneO1AD9go-cX3UM",
+    id: "cartoon-england-penalty-lawyer",
+    title: "England penalty spot lawyer",
+    caption: "Cartoon roast: the penalty spot hired counsel before the whistle.",
+    src: "/gallery/cartoon-england-penalty-lawyer.svg",
+    blobId: "R52vk-xpizXNdru7kIpDkHSVJZgPtGy03p3GcyA-VcE",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/R52vk-xpizXNdru7kIpDkHSVJZgPtGy03p3GcyA-VcE",
   },
   {
-    id: "captain-excuse-armband",
-    titleVi: "Đội trưởng đeo băng biện minh",
-    titleEn: "Captain wears the excuse armband",
-    captionVi: "Tinh thần thủ lĩnh: nhận trách nhiệm sau khi đổ cho mặt cỏ.",
-    captionEn: "Leadership means blaming the pitch with authority.",
-    src: "/gallery/captain-excuse-armband.svg",
-    blobId: "-6SefYATCnHx-hRzom2N1R_1EAcfokPXIdKfyahZQhE",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/-6SefYATCnHx-hRzom2N1R_1EAcfokPXIdKfyahZQhE",
+    id: "cartoon-vini-courtroom-dribble",
+    title: "Vini courtroom dribble",
+    caption: "Cartoon roast: the full-back is guilty of needing a map.",
+    src: "/gallery/cartoon-vini-courtroom-dribble.svg",
+    blobId: "K-p2KEgUpy5g9gvYqHk_2mODVa2S1rJ-7aWdTeeyo5s",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/K-p2KEgUpy5g9gvYqHk_2mODVa2S1rJ-7aWdTeeyo5s",
   },
   {
-    id: "bench-legend-warmup",
-    titleVi: "Huyền thoại khởi động ghế dự bị",
-    titleEn: "Bench legend warms up",
-    captionVi: "Đã sẵn sàng vào sân từ phút 12, vẫn đang chờ hết tournament.",
-    captionEn: "Ready since minute 12, still waiting after the tournament.",
-    src: "/gallery/bench-legend-warmup.svg",
-    blobId: "o3xlMjnCh34YaNw_cZTG1qe-mMbu4Z0QGJWsUk04XtE",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/o3xlMjnCh34YaNw_cZTG1qe-mMbu4Z0QGJWsUk04XtE",
+    id: "cartoon-fan-hopium-crash",
+    title: "Fan hopium market crash",
+    caption: "Cartoon roast: kickoff turned optimism into paperwork.",
+    src: "/gallery/cartoon-fan-hopium-crash.svg",
+    blobId: "vPMwpD6oOH6hmZ0pv4xI3jcHdGfUxNnsbrk2A1xXU6I",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/vPMwpD6oOH6hmZ0pv4xI3jcHdGfUxNnsbrk2A1xXU6I",
   },
   {
-    id: "fan-hopium-meter",
-    titleVi: "Máy đo niềm tin cổ động viên",
-    titleEn: "Fan hopium meter",
-    captionVi: "Trước trận 99%, sau bàn thua đầu tiên chuyển sang cầu trời.",
-    captionEn: "99% before kickoff, prayer mode after the first goal.",
-    src: "/gallery/fan-hopium-meter.svg",
-    blobId: "v7-5GAmmax_EvyvXHfsj4KhapWPM6HDfNaZoSYj95iU",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/v7-5GAmmax_EvyvXHfsj4KhapWPM6HDfNaZoSYj95iU",
+    id: "cartoon-var-first-touch-apology",
+    title: "VAR first touch apology",
+    caption: "Cartoon roast: three camera angles and one apology letter.",
+    src: "/gallery/cartoon-var-first-touch-apology.svg",
+    blobId: "FT32K0uPHpZ7tTJ_rmosjJDyRVNwA-ew2A1QLGiE2dA",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/FT32K0uPHpZ7tTJ_rmosjJDyRVNwA-ew2A1QLGiE2dA",
   },
   {
-    id: "tactical-masterplan-napkin",
-    titleVi: "Chiến thuật viết trên khăn giấy",
-    titleEn: "Tactical masterplan on a napkin",
-    captionVi: "Sơ đồ nhìn như thiên tài cho đến khi bóng lăn.",
-    captionEn: "Genius on paper, improv comedy after kickoff.",
-    src: "/gallery/tactical-masterplan-napkin.svg",
-    blobId: "s7cRASleiQDFHOU6P3apq6oMJX-EZKY8_wpBABZOTm8",
-    blobUrl: "https://aggregator.walrus-testnet.walrus.space/v1/blobs/s7cRASleiQDFHOU6P3apq6oMJX-EZKY8_wpBABZOTm8",
+    id: "cartoon-goalkeeper-buffering",
+    title: "Goalkeeper buffering",
+    caption: "Cartoon roast: the shot arrived before the reflex update.",
+    src: "/gallery/cartoon-goalkeeper-buffering.svg",
+    blobId: "4VV2LYcxeFY02JUnqMEbxhAGB-hN_emTmvWQgbRMRcs",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/4VV2LYcxeFY02JUnqMEbxhAGB-hN_emTmvWQgbRMRcs",
   },
 ];
 
@@ -141,7 +115,7 @@ function shortBlob(id: string): string {
 }
 
 export function GalleryWall() {
-  const { lang, t } = useI18n();
+  const { t } = useI18n();
   const [copied, setCopied] = useState<string | null>(null);
 
   async function copyBlob(item: GalleryItem) {
@@ -164,11 +138,11 @@ export function GalleryWall() {
       <div className="gallery-grid">
         {ITEMS.map((item) => (
           <article className="gallery-card" key={item.id}>
-            <img src={item.src} alt={lang === "en" ? item.titleEn : item.titleVi} loading="lazy" />
+            <img src={item.src} alt={item.title} loading="lazy" />
             <div className="gallery-card-copy">
               <span className={item.blobId ? "gallery-badge stored" : "gallery-badge"}>{item.blobId ? t("gallery.badge") : t("gallery.pending")}</span>
-              <h3>{lang === "en" ? item.titleEn : item.titleVi}</h3>
-              <p>{lang === "en" ? item.captionEn : item.captionVi}</p>
+              <h3>{item.title}</h3>
+              <p>{item.caption}</p>
               <div className="gallery-actions">
                 {item.blobUrl ? (
                   <a href={item.blobUrl} target="_blank" rel="noreferrer">

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">Cartoon walrus mascot bicycle kick roast</title>
+  <desc id="desc">Judge Gil the walrus mascot bicycle-kicks a football while comparing himself to football idols.</desc>
+  <rect width="1200" height="820" fill="#eef8ff"/>
+  <path d="M54 62c260-38 824-34 1088 8 40 180 36 492-20 682-280 38-790 36-1068-8C18 520 18 238 54 62Z" fill="#fffdf3" stroke="#141414" stroke-width="7"/>
+  <ellipse cx="602" cy="660" rx="450" ry="76" fill="#b7e4d2"/>
+  <g transform="translate(415 210) rotate(-16 180 180)">
+    <ellipse cx="180" cy="220" rx="142" ry="116" fill="#7b5941" stroke="#141414" stroke-width="7"/>
+    <circle cx="180" cy="94" r="82" fill="#8b674d" stroke="#141414" stroke-width="7"/>
+    <path d="M116 86c46-56 110-56 150 0-44-15-94-14-150 0Z" fill="#5b3d2c"/>
+    <circle cx="152" cy="94" r="8" fill="#141414"/>
+    <circle cx="208" cy="94" r="8" fill="#141414"/>
+    <path d="M154 124c16 12 38 12 52 0" fill="none" stroke="#141414" stroke-width="5" stroke-linecap="round"/>
+    <path d="M156 132l-26 102M204 132l24 102" stroke="#fffdf3" stroke-width="14" stroke-linecap="round"/>
+    <path d="M80 210-32 164M280 210l130-84" stroke="#141414" stroke-width="24" stroke-linecap="round"/>
+    <path d="M96 306-18 424M268 304l146 72" stroke="#141414" stroke-width="24" stroke-linecap="round"/>
+    <path d="M-24 426h96M410 378h96" stroke="#141414" stroke-width="18" stroke-linecap="round"/>
+  </g>
+  <circle cx="834" cy="238" r="44" fill="#fffdf3" stroke="#141414" stroke-width="6"/>
+  <path d="M797 238h74M812 210l48 56M812 266l48-56" stroke="#141414" stroke-width="5"/>
+  <path d="M760 300c78 42 152 42 224 0" fill="none" stroke="#e85b45" stroke-width="8" stroke-dasharray="16 12"/>
+  <g transform="translate(82 82)">
+    <rect width="610" height="132" rx="24" fill="#f8c54f" stroke="#141414" stroke-width="6"/>
+    <text x="28" y="50" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="35" font-weight="900">GIL CLAIMS HE KICKS BETTER</text>
+    <text x="28" y="94" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="25">Walrus Memory remembers every idol debate.</text>
+  </g>
+  <g transform="translate(812 520)">
+    <rect width="274" height="112" rx="22" fill="#141414" stroke="#141414" stroke-width="6"/>
+    <text x="137" y="44" text-anchor="middle" fill="#fffdf3" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="25" font-weight="900">Verdict</text>
+    <text x="137" y="78" text-anchor="middle" fill="#8ad0ff" font-family="Arial Black, Arial, sans-serif" font-size="30">Cartoon VAR says yes</text>
+  </g>
+</svg>

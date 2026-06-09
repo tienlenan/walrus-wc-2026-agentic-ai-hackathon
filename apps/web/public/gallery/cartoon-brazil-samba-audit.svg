@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">Brazil samba audit cartoon</title>
+  <desc id="desc">Cartoon Brazil fan confidence audited by Judge Gil and a clipboard.</desc>
+  <rect width="1200" height="820" fill="#fff7df"/>
+  <path d="M54 62c250-38 830-34 1090 8 38 178 34 496-20 682-284 40-790 36-1070-8C18 524 18 238 54 62Z" fill="#fffdf3" stroke="#141414" stroke-width="7"/>
+  <g transform="translate(112 86)">
+    <rect width="610" height="126" rx="24" fill="#f8c54f" stroke="#141414" stroke-width="6"/>
+    <text x="28" y="50" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="36" font-weight="900">SAMBA CONFIDENCE AUDIT</text>
+    <text x="28" y="90" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="25">Evidence requested before dancing in July.</text>
+  </g>
+  <g transform="translate(375 214)">
+    <circle cx="136" cy="72" r="56" fill="#f1bd7c" stroke="#141414" stroke-width="6"/>
+    <path d="M90 54c30-36 80-40 112 4-38-8-74-8-112-4Z" fill="#1a1714"/>
+    <path d="M112 92c16 12 42 12 58 0" fill="none" stroke="#141414" stroke-width="5" stroke-linecap="round"/>
+    <path d="M70 142h132l36 188H32l38-188Z" fill="#f8c54f" stroke="#141414" stroke-width="7"/>
+    <path d="M64 170-44 238M214 170l118 54" stroke="#141414" stroke-width="19" stroke-linecap="round"/>
+    <path d="M78 342 18 530M190 342l92 164" stroke="#141414" stroke-width="22" stroke-linecap="round"/>
+    <path d="M14 536h96M280 510h98" stroke="#141414" stroke-width="18" stroke-linecap="round"/>
+    <path d="M36 188c50 36 120 36 188-2" fill="none" stroke="#1f7a3d" stroke-width="8" stroke-dasharray="14 12"/>
+  </g>
+  <g transform="translate(760 250)">
+    <rect width="260" height="240" rx="22" fill="#fffdf3" stroke="#141414" stroke-width="6"/>
+    <text x="130" y="44" text-anchor="middle" fill="#141414" font-family="Arial Black, Arial, sans-serif" font-size="30">GIL AUDIT</text>
+    <path d="M52 86h156M52 126h156M52 166h116" stroke="#141414" stroke-width="8" stroke-linecap="round"/>
+    <text x="130" y="214" text-anchor="middle" fill="#e85b45" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="26" font-weight="900">HYPE: UNVERIFIED</text>
+  </g>
+</svg>
