@@ -19,9 +19,38 @@ const RuntimeTracking = lazy(() => import("./components/runtime-tracking").then(
 type ReferencePageKey = "team-profiles" | "gallery" | "notebook" | "tracking";
 
 const REFERENCE_PAGES = new Set<string>(["team-profiles", "gallery", "notebook", "tracking"]);
+const BOOT_IMAGES = [
+  "/gallery/cartoon-walrus-better-than-idols.svg",
+  "/gallery/cartoon-ronaldo-airmail.svg",
+  "/gallery/cartoon-messi-walking-chess.svg",
+  "/gallery/cartoon-gyokeres-hair-xg.svg",
+  "/gallery/cartoon-haaland-loading-service.svg",
+  "/gallery/cartoon-england-penalty-lawyer.svg",
+];
+const VI_BOOT_LINES = [
+  "Gil đang hỏi VAR xem ai dự đoán tệ nhất.",
+  "Walrus đang niêm phong biên lai nhục.",
+  "Đang kiểm tra xem cú sút phạt bay tới tiểu bang nào.",
+  "Sổ ký ức mở hơi chậm vì nhiều kèo mõm quá.",
+] as const;
+const EN_BOOT_LINES = [
+  "Gil is asking VAR who cooked the worst prediction.",
+  "Walrus is laminating the shame receipts.",
+  "Checking which zip code that free kick landed in.",
+  "Memory is loading slowly because the takes are heavy.",
+] as const;
+const BOOT_LINES = {
+  vi: VI_BOOT_LINES,
+  en: EN_BOOT_LINES,
+} as const;
 
 function currentHash(): string {
   return window.location.hash.replace(/^#/, "");
+}
+
+function bootLineFor(lang: "vi" | "en", index: number): string {
+  const lines = BOOT_LINES[lang];
+  return lines[index % lines.length] ?? EN_BOOT_LINES[0];
 }
 
 export default function App() {
@@ -30,13 +59,23 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [hash, setHash] = useState(currentHash);
   const [routeLoading, setRouteLoading] = useState(false);
+  const [bootSplashVisible, setBootSplashVisible] = useState(true);
+  const [bootLineIndex, setBootLineIndex] = useState(() => Math.floor(Math.random() * EN_BOOT_LINES.length));
   const routeLoadingTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
+    const lineTimer = window.setInterval(() => {
+      setBootLineIndex((value) => (value + 1) % EN_BOOT_LINES.length);
+    }, 760);
     const frame = window.requestAnimationFrame(() => {
       document.documentElement.classList.add("app-ready");
     });
-    return () => window.cancelAnimationFrame(frame);
+    const hideTimer = window.setTimeout(() => setBootSplashVisible(false), 1050);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearInterval(lineTimer);
+      window.clearTimeout(hideTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -76,6 +115,8 @@ export default function App() {
 
   return (
     <div className="paper">
+      {bootSplashVisible && <BootSplash line={bootLineFor(lang, bootLineIndex)} />}
+
       <Suspense fallback={<div className="press-bar press-bar-loading">Loading wallet desk...</div>}>
         <WalletProviders>
           <ConnectBar />
@@ -187,6 +228,23 @@ export default function App() {
           <SettingsPanel onClose={() => setSettingsOpen(false)} />
         </Suspense>
       )}
+    </div>
+  );
+}
+
+function BootSplash({ line }: { line: string }) {
+  return (
+    <div className="boot-splash-stage" role="status" aria-live="polite">
+      <div className="boot-chaos" aria-hidden="true">
+        {BOOT_IMAGES.map((src, index) => (
+          <img key={src} className={`boot-chaos-card card-${index + 1}`} src={src} alt="" />
+        ))}
+      </div>
+      <div className="boot-splash-card">
+        <img src="/app-icon.svg" alt="" aria-hidden="true" />
+        <span>Loading the evidence desk</span>
+        <strong>{line}</strong>
+      </div>
     </div>
   );
 }

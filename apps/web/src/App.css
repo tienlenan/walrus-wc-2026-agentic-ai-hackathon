@@ -153,6 +153,137 @@
   text-transform: uppercase;
 }
 
+.boot-splash-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 1rem;
+  background:
+    linear-gradient(rgba(26, 23, 20, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 23, 20, 0.035) 1px, transparent 1px),
+    color-mix(in srgb, var(--paper-2) 96%, #fff);
+  background-size: 28px 28px, 28px 28px, auto;
+}
+
+.boot-splash-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--teal), #f0b75b, var(--red), var(--teal));
+  background-size: 220% 100%;
+  animation: boot-progress 900ms linear infinite;
+}
+
+.boot-splash-card {
+  position: relative;
+  z-index: 2;
+  width: min(28rem, calc(100vw - 2rem));
+  border: 2px solid var(--ink);
+  background: color-mix(in srgb, var(--paper) 94%, #fff);
+  box-shadow: 5px 5px 0 var(--ink);
+  padding: 1rem;
+  display: grid;
+  gap: 0.65rem;
+  justify-items: start;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.boot-splash-card img {
+  width: 4rem;
+  height: 4rem;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  background: #fff7df;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.boot-splash-card span {
+  color: var(--teal-deep);
+  font-size: 0.72rem;
+}
+
+.boot-splash-card strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 7vw, 3.2rem);
+  line-height: 0.96;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.boot-chaos {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.boot-chaos-card {
+  position: absolute;
+  width: clamp(7rem, 20vw, 13rem);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 4px 4px 0 rgba(26, 23, 20, 0.78);
+  animation: boot-card-float 1.3s ease-in-out infinite alternate;
+}
+
+.boot-chaos-card.card-1 {
+  left: 6vw;
+  top: 8vh;
+  transform: rotate(-14deg);
+}
+
+.boot-chaos-card.card-2 {
+  right: 7vw;
+  top: 10vh;
+  transform: rotate(12deg);
+  animation-delay: 110ms;
+}
+
+.boot-chaos-card.card-3 {
+  left: -2.5rem;
+  top: 38vh;
+  transform: rotate(18deg);
+  animation-delay: 220ms;
+}
+
+.boot-chaos-card.card-4 {
+  right: -2.5rem;
+  top: 42vh;
+  transform: rotate(-18deg);
+  animation-delay: 330ms;
+}
+
+.boot-chaos-card.card-5 {
+  left: 18vw;
+  bottom: 7vh;
+  transform: rotate(9deg);
+  animation-delay: 440ms;
+}
+
+.boot-chaos-card.card-6 {
+  right: 18vw;
+  bottom: 5vh;
+  transform: rotate(-10deg);
+  animation-delay: 550ms;
+}
+
+@keyframes boot-card-float {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -0.65rem;
+  }
+}
+
 .route-load-strip {
   max-height: 0;
   opacity: 0;
@@ -202,6 +333,47 @@
     width: 0.9rem;
     height: 0.9rem;
     font-size: 0.58rem;
+  }
+
+  .boot-chaos-card {
+    width: clamp(5.7rem, 34vw, 8rem);
+  }
+
+  .boot-chaos-card.card-1 {
+    left: 1rem;
+    top: 5rem;
+  }
+
+  .boot-chaos-card.card-2 {
+    right: 0.5rem;
+    top: 8.5rem;
+  }
+
+  .boot-chaos-card.card-3 {
+    left: -2.2rem;
+    top: 34vh;
+  }
+
+  .boot-chaos-card.card-4 {
+    right: -2.2rem;
+    top: 48vh;
+  }
+
+  .boot-chaos-card.card-5 {
+    left: 2rem;
+    bottom: 5rem;
+  }
+
+  .boot-chaos-card.card-6 {
+    right: 1.1rem;
+    bottom: 2.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-splash-stage::before,
+  .boot-chaos-card {
+    animation: none;
   }
 }
 
