@@ -130,18 +130,38 @@
       }
 
       .icon {
+        flex: 0 0 auto;
         display: inline-grid;
         place-items: center;
-        width: 74px;
-        height: 58px;
+        width: 92px;
+        height: 78px;
         border: 3px solid var(--line);
         border-radius: 16px 10px 18px 12px;
         background: var(--pastel-sky);
         color: var(--line);
-        font-size: 30px;
-        font-weight: 900;
         box-shadow: 6px 6px 0 rgba(33, 29, 24, 0.12);
         transform: rotate(-1.5deg);
+      }
+
+      .icon svg {
+        width: 68px;
+        height: 56px;
+        overflow: visible;
+      }
+
+      .icon path,
+      .icon rect,
+      .icon circle,
+      .step-icon path,
+      .step-icon rect,
+      .step-icon circle,
+      .memory-doodle path,
+      .memory-doodle rect,
+      .memory-doodle circle {
+        stroke: var(--line);
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
 
       .card.teal .icon {
@@ -198,6 +218,13 @@
         text-align: center;
       }
 
+      .step-icon {
+        width: 58px;
+        height: 44px;
+        margin-bottom: 8px;
+        overflow: visible;
+      }
+
       .step b {
         display: block;
         color: var(--blue);
@@ -249,8 +276,28 @@
       }
 
       .memory-box h2 {
+        display: flex;
+        align-items: center;
+        gap: 18px;
         color: var(--blue);
         font-size: 44px;
+      }
+
+      .memory-doodle {
+        flex: 0 0 auto;
+        width: 92px;
+        height: 74px;
+        padding: 8px;
+        border: 3px solid var(--line);
+        border-radius: 16px 10px 18px 12px;
+        background: var(--pastel-sky);
+        box-shadow: 6px 6px 0 rgba(33, 29, 24, 0.12);
+        transform: rotate(-1deg);
+      }
+
+      .memory-box:nth-child(2) .memory-doodle {
+        background: var(--pastel-orange);
+        transform: rotate(1deg);
       }
 
       .memory-box .tag {
@@ -318,7 +365,19 @@
 
       <div class="three">
         <article class="card blue">
-          <h2><span class="icon">B</span>Walrus Blob</h2>
+          <h2>
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 23 40 10l22 13-22 13-22-13Z" fill="#fffdf8" />
+                <path d="M18 23v24l22 13 22-13V23" fill="none" />
+                <path d="M40 36v24" />
+                <path d="M28 24 50 12" />
+                <circle cx="21" cy="12" r="5" fill="#dff1ff" />
+                <circle cx="63" cy="51" r="5" fill="#dff1ff" />
+              </svg>
+            </span>
+            Walrus Blob
+          </h2>
           <ul>
             <li>Stores immutable payloads and media.</li>
             <li>Team profiles, gallery art, output JSON.</li>
@@ -327,7 +386,19 @@
         </article>
 
         <article class="card teal">
-          <h2><span class="icon">M</span>Walrus Memory</h2>
+          <h2>
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 17c10-7 20-7 30 0v35c-10-7-20-7-30 0V17Z" fill="#fffdf8" />
+                <path d="M46 17c7-5 14-6 22-2v35c-8-4-15-3-22 2V17Z" fill="#fffdf8" />
+                <path d="M46 17v35" />
+                <path d="M23 27h14M23 37h12M53 26h9M53 36h11" />
+                <circle cx="16" cy="11" r="4" fill="#dff7ed" />
+                <path d="M61 9c7 5 9 11 6 18" />
+              </svg>
+            </span>
+            Walrus Memory
+          </h2>
           <ul>
             <li>Stores recallable knowledge for Gil.</li>
             <li>Global schedule, teams, players, roast traits.</li>
@@ -336,7 +407,18 @@
         </article>
 
         <article class="card orange">
-          <h2><span class="icon">S</span>Sui Objects</h2>
+          <h2>
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="18" y="10" width="36" height="46" rx="5" fill="#fffdf8" />
+                <path d="M27 24h18M27 34h20M27 44h12" />
+                <path d="M56 20c8 0 12 4 12 10s-4 10-12 10" />
+                <path d="M55 28h10M55 34h10" />
+                <circle cx="18" cy="50" r="5" fill="#ffe1b8" />
+              </svg>
+            </span>
+            Sui Objects
+          </h2>
           <ul>
             <li>Stores public receipts and gates.</li>
             <li>Predictions, scoreboard, match registry.</li>
@@ -348,13 +430,43 @@
       <section class="big-flow">
         <h2>One output, three proofs</h2>
         <div class="flow-row">
-          <div class="step"><b>User action</b><span>Wallet signs the action or session.</span></div>
+          <div class="step">
+            <svg class="step-icon" viewBox="0 0 72 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="10" y="13" width="48" height="30" rx="5" fill="#fffdf8" />
+              <path d="M47 22h16v13H47" fill="#dff1ff" />
+              <circle cx="54" cy="29" r="2" fill="#211d18" />
+            </svg>
+            <b>User action</b><span>Wallet signs the action or session.</span>
+          </div>
           <div class="arrow">→</div>
-          <div class="step"><b>Blob / Memory</b><span>Payload or recall context is stored on Walrus.</span></div>
+          <div class="step">
+            <svg class="step-icon" viewBox="0 0 72 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M16 23 35 12l20 11-20 12-19-12Z" fill="#fffdf8" />
+              <path d="M16 23v18l19 11 20-11V23" fill="none" />
+              <path d="M35 35v17M18 8h26" />
+              <circle cx="54" cy="10" r="5" fill="#dff7ed" />
+            </svg>
+            <b>Blob / Memory</b><span>Payload or recall context is stored on Walrus.</span>
+          </div>
           <div class="arrow">→</div>
-          <div class="step"><b>Sui receipt</b><span>Object stores pointer, hash, gate, or score.</span></div>
+          <div class="step">
+            <svg class="step-icon" viewBox="0 0 72 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="18" y="8" width="32" height="38" rx="5" fill="#fffdf8" />
+              <path d="M26 20h16M26 29h18M26 38h10" />
+              <path d="M51 17h9v17h-9" />
+            </svg>
+            <b>Sui receipt</b><span>Object stores pointer, hash, gate, or score.</span>
+          </div>
           <div class="arrow">→</div>
-          <div class="step"><b>Tracking</b><span>UI exposes links for judges to inspect.</span></div>
+          <div class="step">
+            <svg class="step-icon" viewBox="0 0 72 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="10" y="10" width="52" height="34" rx="5" fill="#fffdf8" />
+              <path d="M18 21h18M18 31h28" />
+              <circle cx="53" cy="20" r="4" fill="#dff1ff" />
+              <path d="m50 37 7-7 5 5" />
+            </svg>
+            <b>Tracking</b><span>UI exposes links for judges to inspect.</span>
+          </div>
         </div>
       </section>
 
@@ -380,7 +492,16 @@
 
       <div class="two">
         <article class="memory-box">
-          <h2>Static / Global Memory</h2>
+          <h2>
+            <svg class="memory-doodle" viewBox="0 0 92 74" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="16" y="14" width="54" height="38" rx="5" fill="#fffdf8" />
+              <path d="M23 25h16M23 35h22M23 45h12" />
+              <path d="M58 20c11 7 13 18 3 28" />
+              <circle cx="67" cy="17" r="5" fill="#dff1ff" />
+              <circle cx="70" cy="50" r="4" fill="#dff1ff" />
+            </svg>
+            Static / Global Memory
+          </h2>
           <span class="tag">shared by everyone</span>
           <ul>
             <li>World Cup 2026 fixture schedule.</li>
@@ -392,7 +513,16 @@
         </article>
 
         <article class="memory-box">
-          <h2>User / Wallet Memory</h2>
+          <h2>
+            <svg class="memory-doodle" viewBox="0 0 92 74" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="17" y="22" width="54" height="34" rx="6" fill="#fffdf8" />
+              <path d="M29 22v-6c0-8 29-8 29 0v6" />
+              <path d="M29 39h30" />
+              <circle cx="44" cy="39" r="4" fill="#ffe1b8" />
+              <path d="M20 12c9-7 18-7 27 0" />
+            </svg>
+            User / Wallet Memory
+          </h2>
           <span class="tag">one namespace per wallet</span>
           <ul>
             <li>Chat history and favorite teams.</li>
