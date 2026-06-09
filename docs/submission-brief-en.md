@@ -78,10 +78,11 @@ These IDs prove the flow was tested before mainnet. Do not paste them into the f
 - Demo video ≤ 3:00
 - Poster (vertical + optional horizontal)
 - Screenshots pack:
-  - home / predictions / leaderboard / notebook / tracking / team profiles
+  - home / predictions / leaderboard / roasts / team profiles / gallery / notebook / tracking
 - Logo package (icon + wordmark)
 - GitHub repo and live Walrus URL
-- Poster: `apps/web/public/submission/poster-vertical.svg`
+- Poster: `apps/web/public/submission/poster-sketchnote.png`
+- Design PDF: `docs/high-level-design-requirements.pdf`
 
 ## 9) Contact
 - Built by: **R-AI Daily Walrus Team**

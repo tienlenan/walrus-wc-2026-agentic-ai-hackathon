@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Daily Walrus - Sketchnote Poster</title>
+    <style>
+      :root {
+        --paper: #fffaf0;
+        --paper-deep: #f4e6c5;
+        --ink: #211d18;
+        --muted: #5d554d;
+        --blue: #1f62a4;
+        --teal: #16a394;
+        --red: #c8102e;
+        --green: #258047;
+        --yellow: #ffe26a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #ece5d6;
+        color: var(--ink);
+        font-family: "Comic Sans MS", "Bradley Hand", "Trebuchet MS", Arial, sans-serif;
+      }
+
+      .poster {
+        width: 1440px;
+        min-height: 1900px;
+        margin: 0 auto;
+        padding: 42px 52px 46px;
+        background:
+          radial-gradient(circle at 18% 12%, rgba(255, 226, 106, 0.22), transparent 20%),
+          repeating-linear-gradient(0deg, rgba(33, 29, 24, 0.025) 0 1px, transparent 1px 28px),
+          var(--paper);
+        border: 4px solid var(--ink);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 310px;
+        gap: 28px;
+        align-items: start;
+        border-bottom: 3px solid var(--ink);
+        padding-bottom: 28px;
+      }
+
+      .highlight {
+        display: inline;
+        background: linear-gradient(transparent 10%, var(--yellow) 10% 82%, transparent 82%);
+        padding: 0 12px;
+        font-size: 78px;
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .subhead {
+        margin-top: 14px;
+        font-size: 37px;
+        line-height: 1.15;
+      }
+
+      .hero-note {
+        margin-top: 18px;
+        font-size: 26px;
+        line-height: 1.28;
+        max-width: 910px;
+      }
+
+      .mascot-card {
+        position: relative;
+        min-height: 260px;
+        padding: 18px;
+        border: 3px solid var(--ink);
+        border-radius: 18px 12px 22px 14px;
+        background: #fffdf8;
+        transform: rotate(1.2deg);
+      }
+
+      .mascot-card strong {
+        display: block;
+        margin-top: 12px;
+        font-size: 28px;
+        color: var(--blue);
+      }
+
+      .mascot-card span {
+        display: block;
+        margin-top: 8px;
+        font-size: 21px;
+        line-height: 1.22;
+      }
+
+      .doodle {
+        width: 240px;
+        height: 138px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        margin-top: 28px;
+      }
+
+      .section {
+        min-height: 315px;
+        padding: 24px 26px;
+        border: 3px solid var(--ink);
+        border-radius: 16px 10px 18px 12px;
+        background: rgba(255, 253, 248, 0.9);
+      }
+
+      .section:nth-child(2n) {
+        transform: rotate(-0.5deg);
+      }
+
+      .section:nth-child(2n + 1) {
+        transform: rotate(0.35deg);
+      }
+
+      .title-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .num {
+        display: inline-grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        border: 3px solid var(--ink);
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        font-size: 30px;
+        font-weight: 800;
+      }
+
+      .section h2 {
+        color: var(--blue);
+        font-size: 34px;
+        line-height: 1.04;
+      }
+
+      .section p,
+      li {
+        font-size: 24px;
+        line-height: 1.28;
+      }
+
+      ul {
+        display: grid;
+        gap: 10px;
+        padding-left: 30px;
+        margin: 0;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-top: 24px;
+      }
+
+      .flow .box {
+        min-height: 108px;
+        padding: 14px;
+        border: 2px dashed var(--blue);
+        border-radius: 14px 10px 16px 10px;
+        background: #f3f9ff;
+        text-align: center;
+        font-size: 20px;
+      }
+
+      .flow b {
+        display: block;
+        color: var(--blue);
+        font-size: 23px;
+      }
+
+      .wide {
+        grid-column: 1 / -1;
+      }
+
+      .diagram {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 14px;
+        margin-top: 22px;
+        align-items: stretch;
+      }
+
+      .layer {
+        min-height: 116px;
+        padding: 13px;
+        border: 2px solid var(--ink);
+        border-radius: 12px;
+        background: #fff7df;
+        font-size: 18px;
+        line-height: 1.2;
+        text-align: center;
+      }
+
+      .layer b {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--red);
+        font-size: 21px;
+      }
+
+      .stack-note {
+        margin-top: 22px;
+        padding: 17px 20px;
+        border-left: 8px solid var(--teal);
+        background: #e9fbf8;
+        font-size: 24px;
+      }
+
+      .footer {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 20px;
+        align-items: center;
+        margin-top: 28px;
+        padding-top: 24px;
+        border-top: 3px solid var(--ink);
+      }
+
+      .stamp {
+        display: inline-block;
+        border: 4px solid var(--red);
+        color: var(--red);
+        padding: 12px 20px;
+        font-size: 27px;
+        font-weight: 900;
+        transform: rotate(-2deg);
+      }
+
+      .url {
+        font-family: "Courier New", monospace;
+        font-size: 25px;
+        color: var(--blue);
+      }
+
+      .tiny {
+        font-size: 19px;
+        color: var(--muted);
+      }
+
+      .arrow {
+        color: var(--red);
+        font-weight: 900;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="poster">
+      <section class="hero">
+        <div>
+          <h1><span class="highlight">The Daily Walrus</span></h1>
+          <div class="subhead">World Cup 2026 predictions with memory, receipts, and public shame.</div>
+          <p class="hero-note">
+            Judge Gil is an AI football pundit backed by Walrus Memory and Sui objects. He remembers
+            fixtures, your wallet-linked takes, team profiles, player quirks, and the exact moment your
+            prediction became comedy evidence.
+          </p>
+        </div>
+        <aside class="mascot-card">
+          <svg class="doodle" viewBox="0 0 240 138" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="82" cy="75" rx="58" ry="43" fill="#f4e6c5" stroke="#211d18" stroke-width="5" />
+            <path d="M36 56c15-47 77-61 112-14" stroke="#211d18" stroke-width="7" stroke-linecap="round" />
+            <circle cx="62" cy="67" r="7" fill="#211d18" />
+            <circle cx="103" cy="67" r="7" fill="#211d18" />
+            <path d="M63 92c12 14 29 14 40 0" stroke="#211d18" stroke-width="5" stroke-linecap="round" />
+            <path d="M136 102c31-14 51-20 73-8" stroke="#c8102e" stroke-width="7" stroke-linecap="round" />
+            <circle cx="203" cy="95" r="20" fill="#fffaf0" stroke="#211d18" stroke-width="4" />
+            <path d="M194 88l22 14M215 88l-21 14" stroke="#211d18" stroke-width="3" />
+          </svg>
+          <strong>Judge Gil</strong>
+          <span>"I cannot remember... wait, Walrus already snitched."</span>
+        </aside>
+      </section>
+
+      <section class="grid">
+        <article class="section">
+          <div class="title-row"><span class="num">1</span><h2>Wallet-Gated Predictions</h2></div>
+          <ul>
+            <li>Connect Sui wallet and sign in.</li>
+            <li>Pick scoreline, MVP, worst player, champion, or advance.</li>
+            <li>Only open matches can be predicted; kickoff locks the booth.</li>
+          </ul>
+        </article>
+
+        <article class="section">
+          <div class="title-row"><span class="num">2</span><h2>Walrus Memory Spine</h2></div>
+          <ul>
+            <li>Global schedule memory for fixture Q&amp;A.</li>
+            <li>Team/player memory with squads, coaches, flags, and sources.</li>
+            <li>User notebooks turn bad takes into reusable roast material.</li>
+          </ul>
+        </article>
+
+        <article class="section">
+          <div class="title-row"><span class="num">3</span><h2>Roasted Edition</h2></div>
+          <ul>
+            <li>Gil roasts teams and players using official data.</li>
+            <li>Player troll traits add texture: free-kick moons, hair checks, slow walks.</li>
+            <li>Roast cards link back to output proof and Walrus blobs.</li>
+          </ul>
+        </article>
+
+        <article class="section">
+          <div class="title-row"><span class="num">4</span><h2>Proof, Not Vibes</h2></div>
+          <ul>
+            <li>Sui objects: MatchRegistry, Prediction, Scoreboard, OutputRecord.</li>
+            <li>Walrus blobs: team profiles, gallery assets, output payloads.</li>
+            <li>Runtime Tracking page gives judges one-click audit links.</li>
+          </ul>
+        </article>
+
+        <article class="section wide">
+          <div class="title-row"><span class="num">5</span><h2>How One Bad Take Becomes Permanent Evidence</h2></div>
+          <div class="flow">
+            <div class="box"><b>Wallet</b>signs identity + transaction</div>
+            <div class="box"><b>Prediction</b>writes Sui object before lock</div>
+            <div class="box"><b>Oracle</b>settles after result seed</div>
+            <div class="box"><b>Gil</b>remembers and roasts the receipt</div>
+          </div>
+        </article>
+
+        <article class="section wide">
+          <div class="title-row"><span class="num">6</span><h2>System Structure</h2></div>
+          <div class="diagram">
+            <div class="layer"><b>React SPA</b>chat, predictions, gallery, tracking</div>
+            <div class="layer"><b>Wallet</b>Sui sign-in and tx execution</div>
+            <div class="layer"><b>Node API</b>auth, oracle, Gil routes, indexer</div>
+            <div class="layer"><b>AI Runtime</b>Gil persona + roast engine</div>
+            <div class="layer"><b>Walrus</b>memory + blob proof</div>
+            <div class="layer"><b>Sui</b>contracts + public receipts</div>
+          </div>
+          <p class="stack-note">
+            Canonical memory lives on Walrus. Sui stores public gates and proof objects. Supabase is only
+            a fast rebuildable index, not the source of truth.
+          </p>
+        </article>
+      </section>
+
+      <footer class="footer">
+        <div>
+          <span class="stamp">NO TAKE LEFT BEHIND</span>
+          <p class="tiny">Built for Walrus Memory World Cup. Mainnet deployment goes live after testnet verification and funded gas/WAL.</p>
+        </div>
+        <div class="url">github.com/tienlenan/walrus-wc-2026-agentic-ai-hackathon</div>
+      </footer>
+    </main>
+  </body>
+</html>

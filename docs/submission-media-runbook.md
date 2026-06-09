@@ -12,16 +12,15 @@ Suggested style:
 - No official team crests, no real player faces.
 
 ## Poster
-Final poster theme:
-- Header: `THE DAILY WALRUS`
-- Subline: `World Cup Predictions, Memory, Roasts`
-- Body blocks:
-  1) Prediction engine
-  2) Memory before/after
-  3) Walrus + Sui proof links
-  4) Roast card preview
-- Recommended size: `1080x1350` and optional `1200x630`.
-- Export as PNG + PDF for form upload.
+Final poster files:
+- `apps/web/public/submission/poster-sketchnote.html`
+- `apps/web/public/submission/poster-sketchnote.png`
+- `apps/web/public/submission/poster-sketchnote.pdf`
+
+Style:
+- Hand-drawn sketchnote / highlighter poster.
+- English copy only.
+- Includes product goal, memory spine, roast layer, proof layer, and system structure.
 
 ## Screenshot Workflow
 1. Deploy local environment:
@@ -40,7 +39,8 @@ Final poster theme:
    - `screenshots/screenshot-notebook.png`
    - `screenshots/screenshot-tracking.png`
    - `screenshots/screenshot-team-profiles.png`
-   - `screenshots/screenshot-before-after.png`
+   - `screenshots/screenshot-gallery.png`
+   - `screenshots/screenshot-roasts.png`
 
 ## Demo Video Script (≤ 3 minutes)
 1. 0:00–0:20 connect wallet + UI intro.
@@ -53,4 +53,3 @@ Final poster theme:
 - Record in 1080p.
 - Keep captions on for any speech.
 - Add one closing frame: `Live: <walrus-domain> | Tracking: <tracking-page-url>`.
-

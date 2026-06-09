@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="980" viewBox="0 0 1440 980" role="img" aria-labelledby="title desc">
+  <title id="title">The Daily Walrus system architecture canvas</title>
+  <desc id="desc">Layered architecture showing frontend, agent API, memory, on-chain proof, Walrus blobs, and cache boundaries.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f8f1df}.ink{fill:#171411}.muted{fill:#5f5a51}.panel{fill:#fffaf0;stroke:#171411;stroke-width:3}.band{fill:#eaf5f2;stroke:#171411;stroke-width:3}.accent{fill:#64d3c5}.red{fill:#b91c1c}.gold{fill:#f2cf63}.blue{fill:#dfe7ff}.small{font:500 20px Arial,sans-serif}.body{font:600 22px Arial,sans-serif}.label{font:800 22px Arial,sans-serif;letter-spacing:.8px}.title{font:900 46px Georgia,serif}.mono{font:700 17px ui-monospace,SFMono-Regular,Menlo,monospace}.arrow{stroke:#171411;stroke-width:4;fill:none;marker-end:url(#arrow)}.dash{stroke-dasharray:10 10}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0 L12 6 L0 12 Z" fill="#171411"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1440" height="980"/>
+  <rect x="30" y="28" width="1380" height="924" fill="none" stroke="#171411" stroke-width="5"/>
+  <text x="70" y="86" class="title">The Daily Walrus: System Canvas</text>
+  <text x="72" y="122" class="small muted">Wallet-required World Cup predictions, Gil AI roasts, Walrus Memory, Sui proof objects, and rebuildable cache.</text>
+
+  <rect x="70" y="160" width="1300" height="100" class="band"/>
+  <text x="98" y="198" class="label">Experience Layer</text>
+  <text x="98" y="230" class="small muted">React + Vite SPA on Walrus Sites: chat, predictions, leaderboard, roasts, notebook, profiles, tracking.</text>
+  <rect x="1088" y="184" width="236" height="44" class="panel"/>
+  <text x="1106" y="213" class="mono">&lt;suins&gt;.wal.app</text>
+
+  <rect x="70" y="305" width="1300" height="116" class="panel"/>
+  <text x="98" y="344" class="label">Access & API Layer</text>
+  <text x="98" y="376" class="small muted">Node HTTP service: sign-in-with-Sui, REST APIs, SSE snapshots, oracle endpoints, CORS, output registration.</text>
+  <rect x="920" y="329" width="180" height="52" fill="#fff" stroke="#171411" stroke-width="3"/>
+  <text x="944" y="362" class="body">Wallet session</text>
+  <rect x="1130" y="329" width="180" height="52" fill="#fff" stroke="#171411" stroke-width="3"/>
+  <text x="1166" y="362" class="body">API gateway</text>
+
+  <rect x="70" y="470" width="610" height="190" class="panel"/>
+  <text x="98" y="510" class="label">Agent Runtime</text>
+  <text x="98" y="544" class="small muted">Mastra agent wrapper around Gil persona.</text>
+  <text x="98" y="582" class="small">Inputs: user message, app language, roast severity, wallet identity.</text>
+  <text x="98" y="616" class="small">Tools: recall memory, fixtures, votes, roasts, output payloads.</text>
+  <rect x="410" y="500" width="220" height="54" class="blue" stroke="#171411" stroke-width="3"/>
+  <text x="444" y="535" class="body">Gemini via AI Gateway</text>
+
+  <rect x="760" y="470" width="610" height="190" class="panel"/>
+  <text x="788" y="510" class="label">Data & Proof Boundary</text>
+  <text x="788" y="544" class="small">Walrus Memory is canonical agent memory.</text>
+  <text x="788" y="578" class="small">Sui objects are public proof and prediction gate.</text>
+  <text x="788" y="612" class="small">Supabase is rebuildable index/cache only.</text>
+  <rect x="1112" y="500" width="206" height="54" class="gold" stroke="#171411" stroke-width="3"/>
+  <text x="1141" y="535" class="body">Runtime tracking</text>
+
+  <rect x="70" y="710" width="300" height="150" class="band"/>
+  <text x="94" y="748" class="label">Walrus Memory</text>
+  <text x="94" y="784" class="small">User notebook</text>
+  <text x="94" y="815" class="small">Global schedule memory</text>
+  <text x="94" y="846" class="small">Team and player roast traits</text>
+
+  <rect x="405" y="710" width="300" height="150" class="band"/>
+  <text x="429" y="748" class="label">Sui Mainnet</text>
+  <text x="429" y="784" class="small">MatchRegistry</text>
+  <text x="429" y="815" class="small">Prediction objects</text>
+  <text x="429" y="846" class="small">Scoreboard and OutputRecord</text>
+
+  <rect x="740" y="710" width="300" height="150" class="band"/>
+  <text x="764" y="748" class="label">Walrus Blobs</text>
+  <text x="764" y="784" class="small">Team profiles</text>
+  <text x="764" y="815" class="small">Gallery assets</text>
+  <text x="764" y="846" class="small">JSON proof payloads</text>
+
+  <rect x="1070" y="710" width="300" height="150" class="band"/>
+  <text x="1094" y="748" class="label">Supabase Cache</text>
+  <text x="1094" y="784" class="small">Fixtures and leaderboard</text>
+  <text x="1094" y="815" class="small">Tracking rows</text>
+  <text x="1094" y="846" class="small">Rebuildable indexes</text>
+
+  <path d="M720 260 V305" class="arrow"/>
+  <path d="M720 421 V470" class="arrow"/>
+  <path d="M372 660 V710" class="arrow"/>
+  <path d="M556 660 V710" class="arrow"/>
+  <path d="M890 660 V710" class="arrow"/>
+  <path d="M1190 660 V710" class="arrow"/>
+  <path d="M370 785 H405" class="arrow"/>
+  <path d="M705 785 H740" class="arrow"/>
+  <path d="M1040 785 H1070" class="arrow dash"/>
+
+  <rect x="74" y="890" width="1290" height="38" fill="#171411"/>
+  <text x="98" y="916" fill="#fffaf0" class="mono">Rule: wallet signs writes; Walrus Memory is canonical; Supabase is rebuildable from Sui, blobs, and memory.</text>
+</svg>

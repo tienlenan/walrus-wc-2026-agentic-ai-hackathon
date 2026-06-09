@@ -5,7 +5,7 @@ export type Lang = "vi" | "en";
 // Flat dictionary keyed by string id. Add UI strings here; t() falls back vi → key.
 const DICT: Record<Lang, Record<string, string>> = {
   vi: {
-    "brand.eyebrow": "Chạy bằng Walrus · biên lai Mainnet · không khoan nhượng",
+    "brand.eyebrow": "Chạy bằng Walrus · biên lai Walrus · không khoan nhượng",
     "brand.tagline": "Ấn bản cà khịa — FIFA World Cup 2026",
     "brand.est": "EST. 2026",
     "brand.edition": "Số 001 · sổ cái cà khịa",
@@ -85,6 +85,9 @@ const DICT: Record<Lang, Record<string, string>> = {
     "pred.loadErr": "Chưa tải được lịch thi đấu.",
     "pred.targetReq": "Cần nhập mục tiêu.",
     "pred.failed": "Dự đoán thất bại.",
+    "pred.needGas": "Ví đang ở {network} nhưng không có SUI gas trên mạng này. Nạp faucet testnet rồi thử lại.",
+    "pred.openFaucet": "Mở faucet",
+    "pred.gasCheckFailed": "Không kiểm tra được gas ví",
     "pred.voteFailed": "Lưu vote thất bại.",
     "pred.voteSaved": "Đã lưu vote",
     "pred.submitted": "Đã nộp dự đoán",
@@ -226,7 +229,7 @@ const DICT: Record<Lang, Record<string, string>> = {
     "gallery.badge": "đã lưu testnet",
   },
   en: {
-    "brand.eyebrow": "Powered by Walrus · Mainnet receipts · No mercy",
+    "brand.eyebrow": "Powered by Walrus · Walrus receipts · No mercy",
     "brand.tagline": "Roasted Edition — FIFA World Cup 2026",
     "brand.est": "EST. 2026",
     "brand.edition": "No. 001 · roast ledger",
@@ -306,6 +309,9 @@ const DICT: Record<Lang, Record<string, string>> = {
     "pred.loadErr": "Cannot load fixtures yet.",
     "pred.targetReq": "Target is required.",
     "pred.failed": "Prediction failed.",
+    "pred.needGas": "Wallet is on {network}, but this address has no SUI gas on that network. Use the testnet faucet, then try again.",
+    "pred.openFaucet": "Open faucet",
+    "pred.gasCheckFailed": "Cannot check wallet gas",
     "pred.voteFailed": "Vote failed.",
     "pred.voteSaved": "Vote saved",
     "pred.submitted": "Prediction submitted",

@@ -9,6 +9,8 @@ import {
   useSwitchAccount,
 } from "@mysten/dapp-kit";
 import { signIn, signOut, getSession, type Session } from "../lib/auth";
+import { SUI_NETWORKS, formatMistAsSui, type AppSuiNetwork } from "../lib/sui-network";
+import { useSuiGasBalance } from "../lib/use-sui-gas-balance";
 import "./connect-bar.css";
 
 function shortAddress(address: string): string {
@@ -26,10 +28,12 @@ export function ConnectBar() {
   const [names, setNames] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [walletBusy, setWalletBusy] = useState(false);
+  const gas = useSuiGasBalance(account?.address);
 
   const signedIn = Boolean(session && account && session.address === account.address);
   const accountOptions = useMemo(() => accounts.filter((item) => item.address), [accounts]);
   const accountAddressKey = accountOptions.map((item) => item.address).join("|");
+  const faucetUrl = SUI_NETWORKS[gas.network as AppSuiNetwork]?.faucetUrl ?? null;
 
   useEffect(() => {
     let cancelled = false;
@@ -99,12 +103,15 @@ export function ConnectBar() {
 
   return (
     <div className="press-bar">
-      <span className="press-pass">🦭 Digital Edition · Member Pass</span>
+      <span className="press-pass">🦭 Digital Edition · sui:{gas.network} · Member Pass</span>
       <div className="press-actions">
         {!account ? (
           <ConnectButton connectText="Kết nối ví" />
         ) : (
           <div className="wallet-control">
+            <span className={gas.hasGas ? "network-pill" : "network-pill warn"} title={gas.error ?? undefined}>
+              sui:{gas.network} · {gas.loading ? "checking" : formatMistAsSui(gas.mist)}
+            </span>
             <select
               aria-label="Connected wallet"
               value={account.address}
@@ -120,6 +127,11 @@ export function ConnectBar() {
             <button type="button" className="press-btn" onClick={() => void doDisconnect()} disabled={walletBusy}>
               Disconnect
             </button>
+            {!gas.loading && !gas.hasGas && faucetUrl && (
+              <a className="faucet-link" href={faucetUrl} target="_blank" rel="noreferrer">
+                Faucet
+              </a>
+            )}
           </div>
         )}
         {account && !signedIn && (

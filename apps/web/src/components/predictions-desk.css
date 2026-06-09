@@ -265,6 +265,22 @@
   color: var(--red);
 }
 
+.gas-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.gas-alert a {
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.35rem 0.55rem;
+  text-decoration: none;
+}
+
 @media (max-width: 640px) {
   .prediction-form {
     grid-template-columns: 1fr;

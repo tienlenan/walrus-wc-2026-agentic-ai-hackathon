@@ -3,7 +3,9 @@ import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-ki
 import { buildSubmitPrediction, Kind } from "@daily-walrus/contract";
 import { getGameSnapshot, saveMatchVote, type Fixture, type GameSnapshot, type MatchVoteSummary } from "../lib/game-api";
 import { useI18n } from "../lib/i18n";
+import { SUI_NETWORKS, type AppSuiNetwork } from "../lib/sui-network";
 import { useSuiOutputRecorder } from "../lib/sui-output-record";
+import { useSuiGasBalance } from "../lib/use-sui-gas-balance";
 import { useVerifiedSession } from "../lib/wallet-session";
 import "./predictions-desk.css";
 
@@ -83,6 +85,7 @@ export function PredictionsDesk() {
   const { t } = useI18n();
   const account = useCurrentAccount();
   const { signedIn } = useVerifiedSession();
+  const gas = useSuiGasBalance(account?.address);
   const recordOutput = useSuiOutputRecorder();
   const { mutateAsync: signAndExecute } = useSignAndExecuteTransaction();
   const [snapshot, setSnapshot] = useState<GameSnapshot | null>(null);
@@ -132,14 +135,19 @@ export function PredictionsDesk() {
     () => snapshot?.votes.find((vote) => vote.matchId === matchId && vote.kind === kindKey),
     [snapshot?.votes, matchId, kindKey],
   );
+  const faucetUrl = SUI_NETWORKS[gas.network as AppSuiNetwork]?.faucetUrl ?? null;
+  const gasBlocked = Boolean(signedIn && account && !gas.loading && !gas.hasGas);
   const gated = option.needsFixture && selectedFixture && !selectedFixture.predictionOpen;
   const canSubmit = Boolean(
     signedIn &&
       account &&
+      gas.hasGas &&
       !busy &&
       (!option.needsFixture || (matchId && selectedFixture?.predictionOpen)),
   );
-  const canVote = Boolean(signedIn && isVoteKind(kindKey) && matchId && target.trim() && !voteBusy && selectedFixture?.predictionOpen);
+  const canVote = Boolean(
+    signedIn && gas.hasGas && isVoteKind(kindKey) && matchId && target.trim() && !voteBusy && selectedFixture?.predictionOpen,
+  );
 
   function buildPayload(): { a: number; b: number; c: number; d: number; e: number } {
     if (kindKey === "scoreline") {
@@ -320,6 +328,17 @@ export function PredictionsDesk() {
       )}
 
       {gated && selectedFixture && <div className="prediction-alert">{gateCopy(selectedFixture, t)}</div>}
+      {gasBlocked && (
+        <div className="prediction-alert gas-alert">
+          <span>{t("pred.needGas").replace("{network}", gas.network)}</span>
+          {faucetUrl && (
+            <a href={faucetUrl} target="_blank" rel="noreferrer">
+              {t("pred.openFaucet")}
+            </a>
+          )}
+        </div>
+      )}
+      {gas.error && <div className="prediction-error">{t("pred.gasCheckFailed")}: {gas.error}</div>}
       {notice && <div className="prediction-notice">{notice}</div>}
       {error && <div className="prediction-error">{error}</div>}
       {option.needsFixture && openFixtures.length === 0 && (

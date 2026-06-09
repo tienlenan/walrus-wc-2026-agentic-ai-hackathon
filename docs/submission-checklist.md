@@ -38,8 +38,10 @@
   - Settle match 2: `7xhVSDGbR5wocVs8iNMVgB4ZgMSAshZ4uyqX93LtdRDw`
 
 ## Media Checklist
-- Poster (English): 1080x1350 (default) and 1200x630 (optional)
-  - `apps/web/public/submission/poster-vertical.svg`
+- Poster (English sketchnote style)
+  - `apps/web/public/submission/poster-sketchnote.png`
+  - `apps/web/public/submission/poster-sketchnote.pdf`
+  - Source: `apps/web/public/submission/poster-sketchnote.html`
 - Logo package:
   - `logo/icon.svg`
   - `logo/wordmark.svg`
@@ -51,7 +53,8 @@
   - `screenshot-notebook.png`
   - `screenshot-tracking.png`
   - `screenshot-team-profiles.png`
-  - `screenshot-before-after.png`
+  - `screenshot-gallery.png`
+  - `screenshot-roasts.png`
 - Demo video:
   - Duration < 3 minutes
   - Show: connect wallet → submit prediction → settle flow → leaderboard update → memory proof page

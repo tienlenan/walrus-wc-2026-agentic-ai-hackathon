@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>The Daily Walrus - High-Level Design</title>
+    <style>
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+
+      :root {
+        --paper: #fffaf0;
+        --ink: #181512;
+        --muted: #5f574d;
+        --line: #d7c9a8;
+        --blue: #155da1;
+        --teal: #16a394;
+        --red: #c8102e;
+        --gold: #ffe26a;
+        --cream: #f6ecd3;
+        --white: #fffdf8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #ddd4c0;
+        color: var(--ink);
+        font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .page {
+        width: 297mm;
+        height: 210mm;
+        padding: 14mm 16mm;
+        background: var(--paper);
+        page-break-after: always;
+        overflow: hidden;
+      }
+
+      .page:last-child {
+        page-break-after: auto;
+      }
+
+      header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 10px;
+        margin-bottom: 14px;
+      }
+
+      .kicker {
+        color: var(--red);
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        display: inline;
+        background: linear-gradient(transparent 12%, var(--gold) 12% 82%, transparent 82%);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 44px;
+        line-height: 0.98;
+      }
+
+      h2 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 29px;
+        line-height: 1.05;
+      }
+
+      h3 {
+        font-size: 16px;
+        line-height: 1.15;
+      }
+
+      .subtitle {
+        margin-top: 8px;
+        max-width: 720px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.42;
+      }
+
+      .badge {
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .panel {
+        border: 2px solid var(--ink);
+        border-radius: 9px;
+        background: var(--white);
+        padding: 13px;
+      }
+
+      .panel.blue {
+        background: #edf6ff;
+        border-color: var(--blue);
+      }
+
+      .panel.green {
+        background: #e9fbf8;
+        border-color: var(--teal);
+      }
+
+      .panel.gold {
+        background: #fff5cc;
+        border-color: #cf9b00;
+      }
+
+      .panel.red {
+        background: #fff0f2;
+        border-color: var(--red);
+      }
+
+      .panel h3 {
+        margin-bottom: 8px;
+        color: var(--blue);
+      }
+
+      .panel p,
+      .panel li,
+      .small {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.38;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      li + li {
+        margin-top: 5px;
+      }
+
+      .canvas {
+        display: grid;
+        grid-template-columns: 170px 1fr 190px;
+        gap: 13px;
+        margin-top: 14px;
+      }
+
+      .stack {
+        display: grid;
+        gap: 9px;
+      }
+
+      .layer {
+        min-height: 63px;
+        border: 2px solid var(--ink);
+        border-radius: 8px;
+        background: var(--cream);
+        padding: 9px 11px;
+      }
+
+      .layer strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--red);
+        font-size: 13px;
+      }
+
+      .layer span {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.25;
+      }
+
+      .center-flow {
+        display: grid;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .flow-row {
+        display: grid;
+        grid-template-columns: 1fr 38px 1fr 38px 1fr;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .node {
+        min-height: 62px;
+        border: 2px solid var(--blue);
+        border-radius: 8px;
+        background: #f3f9ff;
+        padding: 9px;
+        text-align: center;
+      }
+
+      .node b {
+        display: block;
+        color: var(--blue);
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+
+      .node span {
+        color: var(--muted);
+        font-size: 10.5px;
+        line-height: 1.22;
+      }
+
+      .arrow {
+        color: var(--red);
+        text-align: center;
+        font-size: 28px;
+        font-weight: 900;
+      }
+
+      .contract-map {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
+        border: 2px solid var(--ink);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .contract-map div {
+        min-height: 57px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        padding: 9px;
+        background: var(--white);
+        font-size: 11px;
+        line-height: 1.28;
+      }
+
+      .contract-map div:nth-child(4n) {
+        border-right: 0;
+      }
+
+      .contract-map .head {
+        background: var(--ink);
+        color: var(--paper);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .swimlane {
+        display: grid;
+        grid-template-columns: 120px repeat(5, 1fr);
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .lane-title {
+        align-self: stretch;
+        display: grid;
+        place-items: center;
+        border: 2px solid var(--ink);
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 8px;
+        font-weight: 800;
+        text-align: center;
+        font-size: 12px;
+      }
+
+      .step {
+        min-height: 78px;
+        border: 2px dashed var(--blue);
+        border-radius: 8px;
+        background: #f6fbff;
+        padding: 9px;
+      }
+
+      .step b {
+        display: block;
+        color: var(--blue);
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+
+      .step span {
+        color: var(--muted);
+        font-size: 10.8px;
+        line-height: 1.28;
+      }
+
+      .callout {
+        margin-top: 12px;
+        padding: 12px 14px;
+        border-left: 7px solid var(--teal);
+        background: #e9fbf8;
+        color: var(--ink);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .footer {
+        position: absolute;
+        left: 16mm;
+        right: 16mm;
+        bottom: 8mm;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid var(--line);
+        padding-top: 6px;
+        color: var(--muted);
+        font-family: "Courier New", monospace;
+        font-size: 10px;
+      }
+
+      .relative {
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="page relative">
+      <header>
+        <div>
+          <div class="kicker">High-Level Design / Submission Pack</div>
+          <h1>The Daily Walrus</h1>
+          <p class="subtitle">
+            A wallet-gated World Cup 2026 prediction and roast app where Walrus Memory stores what
+            Gil remembers, Sui objects prove what happened, and Supabase remains a rebuildable index.
+          </p>
+        </div>
+        <div class="badge">testnet verified -> mainnet ready after funding</div>
+      </header>
+
+      <div class="grid-3">
+        <div class="panel blue">
+          <h3>Product Goal</h3>
+          <p>Make predictions, ask fixture questions, and receive personalized roasts that improve over time because memory is persistent and wallet-scoped.</p>
+        </div>
+        <div class="panel green">
+          <h3>Proof Goal</h3>
+          <p>Every important output should be traceable through Walrus Memory, Walrus blobs, Sui objects, or a rebuildable runtime index.</p>
+        </div>
+        <div class="panel gold">
+          <h3>Demo Goal</h3>
+          <p>Judges can connect a wallet, submit a prediction, inspect memory, see leaderboard scoring, and open contract/blob links from Tracking.</p>
+        </div>
+      </div>
+
+      <div class="canvas">
+        <div class="stack">
+          <div class="layer"><strong>Experience</strong><span>React/Vite SPA, Gil chat, predictions, leaderboard, roasts, gallery, tracking.</span></div>
+          <div class="layer"><strong>Access</strong><span>Sui wallet connect, sign-in-with-Sui, session token, gas/network checks.</span></div>
+          <div class="layer"><strong>API</strong><span>Node HTTP server, auth routes, oracle routes, Gil routes, CORS, tracking.</span></div>
+          <div class="layer"><strong>AI Runtime</strong><span>Gil persona, roast engine, fixture context, player troll traits.</span></div>
+        </div>
+
+        <div class="center-flow">
+          <div class="flow-row">
+            <div class="node"><b>User</b><span>Connects wallet and asks Gil or submits prediction.</span></div>
+            <div class="arrow">-></div>
+            <div class="node"><b>Web App</b><span>Validates session, network, gas, open match gate.</span></div>
+            <div class="arrow">-></div>
+            <div class="node"><b>Sui Tx</b><span>Prediction or OutputRecord object becomes public proof.</span></div>
+          </div>
+          <div class="flow-row">
+            <div class="node"><b>Fixture Seed</b><span>Official schedule and squads loaded as base data.</span></div>
+            <div class="arrow">-></div>
+            <div class="node"><b>Walrus Memory</b><span>Global schedule, teams, players, and user notebook.</span></div>
+            <div class="arrow">-></div>
+            <div class="node"><b>Gil Recall</b><span>Chat and roasts use memory instead of stateless prompts.</span></div>
+          </div>
+          <div class="flow-row">
+            <div class="node"><b>Result Seed</b><span>Oracle updates finished match and closes prediction gate.</span></div>
+            <div class="arrow">-></div>
+            <div class="node"><b>Scoreboard</b><span>Scores, streaks, and correctness are written/indexed.</span></div>
+            <div class="arrow">-></div>
+            <div class="node"><b>Shameboard</b><span>Leaderboard and roasts reflect the receipt trail.</span></div>
+          </div>
+          <div class="flow-row">
+            <div class="node"><b>Blob Assets</b><span>Profiles, gallery, and outputs can be opened from Walrus.</span></div>
+            <div class="arrow">-></div>
+            <div class="node"><b>Runtime Tracking</b><span>One audit page for contract IDs, blobs, and memory syncs.</span></div>
+            <div class="arrow">-></div>
+            <div class="node"><b>Submission</b><span>Mainnet IDs replace testnet IDs after publish.</span></div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="layer"><strong>Memory</strong><span>MemWal namespaces: global schedule, team/player profiles, player roast traits, user notebook.</span></div>
+          <div class="layer"><strong>On-chain</strong><span>Move package: MatchRegistry, Prediction, Scoreboard, OutputRecord, caps.</span></div>
+          <div class="layer"><strong>Blob Proof</strong><span>Walrus blobs for profiles, gallery assets, output JSON, memory receipts.</span></div>
+          <div class="layer"><strong>Index</strong><span>Supabase caches fixtures, predictions, roasts, leaderboard, and tracking metadata.</span></div>
+        </div>
+      </div>
+
+      <div class="callout">Invariant: wallet-signed writes are the public action layer; Walrus is canonical memory; Supabase is disposable cache and fast query surface.</div>
+      <div class="footer"><span>The Daily Walrus</span><span>1 / 4</span></div>
+    </section>
+
+    <section class="page relative">
+      <header>
+        <div>
+          <div class="kicker">Component Boundaries</div>
+          <h2>System Layers and Ownership</h2>
+        </div>
+        <div class="badge">comments + docs in English</div>
+      </header>
+
+      <div class="contract-map">
+        <div class="head">Layer</div><div class="head">Owns</div><div class="head">Inputs</div><div class="head">Outputs</div>
+        <div>React SPA</div><div>UI, i18n, wallet UX, settings, reference pages, gallery.</div><div>Wallet account, API snapshots, user input.</div><div>Transactions, REST calls, proof links.</div>
+        <div>Wallet / Sui Client</div><div>Sign-in messages, transaction execution, gas/network state.</div><div>Current account and Sui network.</div><div>Signatures, tx digests, object IDs.</div>
+        <div>Node API</div><div>Auth, Gil context assembly, memory calls, scoring, indexing, tracking.</div><div>Session token, oracle token, app payloads.</div><div>JSON DTOs, SSE snapshots, registered output rows.</div>
+        <div>AI Runtime</div><div>Gil persona, fixture Q&amp;A, roast composition, severity/language controls.</div><div>User memory, global memory, team/player data.</div><div>Chat, roasts, notebook summaries.</div>
+        <div>Walrus Memory</div><div>Persistent recall store by namespace.</div><div>Global schedule docs, user events, player traits.</div><div>Recall chunks and memory receipts.</div>
+        <div>Sui Contract</div><div>Prediction gate, score proof, output receipts.</div><div>Wallet transactions and oracle transactions.</div><div>Public objects and events.</div>
+        <div>Walrus Blob</div><div>Immutable payload evidence and media assets.</div><div>Profile JSON, output JSON, gallery assets.</div><div>Blob IDs and object links.</div>
+        <div>Supabase Index</div><div>Fast UI reads and rebuildable state.</div><div>Sui events, Walrus pointers, server writes.</div><div>Leaderboard, fixture gates, tracking metadata.</div>
+      </div>
+
+      <div class="grid-3" style="margin-top: 14px">
+        <div class="panel blue">
+          <h3>Prediction Gate</h3>
+          <ul>
+            <li>Match must be registered on-chain.</li>
+            <li>Kickoff time must be in the future.</li>
+            <li>Settled matches are permanently closed.</li>
+          </ul>
+        </div>
+        <div class="panel green">
+          <h3>Memory Gate</h3>
+          <ul>
+            <li>Personalized reads require verified wallet session.</li>
+            <li>Global fixture memory is public app context.</li>
+            <li>Output pointers are tracked for audit.</li>
+          </ul>
+        </div>
+        <div class="panel red">
+          <h3>Mainnet Gate</h3>
+          <ul>
+            <li>Publish Move package to Sui mainnet.</li>
+            <li>Publish site/assets to Walrus mainnet.</li>
+            <li>Replace testnet IDs in tracking and submission.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer"><span>The Daily Walrus</span><span>2 / 4</span></div>
+    </section>
+
+    <section class="page relative">
+      <header>
+        <div>
+          <div class="kicker">Communication Flows</div>
+          <h2>Runtime Paths Judges Can Verify</h2>
+        </div>
+        <div class="badge">wallet -> memory -> proof</div>
+      </header>
+
+      <h3>Prediction and Settlement</h3>
+      <div class="swimlane">
+        <div class="lane-title">Prediction</div>
+        <div class="step"><b>1. Load fixtures</b><span>Web calls `/api/game/snapshot` and receives on-chain gate state.</span></div>
+        <div class="step"><b>2. Sign tx</b><span>User signs `submit_prediction` against current Sui network.</span></div>
+        <div class="step"><b>3. Index event</b><span>Server indexer mirrors Sui events into Supabase.</span></div>
+        <div class="step"><b>4. Result seed</b><span>Oracle scores after result input and can settle match.</span></div>
+        <div class="step"><b>5. Leaderboard</b><span>Scoreboard and Shameboard update from indexed result.</span></div>
+      </div>
+
+      <h3 style="margin-top: 18px">Chat / Roast / Notebook</h3>
+      <div class="swimlane">
+        <div class="lane-title">Memory</div>
+        <div class="step"><b>1. Verify wallet</b><span>Session token anchors the resource ID to Sui address.</span></div>
+        <div class="step"><b>2. Recall</b><span>Gil retrieves user, fixture, team, and player roast memory.</span></div>
+        <div class="step"><b>3. Generate</b><span>AI runtime applies language, severity, persona, and context.</span></div>
+        <div class="step"><b>4. Store</b><span>Important output is written to memory and/or blob proof.</span></div>
+        <div class="step"><b>5. Register</b><span>OutputRecord can point to hash/blob for public audit.</span></div>
+      </div>
+
+      <h3 style="margin-top: 18px">Tracking Page</h3>
+      <div class="swimlane">
+        <div class="lane-title">Audit</div>
+        <div class="step"><b>1. Network</b><span>Shows active Sui network and contract IDs.</span></div>
+        <div class="step"><b>2. Memory</b><span>Shows global/team/player memory sync receipts.</span></div>
+        <div class="step"><b>3. Walrus</b><span>Shows blob counts and openable aggregator URLs.</span></div>
+        <div class="step"><b>4. Fixtures</b><span>Shows total, registered, open, closed, and not-on-chain counts.</span></div>
+        <div class="step"><b>5. Sources</b><span>Links back to source schedule and squad references.</span></div>
+      </div>
+
+      <div class="callout">Browser test requirement: the app now exposes the current Sui network and checks wallet gas, so testnet wallets fail with an actionable faucet message instead of an opaque wallet popup error.</div>
+      <div class="footer"><span>The Daily Walrus</span><span>3 / 4</span></div>
+    </section>
+
+    <section class="page relative">
+      <header>
+        <div>
+          <div class="kicker">Submission Readiness</div>
+          <h2>What Must Be Mainnet Before Final Form</h2>
+        </div>
+        <div class="badge">testnet IDs are internal proof only</div>
+      </header>
+
+      <div class="grid-2">
+        <div class="panel green">
+          <h3>Already Verified on Testnet</h3>
+          <ul>
+            <li>104/104 fixtures registered on-chain.</li>
+            <li>Prediction submit, score, settle, and index replay verified.</li>
+            <li>Global schedule memory and player roast memory synced.</li>
+            <li>Runtime Tracking loads network, contract IDs, memory, blobs, and fixture gates.</li>
+            <li>Web build succeeds for Walrus Sites packaging.</li>
+          </ul>
+        </div>
+        <div class="panel red">
+          <h3>Mainnet Deployment Steps</h3>
+          <ul>
+            <li>Fund deploy wallet with mainnet SUI gas and WAL.</li>
+            <li>Publish Move package and record package, registry, scoreboard, cap IDs.</li>
+            <li>Register all fixtures on mainnet and replay indexer.</li>
+            <li>Publish team/player/profile/gallery blobs to Walrus mainnet.</li>
+            <li>Deploy SPA to Walrus Sites and attach SuiNS / wal.app domain.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-top: 14px">
+        <div class="panel blue"><h3>Submission Media</h3><p>Poster PNG/PDF, screenshots for home/predictions/leaderboard/roasts/team profiles/gallery/notebook/tracking, and a sub-3-minute demo script.</p></div>
+        <div class="panel gold"><h3>Form Fields</h3><p>Project name, introduction, repo URL, live Walrus URL, Sui/Walrus object IDs, memory namespaces, and judge verification notes.</p></div>
+        <div class="panel green"><h3>Verification Note</h3><p>Use `/api/tracking/runtime` and the Tracking page as the canonical public map from UI to contract objects, Walrus blobs, and memory receipts.</p></div>
+      </div>
+
+      <div class="callout">
+        Current deploy state: local/testnet is healthy. Mainnet should not be submitted until the deploy wallet is funded and the final mainnet package, Walrus Site, blob, and memory IDs replace all testnet evidence.
+      </div>
+      <div class="footer"><span>The Daily Walrus</span><span>4 / 4</span></div>
+    </section>
+  </body>
+</html>

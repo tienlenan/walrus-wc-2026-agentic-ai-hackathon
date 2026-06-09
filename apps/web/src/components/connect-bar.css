@@ -53,6 +53,7 @@
   align-items: center;
   gap: 0.45rem;
   min-width: 0;
+  flex-wrap: wrap;
 }
 
 .wallet-control select {
@@ -84,4 +85,31 @@
 .press-btn.primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.network-pill,
+.faucet-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  padding: 0.3rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.network-pill.warn {
+  border-style: dashed;
+  color: var(--red);
+}
+
+.faucet-link {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #fff;
 }
