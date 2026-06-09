@@ -7,7 +7,7 @@ This file is the short English design and requirements note for submission. The 
 It is intentionally different from the storage explainer:
 
 - `apps/web/public/submission/storage-memory-explainer.pdf` explains how Walrus Blob, Walrus Memory, and Sui Objects split storage responsibilities.
-- `docs/high-level-design-requirements.pdf` explains the premium system architecture, component boundaries, and signed action/data flows.
+- `docs/high-level-design-requirements.pdf` explains the tabloid-style system architecture, component boundaries, and signed action/data flows.
 
 ## System Canvas
 
