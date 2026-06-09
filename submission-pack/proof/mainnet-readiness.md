@@ -7,8 +7,10 @@ Captured on: 2026-06-09
 - Deploy wallet funded with SUI and WAL.
 - Mainnet Move package published.
 - Mainnet Walrus Sites object deployed.
+- Mainnet Walrus Site content updated after the English-only cartoon gallery pass.
 - 104/104 World Cup fixtures registered into the mainnet MatchRegistry.
 - `apps/web/public/ws-resources.json` updated with the mainnet site object ID.
+- Submission screenshots refreshed from localhost after the latest mainnet build.
 
 ## Mainnet IDs
 
@@ -30,6 +32,13 @@ Captured on: 2026-06-09
 - Match 1 register tx: `DXfbZj4U89VgBAxnm2qRAJo5hevwdxHKwW6b3cYh7WXS`
 - Match 2 register tx: `3FzSbYBjEgSswFsRqUk7LmK6sob4ioSxpNsiUvg2XUBB`
 - Match 104 register tx: `3vkHeidnmnYxJe3a9vc1hXTEzWAngv44L4robPxiVSub`
+
+## Latest Site Content Verification
+
+- Gallery now contains 12 cartoon-only cards.
+- Gallery card copy and image text are English-only.
+- Gallery links point to Walrus Mainnet blobs; no testnet gallery links remain.
+- Latest sitemap shows the 12 `/gallery/cartoon-*.svg` resources and the old gallery resources removed.
 
 ## Remaining Blocker
 

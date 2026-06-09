@@ -29,6 +29,8 @@
 | Gallery | `submission-pack/assets/screenshots/screenshot-gallery.png` |
 | Tracking | `submission-pack/assets/screenshots/screenshot-tracking.png` |
 
+Screenshot set refreshed after the 12-card English-only cartoon gallery update.
+
 ## Demo Video
 
 | Asset | Path |
