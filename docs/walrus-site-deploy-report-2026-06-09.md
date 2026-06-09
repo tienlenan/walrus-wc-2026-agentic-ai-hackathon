@@ -54,10 +54,10 @@
 - Base36 diagnostic: `5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg`
 - Fixture seed: 104/104 registered on mainnet.
 
-## Required To Finish wal.app
-1. Configure SuiNS for the site object. The official Walrus Sites docs state `wal.app` browsing requires a SuiNS name for mainnet sites.
-2. Convert site object ID to a base36 subdomain for diagnostics:
+## Public URL Notes
+1. Public URL is live: `https://roast2026wc.wal.app/`.
+2. Convert site object ID to a base36 subdomain only for diagnostics:
    ```bash
    site-builder --context mainnet convert <SITE_OBJECT_ID>
    ```
-3. Record a real sub-3-minute demo video after the public URL is live.
+3. Record a real sub-3-minute demo video from the public URL.
