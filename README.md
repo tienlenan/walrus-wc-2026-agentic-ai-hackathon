@@ -97,8 +97,11 @@ Planning & design (written in Vietnamese):
 | [07-runtime-tracking-design](docs/07-runtime-tracking-design.md) | Global schedule memory + contract/Walrus tracking page |
 
 ## 🗺️ Status
-- ✅ Monorepo · web (themed landing) · db (live schema) · shared (Gil persona) · server (Gil on Gemini)
-- ⏳ Next: **Walrus Memory** integration (the memory spine) → predictions / roasts / leaderboard UI → deploy to Walrus Mainnet
+- ✅ Web app · server · Supabase schema · Gil persona · wallet session · i18n/settings
+- ✅ Walrus Memory spine via MemWal: per-user notebook + global WC2026 schedule/team memory
+- ✅ Predictions, on-chain gating, oracle scoring, leaderboard, roast wall, team profiles, runtime tracking
+- ✅ Testnet verification completed for prediction submit → score → settle → indexer replay
+- ⏳ Mainnet deploy is blocked until the deploy wallet has SUI gas + WAL for package publish and Walrus Sites
 
 ## License
 TBD
