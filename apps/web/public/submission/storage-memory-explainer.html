@@ -9,14 +9,12 @@
         --paper: #fffaf0;
         --line: #211d18;
         --muted: #5b5148;
-        --blue: #1f62a4;
+        --blue: #2466a8;
         --teal: #16a394;
-        --red: #1f62a4;
-        --green: #258047;
-        --yellow: #ffe26a;
-        --soft-blue: #eef7ff;
-        --soft-teal: #e9fbf8;
-        --soft-red: #fff5cc;
+        --orange: #f7b267;
+        --pastel-sky: #dff1ff;
+        --pastel-mint: #dff7ed;
+        --pastel-orange: #ffe1b8;
       }
 
       @page {
@@ -70,7 +68,7 @@
 
       h1 {
         display: inline;
-        background: linear-gradient(transparent 10%, var(--yellow) 10% 82%, transparent 82%);
+        background: linear-gradient(transparent 10%, var(--pastel-orange) 10% 82%, transparent 82%);
         padding: 0 10px;
         font-size: 74px;
         line-height: 1.02;
@@ -86,8 +84,8 @@
 
       .stamp {
         margin-top: 8px;
-        border: 4px solid var(--red);
-        color: var(--red);
+        border: 4px solid var(--blue);
+        color: var(--blue);
         padding: 14px 18px;
         font-size: 28px;
         font-weight: 900;
@@ -111,15 +109,15 @@
       }
 
       .card.blue {
-        background: var(--soft-blue);
+        background: color-mix(in srgb, var(--pastel-sky) 46%, #fffdf8);
       }
 
       .card.teal {
-        background: var(--soft-teal);
+        background: color-mix(in srgb, var(--pastel-mint) 50%, #fffdf8);
       }
 
-      .card.red {
-        background: var(--soft-red);
+      .card.orange {
+        background: color-mix(in srgb, var(--pastel-orange) 54%, #fffdf8);
       }
 
       .card h2 {
@@ -134,12 +132,26 @@
       .icon {
         display: inline-grid;
         place-items: center;
-        width: 64px;
-        height: 64px;
+        width: 74px;
+        height: 58px;
         border: 3px solid var(--line);
-        border-radius: 50%;
-        background: #fffaf0;
-        font-size: 34px;
+        border-radius: 16px 10px 18px 12px;
+        background: var(--pastel-sky);
+        color: var(--line);
+        font-size: 30px;
+        font-weight: 900;
+        box-shadow: 6px 6px 0 rgba(33, 29, 24, 0.12);
+        transform: rotate(-1.5deg);
+      }
+
+      .card.teal .icon {
+        background: var(--pastel-mint);
+        transform: rotate(1.2deg);
+      }
+
+      .card.orange .icon {
+        background: var(--pastel-orange);
+        transform: rotate(-0.6deg);
       }
 
       ul {
@@ -182,7 +194,7 @@
         padding: 18px;
         border: 3px dashed var(--blue);
         border-radius: 18px 12px 18px 12px;
-        background: #f8fcff;
+        background: color-mix(in srgb, var(--pastel-sky) 42%, #fffdf8);
         text-align: center;
       }
 
@@ -202,7 +214,7 @@
       }
 
       .arrow {
-        color: var(--red);
+        color: var(--blue);
         text-align: center;
         font-size: 54px;
         font-weight: 900;
@@ -212,13 +224,13 @@
         margin-top: 40px;
         padding: 26px 32px;
         border-left: 12px solid var(--teal);
-        background: var(--soft-teal);
+        background: var(--pastel-mint);
         font-size: 31px;
         line-height: 1.25;
       }
 
       .truth b {
-        color: var(--red);
+        color: var(--blue);
       }
 
       .two {
@@ -247,7 +259,7 @@
         border: 3px solid var(--line);
         border-radius: 999px;
         padding: 8px 15px;
-        background: var(--yellow);
+        background: var(--pastel-orange);
         font-size: 22px;
         font-weight: 900;
       }
@@ -264,13 +276,13 @@
         padding: 18px;
         border: 3px solid var(--line);
         border-radius: 16px 10px 18px 12px;
-        background: #fff7df;
+        background: color-mix(in srgb, var(--pastel-orange) 46%, #fffdf8);
         text-align: center;
       }
 
       .small-step b {
         display: block;
-        color: var(--red);
+        color: var(--blue);
         font-size: 27px;
       }
 
@@ -323,7 +335,7 @@
           </ul>
         </article>
 
-        <article class="card red">
+        <article class="card orange">
           <h2><span class="icon">S</span>Sui Objects</h2>
           <ul>
             <li>Stores public receipts and gates.</li>
