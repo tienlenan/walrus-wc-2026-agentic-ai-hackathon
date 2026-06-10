@@ -16,7 +16,7 @@ const loadGalleryWall = () => import("./components/gallery-wall").then((mod) => 
 const loadMemoryNotebook = () => import("./components/memory-notebook").then((mod) => ({ default: mod.MemoryNotebook }));
 const loadRuntimeTracking = () => import("./components/runtime-tracking").then((mod) => ({ default: mod.RuntimeTracking }));
 const loadDailyBriefings = () => import("./components/daily-briefings").then((mod) => ({ default: mod.DailyBriefings }));
-const loadLatestBriefingTeaser = () => import("./components/daily-briefings").then((mod) => ({ default: mod.LatestBriefingTeaser }));
+const loadLatestBriefingTeaser = () => import("./components/latest-briefing-teaser").then((mod) => ({ default: mod.LatestBriefingTeaser }));
 const loadGuidePage = () => import("./components/guide-page").then((mod) => ({ default: mod.GuidePage }));
 
 const ConnectBar = lazy(loadConnectBar);
@@ -54,13 +54,13 @@ const EN_BOOT_LINES = [
   "Gil is asking VAR who cooked the worst prediction.",
   "Walrus is laminating the shame receipts.",
   "Checking which zip code that free kick landed in.",
-  "Memory is loading slowly because the takes are heavy.",
+  "Walrus is sorting receipts before Gil starts yelling.",
 ] as const;
 const BOOT_LINES = {
   vi: VI_BOOT_LINES,
   en: EN_BOOT_LINES,
 } as const;
-const BOOT_SPLASH_MIN_MS = 5000;
+const BOOT_SPLASH_MIN_MS = 1800;
 const GITHUB_URL = "https://github.com/tienlenan/walrus-wc-2026-agentic-ai-hackathon";
 const COOKIE_CONSENT_KEY = "gil.cookie-consent.v1";
 const ONBOARDING_SETTINGS_PREFIX = "gil:onboarding-settings:";
@@ -89,13 +89,7 @@ function bootLineFor(lang: "vi" | "en", index: number): string {
 }
 
 function preloadHomeChunks(): Promise<unknown> {
-  return Promise.all([
-    loadConnectBar(),
-    loadNewsDeskChat(),
-    loadPredictionsDesk(),
-    loadLeaderboard(),
-    loadRoastWall(),
-  ]);
+  return Promise.all([loadConnectBar(), loadPredictionsDesk()]);
 }
 
 export default function App() {
@@ -120,7 +114,8 @@ export default function App() {
       document.documentElement.classList.add("app-ready");
     });
     const minSplash = new Promise((resolve) => window.setTimeout(resolve, BOOT_SPLASH_MIN_MS));
-    void Promise.all([minSplash, preloadHomeChunks().catch(() => undefined)]).then(() => {
+    void preloadHomeChunks().catch(() => undefined);
+    void minSplash.then(() => {
       if (!cancelled) {
         setBootSplashVisible(false);
       }

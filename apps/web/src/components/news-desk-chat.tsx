@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Streamdown } from "streamdown";
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from "react";
 import { askGil, type ChatRenderPart, type ChatToolPart, type FixturesToolOutput, type TeamProfileToolOutput } from "../lib/gil-api";
 import { useI18n } from "../lib/i18n";
 import { loadAiSettings, resolveAiLang } from "../lib/ai-settings";
@@ -7,8 +6,9 @@ import { useSuiOutputRecorder } from "../lib/sui-output-record";
 import { useVerifiedSession } from "../lib/wallet-session";
 import { useTimeSettings } from "../lib/time-settings";
 import { teamWithFlag } from "../lib/team-flags";
-import "streamdown/styles.css";
 import "./news-desk-chat.css";
+
+const MarkdownMessage = lazy(() => import("./streamdown-markdown").then((mod) => ({ default: mod.MarkdownMessage })));
 
 interface Msg {
   role: "user" | "gil";
@@ -281,9 +281,9 @@ function MessageParts({ message }: { message: Msg }) {
       {parts.map((part, index) => {
         if (part.type === "text") {
           return (
-            <Streamdown key={`${part.type}-${index}`} className="msg-markdown" mode="static" controls={false}>
-              {part.text}
-            </Streamdown>
+            <Suspense key={`${part.type}-${index}`} fallback={<p className="msg-markdown">{part.text}</p>}>
+              <MarkdownMessage className="msg-markdown">{part.text}</MarkdownMessage>
+            </Suspense>
           );
         }
         return <ToolPartRenderer key={`${part.type}-${part.toolCallId}-${index}`} part={part} />;

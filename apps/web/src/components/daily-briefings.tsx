@@ -237,38 +237,3 @@ export function DailyBriefings() {
     </section>
   );
 }
-
-export function LatestBriefingTeaser() {
-  const { t } = useI18n();
-  const { formatDate } = useTimeSettings();
-  const [briefing, setBriefing] = useState<DailyBriefing | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    getLatestBriefing()
-      .then((next) => {
-        if (!cancelled) setBriefing(next);
-      })
-      .catch(() => undefined);
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  if (!briefing) return null;
-
-  return (
-    <section className="briefing-teaser">
-      <div>
-        <span>{t("briefings.latest")}</span>
-        <h3>{briefing.title}</h3>
-        <p>{briefing.summary}</p>
-      </div>
-      <div className="briefing-teaser-proof">
-        <span>{formatDate(`${briefing.briefingDate}T00:00:00.000Z`)}</span>
-        <strong>{shortId(briefing.proof.contentHash)}</strong>
-        <a href="#briefings">{t("briefings.open")}</a>
-      </div>
-    </section>
-  );
-}
