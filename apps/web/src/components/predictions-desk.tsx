@@ -103,6 +103,8 @@ export function PredictionsDesk() {
   const [target, setTarget] = useState("");
   const [busy, setBusy] = useState(false);
   const [voteBusy, setVoteBusy] = useState(false);
+  const [predictionPhase, setPredictionPhase] = useState<"signing" | null>(null);
+  const [votePhase, setVotePhase] = useState<"saving" | "signing" | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -170,6 +172,7 @@ export function PredictionsDesk() {
     setBusy(true);
     setError(null);
     setNotice(null);
+    setPredictionPhase("signing");
     try {
       const payload = buildPayload();
       const tx = buildSubmitPrediction({
@@ -185,12 +188,14 @@ export function PredictionsDesk() {
       setError(err instanceof Error ? err.message : t("pred.failed"));
     } finally {
       setBusy(false);
+      setPredictionPhase(null);
     }
   }
 
   async function submitVote() {
     if (!isVoteKind(kindKey) || !canVote) return;
     setVoteBusy(true);
+    setVotePhase("saving");
     setError(null);
     setNotice(null);
     try {
@@ -200,6 +205,7 @@ export function PredictionsDesk() {
         resourceType: "match_vote",
         resourceId: `${matchId}:${kindKey}`,
         payload: votePayload,
+        onBeforeSign: () => setVotePhase("signing"),
       });
       const vote = await saveMatchVote({
         ...votePayload,
@@ -213,6 +219,7 @@ export function PredictionsDesk() {
       setError(err instanceof Error ? err.message : t("pred.voteFailed"));
     } finally {
       setVoteBusy(false);
+      setVotePhase(null);
     }
   }
 
@@ -308,7 +315,7 @@ export function PredictionsDesk() {
         )}
 
         <button className="submit-slip" type="submit" disabled={!canSubmit}>
-          {busy ? t("pred.submitting") : signedIn ? t("pred.submit") : t("common.signInFirst")}
+          {busy ? (predictionPhase === "signing" ? t("pred.openingWallet") : t("pred.submitting")) : signedIn ? t("pred.submit") : t("common.signInFirst")}
         </button>
       </form>
 
@@ -319,7 +326,7 @@ export function PredictionsDesk() {
             <strong>{voteTitle(selectedVoteSummary, t)}</strong>
           </div>
           <button type="button" onClick={() => void submitVote()} disabled={!canVote}>
-            {voteBusy ? t("pred.saving") : signedIn ? t("pred.saveVote") : t("common.signInFirst")}
+            {voteBusy ? (votePhase === "signing" ? t("pred.openingWallet") : t("pred.saving")) : signedIn ? t("pred.saveVote") : t("common.signInFirst")}
           </button>
           {selectedVoteSummary?.myVote && <small>{t("pred.myVote")}: {selectedVoteSummary.myVote.targetLabel}</small>}
           {selectedVoteSummary?.leaders.length ? (

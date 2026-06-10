@@ -23,6 +23,7 @@ export function RoastWall() {
   const [playerNumber, setPlayerNumber] = useState(10);
   const [freeTarget, setFreeTarget] = useState("");
   const [busy, setBusy] = useState(false);
+  const [phase, setPhase] = useState<"roasting" | "signing" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function refresh() {
@@ -52,6 +53,7 @@ export function RoastWall() {
       return;
     }
     setBusy(true);
+    setPhase("roasting");
     setError(null);
     try {
       const ai = loadAiSettings();
@@ -76,6 +78,7 @@ export function RoastWall() {
           cardTitle: next.cardTitle,
         },
         pointer: next.outputPointer,
+        onBeforeSign: () => setPhase("signing"),
       });
       const withProof: Roast = {
         ...next,
@@ -88,6 +91,7 @@ export function RoastWall() {
       setError(err instanceof Error ? err.message : t("roast.failed"));
     } finally {
       setBusy(false);
+      setPhase(null);
     }
   }
 
@@ -144,7 +148,7 @@ export function RoastWall() {
           </label>
 
           <button className="roast-submit" type="button" onClick={() => void roast()} disabled={busy || !selectedTeam || !signedIn}>
-            {busy ? t("roast.roasting") : signedIn ? `${t("roast.submit")} ${targetPreview}` : t("common.signInFirst")}
+            {busy ? (phase === "signing" ? t("roast.signing") : t("roast.roasting")) : signedIn ? `${t("roast.submit")} ${targetPreview}` : t("common.signInFirst")}
           </button>
         </div>
 

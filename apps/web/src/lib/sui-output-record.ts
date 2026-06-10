@@ -100,6 +100,7 @@ export function useSuiOutputRecorder() {
     payload: unknown;
     pointer?: WalrusOutputPointer | null;
     register?: boolean;
+    onBeforeSign?: () => void;
   }): Promise<SuiOutputProof> {
     const contentHash = input.pointer?.hash || (await sha256Hex(input.payload));
     const tx = buildSubmitOutputRecord({
@@ -107,6 +108,7 @@ export function useSuiOutputRecorder() {
       blobId: input.pointer?.blobId ?? null,
       contentHash,
     });
+    input.onBeforeSign?.();
     const result = await mutateAsync({ transaction: tx });
     const proof: SuiOutputProof = {
       outputKind: input.outputKind,

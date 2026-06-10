@@ -79,6 +79,7 @@ function GiftRevealBox({ reveal }: { reveal: GiftReveal }) {
           lineKey: reveal.lineKey,
           tone: reveal.tone,
         },
+        onBeforeSign: () => setSigning(true),
       });
       writeSaved(reveal.openedStorageKey, proof.txDigest);
       writeOpened(reveal.openedStorageKey);

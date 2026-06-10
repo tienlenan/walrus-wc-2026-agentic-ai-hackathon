@@ -322,6 +322,7 @@ export function NewsDeskChat({ onOpenSettings }: { onOpenSettings: () => void })
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [phase, setPhase] = useState<"replying" | "signing" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -336,7 +337,7 @@ export function NewsDeskChat({ onOpenSettings }: { onOpenSettings: () => void })
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  }, [messages, loading, phase]);
 
   async function send(text: string) {
     const msg = text.trim();
@@ -349,6 +350,7 @@ export function NewsDeskChat({ onOpenSettings }: { onOpenSettings: () => void })
     setError(null);
     setMessages((m) => [...m, { role: "user", text: msg }]);
     setLoading(true);
+    setPhase("replying");
     try {
       const ai = loadAiSettings();
       const reply = await askGil(msg, {
@@ -362,6 +364,7 @@ export function NewsDeskChat({ onOpenSettings }: { onOpenSettings: () => void })
         resourceId: `chat-${Date.now().toString(36)}`,
         payload: { message: msg, reply: reply.text, parts: reply.parts, usedMemories: reply.usedMemories },
         pointer: reply.outputPointer,
+        onBeforeSign: () => setPhase("signing"),
       });
       setMessages((m) => [
         ...m,
@@ -371,6 +374,7 @@ export function NewsDeskChat({ onOpenSettings }: { onOpenSettings: () => void })
       setError(err instanceof Error ? err.message : t("chat.error"));
     } finally {
       setLoading(false);
+      setPhase(null);
     }
   }
 
@@ -418,7 +422,7 @@ export function NewsDeskChat({ onOpenSettings }: { onOpenSettings: () => void })
           </div>
         ))}
 
-        {loading && <div className="msg msg-gil loading">{t("chat.loading")}</div>}
+        {loading && <div className="msg msg-gil loading">{phase === "signing" ? t("chat.signing") : t("chat.loading")}</div>}
         {error && <div className="chat-error">{error}</div>}
         <div ref={endRef} />
       </div>
