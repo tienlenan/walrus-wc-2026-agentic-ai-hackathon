@@ -5,7 +5,6 @@ import { useI18n } from "./lib/i18n";
 import { useTimeSettings } from "./lib/time-settings";
 import "./styles/ui-controls.css";
 
-const loadWalletProviders = () => import("./wallet-providers").then((mod) => ({ default: mod.WalletProviders }));
 const loadConnectBar = () => import("./components/connect-bar").then((mod) => ({ default: mod.ConnectBar }));
 const loadNewsDeskChat = () => import("./components/news-desk-chat").then((mod) => ({ default: mod.NewsDeskChat }));
 const loadSettingsPanel = () => import("./components/settings-panel").then((mod) => ({ default: mod.SettingsPanel }));
@@ -20,7 +19,6 @@ const loadDailyBriefings = () => import("./components/daily-briefings").then((mo
 const loadLatestBriefingTeaser = () => import("./components/daily-briefings").then((mod) => ({ default: mod.LatestBriefingTeaser }));
 const loadGuidePage = () => import("./components/guide-page").then((mod) => ({ default: mod.GuidePage }));
 
-const WalletProviders = lazy(loadWalletProviders);
 const ConnectBar = lazy(loadConnectBar);
 const NewsDeskChat = lazy(loadNewsDeskChat);
 const SettingsPanel = lazy(loadSettingsPanel);
@@ -92,7 +90,6 @@ function bootLineFor(lang: "vi" | "en", index: number): string {
 
 function preloadHomeChunks(): Promise<unknown> {
   return Promise.all([
-    loadWalletProviders(),
     loadConnectBar(),
     loadNewsDeskChat(),
     loadPredictionsDesk(),
@@ -203,9 +200,7 @@ export default function App() {
       {bootSplashVisible && <BootSplash line={bootLineFor(lang, bootLineIndex)} />}
 
       <Suspense fallback={<div className="press-bar press-bar-loading">Loading wallet desk...</div>}>
-        <WalletProviders>
-          <ConnectBar />
-        </WalletProviders>
+        <ConnectBar />
       </Suspense>
 
       <div className="utility-bar">
@@ -276,35 +271,27 @@ export default function App() {
           </Suspense>
           <div id="newsroom" className="section-anchor">
             <Suspense fallback={<SectionSkeleton title={t("nav.gil")} />}>
-              <WalletProviders>
-                <NewsDeskChat onOpenSettings={openSettings} />
-              </WalletProviders>
+              <NewsDeskChat onOpenSettings={openSettings} />
             </Suspense>
           </div>
           <div id="predictions" className="section-anchor">
             <DeferredSection fallback={<SectionSkeleton title={t("nav.predictions")} />}>
               <Suspense fallback={<SectionSkeleton title={t("nav.predictions")} />}>
-                <WalletProviders>
-                  <PredictionsDesk />
-                </WalletProviders>
+                <PredictionsDesk />
               </Suspense>
             </DeferredSection>
           </div>
           <div id="leaderboard" className="section-anchor">
             <DeferredSection fallback={<SectionSkeleton title={t("nav.leaderboard")} />}>
               <Suspense fallback={<SectionSkeleton title={t("nav.leaderboard")} />}>
-                <WalletProviders>
-                  <Leaderboard />
-                </WalletProviders>
+                <Leaderboard />
               </Suspense>
             </DeferredSection>
           </div>
           <div id="roasts" className="section-anchor">
             <DeferredSection fallback={<SectionSkeleton title={t("nav.roasts")} />}>
               <Suspense fallback={<SectionSkeleton title={t("nav.roasts")} />}>
-                <WalletProviders>
-                  <RoastWall />
-                </WalletProviders>
+                <RoastWall />
               </Suspense>
             </DeferredSection>
           </div>
@@ -459,11 +446,7 @@ function ReferencePage({ page }: { page: ReferencePageKey }) {
     "team-profiles": <TeamProfiles />,
     gallery: <GalleryWall />,
     briefings: <DailyBriefings />,
-    notebook: (
-      <WalletProviders>
-        <MemoryNotebook />
-      </WalletProviders>
-    ),
+    notebook: <MemoryNotebook />,
     tracking: <RuntimeTracking />,
   };
 
