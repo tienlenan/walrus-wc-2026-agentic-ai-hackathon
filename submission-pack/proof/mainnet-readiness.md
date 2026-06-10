@@ -13,7 +13,7 @@ Captured on: 2026-06-09
 - 48/48 team profile blob/object pairs published on Walrus Mainnet.
 - `apps/web/public/ws-resources.json` updated with the mainnet site object ID.
 - Submission screenshots refreshed from the public `wal.app` URL after the latest mainnet build.
-- Real public-app demo video recorded from `https://roast2026wc.wal.app/`.
+- Demo video pending manual recording from `https://roast2026wc.wal.app/`.
 
 ## Mainnet IDs
 

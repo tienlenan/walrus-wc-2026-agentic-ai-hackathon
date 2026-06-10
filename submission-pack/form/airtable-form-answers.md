@@ -91,6 +91,8 @@ Mainnet proof:
 
 Upload these files:
 
+- `submission-pack/assets/logo/logo-troll.png`
+- `submission-pack/assets/logo/app-icon.png`
 - `submission-pack/assets/posters/poster-sketchnote.png`
 - `submission-pack/assets/docs/high-level-design-requirements.pdf`
 - `submission-pack/assets/docs/storage-memory-explainer.pdf`
@@ -98,21 +100,23 @@ Upload these files:
 
 ## Demo video of the form (sub 3 minutes)
 
-Upload:
+TODO: attach the real sub-3-minute walkthrough after manual recording.
 
-`submission-pack/video/gil-var-shamebook-real-app-demo.mp4`
+Record from the live public app:
 
-This is a real public-app screencast from `https://roast2026wc.wal.app/`, not a slideshow. Duration: 23.2 seconds, 1280x720 H.264 MP4.
+`https://roast2026wc.wal.app/`
 
 Suggested flow:
-
-Recorded flow:
 
 1. Open `https://roast2026wc.wal.app/`.
 2. Show 5-second splash and loaded home.
 3. Navigate predictions, Daily What's Up, runtime tracking, gallery, guide.
 4. Open Guide Dr. Gil settings panel.
 5. Show proof-heavy Daily What's Up / tracking surfaces from the live deployed app.
+
+Fallback storyboard source if needed:
+
+`submission-pack/video/demo-slideshow.html`
 
 ## Which features sets your solution apart from the rest?
 

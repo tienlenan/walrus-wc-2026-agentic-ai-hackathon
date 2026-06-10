@@ -2,7 +2,7 @@
   "source": "https://airtable.com/appoDAKpC74UOqoDa/shrIl2BMnzMwpuLhO",
   "capturedAt": "2026-06-09",
   "project": {
-    "name": "The Daily Walrus",
+    "name": "Gil's VAR Shamebook",
     "session": "Walrus Session 4 - Walrus Memory World Cup",
     "github": "https://github.com/tienlenan/walrus-wc-2026-agentic-ai-hackathon",
     "suiAddress": "0xf5ca4f02cf58d6448b6429c691b53c89c56b30c3ded38b45e73ce78829e99f6d",
@@ -29,6 +29,8 @@
   ],
   "uploadFiles": {
     "visuals": [
+      "submission-pack/assets/logo/logo-troll.png",
+      "submission-pack/assets/logo/app-icon.png",
       "submission-pack/assets/posters/poster-sketchnote.png",
       "submission-pack/assets/docs/high-level-design-requirements.pdf",
       "submission-pack/assets/docs/storage-memory-explainer.pdf",
@@ -41,6 +43,6 @@
       "submission-pack/assets/screenshots/screenshot-gallery.png",
       "submission-pack/assets/screenshots/screenshot-tracking.png"
     ],
-    "demoVideo": "submission-pack/video/gil-var-shamebook-real-app-demo.mp4"
+    "demoVideo": "TODO: attach manually recorded sub-3-minute public-app walkthrough"
   }
 }

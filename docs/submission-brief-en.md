@@ -109,11 +109,11 @@ These IDs prove the flow was tested before mainnet. Do not paste them into the f
   - Settle match 2: `7xhVSDGbR5wocVs8iNMVgB4ZgMSAshZ4uyqX93LtdRDw`
 
 ## 8) Submission Outputs (Ready to Attach)
-- Demo video ≤ 3:00: `submission-pack/video/gil-var-shamebook-real-app-demo.mp4` (real public-app screencast, 23.2s, 1280x720 H.264)
+- Demo video ≤ 3:00: TODO, attach the manually recorded public-app walkthrough from `https://roast2026wc.wal.app/`.
 - Poster (vertical + optional horizontal)
 - Screenshots pack:
   - home / predictions / leaderboard / roasts / team profiles / gallery / notebook / tracking
-- Logo package (icon + wordmark)
+- Logo package: `submission-pack/assets/logo/app-icon.png`, `submission-pack/assets/logo/logo-troll.png`, plus SVG originals.
 - GitHub repo and live Walrus URL
 - Poster: `apps/web/public/submission/poster-sketchnote.png`
 - Storage and memory explainer: `apps/web/public/submission/storage-memory-explainer.pdf`

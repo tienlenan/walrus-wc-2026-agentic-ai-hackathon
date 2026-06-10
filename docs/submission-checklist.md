@@ -74,9 +74,12 @@
   - `apps/web/public/submission/storage-memory-explainer-page-1.png`
   - `apps/web/public/submission/storage-memory-explainer-page-2.png`
 - Logo package:
-  - `logo/icon.svg`
-  - `logo/wordmark.svg`
-  - `logo/favicon.ico` (optional)
+  - `submission-pack/assets/logo/app-icon.svg`
+  - `submission-pack/assets/logo/app-icon.png`
+  - `submission-pack/assets/logo/logo-troll.svg`
+  - `submission-pack/assets/logo/logo-troll.png`
+  - `submission-pack/assets/logo/walrus.svg`
+  - `submission-pack/assets/logo/walrus.png`
 - Screenshots:
   - `screenshot-home.png`
   - `screenshot-predictions.png`
@@ -89,16 +92,16 @@
   - `screenshot-briefings.png`
   - `screenshot-tracking-briefing-proof.png`
 - Demo video:
-  - Ready: `submission-pack/video/gil-var-shamebook-real-app-demo.mp4`
-  - Duration: 23.2 seconds
-  - Source: real public-app screencast from `https://roast2026wc.wal.app/`
+  - Pending: record a real public-app walkthrough under 3 minutes.
+  - Source: `https://roast2026wc.wal.app/`
+  - Fallback storyboard source: `submission-pack/video/demo-slideshow.html`
   - Shows: splash → predictions → Daily What's Up proof → tracking → gallery → guide/settings
 
 ## Mainnet Status
 - Sui contract is published on mainnet.
 - Walrus Sites object is deployed on mainnet.
 - Public `wal.app` browsing is live at `https://roast2026wc.wal.app/`.
-- Real sub-3-minute demo video is ready in `submission-pack/video/`.
+- Real sub-3-minute demo video still needs to be attached after manual recording.
 
 ## Post-Submit Actions
 - Post link with `#Walrus` on X.

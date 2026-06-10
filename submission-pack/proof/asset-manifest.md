@@ -13,9 +13,12 @@
 | Storage and memory explainer PDF | `submission-pack/assets/docs/storage-memory-explainer.pdf` |
 | Storage explainer page 1 PNG | `submission-pack/assets/docs/storage-memory-explainer-page-1.png` |
 | Storage explainer page 2 PNG | `submission-pack/assets/docs/storage-memory-explainer-page-2.png` |
-| App icon | `submission-pack/assets/logo/app-icon.svg` |
-| Logo mark | `submission-pack/assets/logo/logo-troll.svg` |
-| Walrus mark | `submission-pack/assets/logo/walrus.svg` |
+| App icon SVG | `submission-pack/assets/logo/app-icon.svg` |
+| App icon PNG | `submission-pack/assets/logo/app-icon.png` |
+| Logo mark SVG | `submission-pack/assets/logo/logo-troll.svg` |
+| Logo mark PNG | `submission-pack/assets/logo/logo-troll.png` |
+| Walrus mark SVG | `submission-pack/assets/logo/walrus.svg` |
+| Walrus mark PNG | `submission-pack/assets/logo/walrus.png` |
 
 ## Screenshots
 
@@ -40,7 +43,7 @@ Screenshot set refreshed from the public `wal.app` app after the Guide Dr. Gil a
 
 | Asset | Path |
 |---|---|
-| Real public-app demo video | `submission-pack/video/gil-var-shamebook-real-app-demo.mp4` |
+| Real public-app demo video | TODO: record and attach manually, under 3 minutes |
 | Fallback slideshow source | `submission-pack/video/demo-slideshow.html` |
 
 ## Preferred Upload Set
@@ -55,3 +58,4 @@ If Airtable upload count or file size is limited, upload this reduced set:
 6. `submission-pack/assets/screenshots/screenshot-notebook.png`
 7. `submission-pack/assets/screenshots/screenshot-briefings.png`
 8. `submission-pack/assets/screenshots/screenshot-tracking-briefing-proof.png`
+9. `submission-pack/assets/logo/logo-troll.png`

@@ -1,4 +1,4 @@
-# The Daily Walrus - Submission Pack
+# Gil's VAR Shamebook - Submission Pack
 
 Prepared for the Walrus Memory World Cup Airtable submission.
 
@@ -8,6 +8,8 @@ Prepared for the Walrus Memory World Cup Airtable submission.
 |---|---|
 | `form/airtable-form-answers.md` | Copy-paste answers for the Airtable form |
 | `form/airtable-form-fields.json` | Structured field list and current values |
+| `form/final-submit-cheatsheet.md` | Short copy-paste sheet for the final submit pass |
+| `form/sui-overflow-project-description.md` | Full Sui Overflow / DeepSurge project description |
 | `proof/rules-and-fit.md` | Rules summary and requirement mapping |
 | `proof/mainnet-readiness.md` | Mainnet deployment status, IDs, and verification handles |
 | `proof/asset-manifest.md` | All attached assets and where to upload them |
@@ -25,13 +27,14 @@ Prepared for the Walrus Memory World Cup Airtable submission.
 - Architecture/design PDFs: ready.
 - Storage/memory explainer: ready.
 - Form copy: ready with placeholders for personal/team fields.
+- Logo package: ready as SVG + PNG.
 - Mainnet contract: published.
 - Mainnet fixtures: 104/104 registered.
 - Mainnet Walrus Site object: deployed.
 - Mainnet Walrus Site content: updated with 12 English-only cartoon gallery cards.
 - Daily What's Up: mainnet DB has one `daily` article with Walrus blob proof, memory synced, and Sui receipt digest.
 - Public `wal.app` URL: `https://roast2026wc.wal.app/`.
-- Demo video: ready. Real public-app screencast is `submission-pack/video/gil-var-shamebook-real-app-demo.mp4` (23.2s, 1280x720, H.264).
+- Demo video: pending manual recording. Attach a real sub-3-minute walkthrough from `https://roast2026wc.wal.app/`. Fallback source: `submission-pack/video/demo-slideshow.html`.
 
 ## Fields Still Requiring Human Input
 
@@ -44,6 +47,7 @@ Prepared for the Walrus Memory World Cup Airtable submission.
 - Live mainnet project URL: `https://roast2026wc.wal.app/`
 - X account
 - X tweet link with `#Walrus`
+- Demo video file after manual recording
 - Referrer, if any
 
 Do not submit testnet IDs as final production proof. Use only mainnet IDs and the live `wal.app` URL.
