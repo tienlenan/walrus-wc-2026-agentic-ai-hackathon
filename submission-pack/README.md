@@ -20,7 +20,7 @@ Prepared for the Walrus Memory World Cup Airtable submission.
 ## Submit-Ready Status
 
 - Product screenshots: ready.
-- Product screenshots refreshed after the English-only cartoon gallery update.
+- Product screenshots refreshed after the English-only cartoon gallery update and Daily What's Up feature.
 - Poster: ready.
 - Architecture/design PDFs: ready.
 - Storage/memory explainer: ready.
@@ -29,6 +29,7 @@ Prepared for the Walrus Memory World Cup Airtable submission.
 - Mainnet fixtures: 104/104 registered.
 - Mainnet Walrus Site object: deployed.
 - Mainnet Walrus Site content: updated with 12 English-only cartoon gallery cards.
+- Daily What's Up: mainnet DB has one `daily` article with Walrus blob proof, memory synced, and Sui receipt digest.
 - Public `wal.app` URL: `https://roast2026wc.wal.app/`.
 - Demo video: record a real sub-3-minute walkthrough after the public URL is live.
 

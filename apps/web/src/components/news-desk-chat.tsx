@@ -20,6 +20,7 @@ interface Msg {
 
 const DEFAULT_SUGGESTIONS = {
   vi: [
+    "Gil hôm nay xuất bản điểm tin gì?",
     "Hỏi lịch thi đấu hôm nay và trận nào còn mở kèo.",
     "Cà khịa Brazil nhưng đừng quên nhắc Argentina.",
     "Troll Ronaldo, rồi tiện tay kéo Messi vào phiên tòa.",
@@ -28,6 +29,7 @@ const DEFAULT_SUGGESTIONS = {
     "Kèo nào đang mở on-chain? Gil đọc biên lai cho tôi.",
   ],
   en: [
+    "What did Gil publish in today's briefing?",
     "Ask today's fixtures and which matches are still open.",
     "Roast Brazil, then drag Argentina into the courtroom.",
     "Troll Ronaldo, and make Messi catch a stray too.",

@@ -1,4 +1,11 @@
 import { createHash } from "node:crypto";
+import { spawn } from "node:child_process";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { walrus } from "@mysten/walrus";
+import { getSuiGrpcClient } from "./sui-clients.js";
 
 export interface WalrusBlobPointer {
   status: "not_configured" | "published" | "already_certified" | "failed";
@@ -9,6 +16,7 @@ export interface WalrusBlobPointer {
 }
 
 interface WalrusStoreResponse {
+  blobStoreResult?: WalrusStoreResponse;
   newlyCreated?: {
     blobObject?: {
       id?: string;
@@ -34,16 +42,19 @@ function stableJson(value: unknown): string {
   return JSON.stringify(normalize(value));
 }
 
+function unwrapStoreResponse(value: WalrusStoreResponse | WalrusStoreResponse[]): WalrusStoreResponse {
+  const first = Array.isArray(value) ? value[0] : value;
+  return first?.blobStoreResult ?? first ?? {};
+}
+
 export function contentHash(value: unknown): string {
   const body = typeof value === "string" ? value : stableJson(value);
   return createHash("sha256").update(body).digest("hex");
 }
 
-export async function publishJsonBlob(kind: string, value: unknown): Promise<WalrusBlobPointer> {
-  const hash = contentHash(value);
+async function publishWithHttpPublisher(kind: string, value: unknown, hash: string): Promise<WalrusBlobPointer> {
   const publisher = process.env.WALRUS_PUBLISHER_URL?.replace(/\/$/, "");
   if (!publisher) return { status: "not_configured", blobId: null, objectId: null, hash };
-
   const epochs = Number(process.env.WALRUS_BLOB_EPOCHS ?? 12);
   const url = `${publisher}/v1/blobs?epochs=${Number.isFinite(epochs) ? epochs : 12}&deletable=true`;
   const headers: Record<string, string> = {
@@ -60,7 +71,7 @@ export async function publishJsonBlob(kind: string, value: unknown): Promise<Wal
       headers,
       body: JSON.stringify(value),
     });
-    const data = (await res.json().catch(() => ({}))) as WalrusStoreResponse;
+    const data = unwrapStoreResponse((await res.json().catch(() => ({}))) as WalrusStoreResponse | WalrusStoreResponse[]);
     if (!res.ok) throw new Error(`publisher ${res.status}`);
 
     const created = data.newlyCreated?.blobObject;
@@ -74,4 +85,87 @@ export async function publishJsonBlob(kind: string, value: unknown): Promise<Wal
   } catch (error) {
     return { status: "failed", blobId: null, objectId: null, hash, error: error instanceof Error ? error.message : String(error) };
   }
+}
+
+async function runWalrusCliStore(file: string): Promise<WalrusStoreResponse> {
+  const binary = process.env.WALRUS_BINARY ?? "/Users/mpdh/.local/share/suiup/binaries/mainnet/walrus-v1.49.1";
+  const context = process.env.WALRUS_CONTEXT ?? process.env.SUI_NETWORK ?? "mainnet";
+  const epochs = process.env.WALRUS_BLOB_EPOCHS ?? "12";
+  const args = ["--context", context, "--json", "store", "--epochs", epochs, "--force", "--ignore-resources", file];
+  if (process.env.WALRUS_CONFIG) args.unshift("--config", process.env.WALRUS_CONFIG);
+
+  return new Promise((resolve, reject) => {
+    const child = spawn(binary, args, { stdio: ["ignore", "pipe", "pipe"] });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => (stdout += chunk));
+    child.stderr.on("data", (chunk) => (stderr += chunk));
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code !== 0) return reject(new Error(stderr || `walrus exited ${code}`));
+      try {
+        resolve(unwrapStoreResponse(JSON.parse(stdout) as WalrusStoreResponse | WalrusStoreResponse[]));
+      } catch {
+        reject(new Error(`cannot parse walrus JSON: ${stdout.slice(0, 500)}`));
+      }
+    });
+  });
+}
+
+async function publishWithWalrusCli(kind: string, value: unknown, hash: string): Promise<WalrusBlobPointer> {
+  const binary = process.env.WALRUS_BINARY ?? "/Users/mpdh/.local/share/suiup/binaries/mainnet/walrus-v1.49.1";
+  if (process.env.WALRUS_CLI_DISABLED === "true") return { status: "not_configured", blobId: null, objectId: null, hash };
+  const tmp = await mkdtemp(path.join(tmpdir(), "daily-walrus-blob-"));
+  try {
+    const file = path.join(tmp, `${kind.replace(/[^a-z0-9._-]/gi, "-")}-${hash.slice(0, 12)}.json`);
+    await writeFile(file, stableJson(value));
+    const data = await runWalrusCliStore(file);
+    const created = data.newlyCreated?.blobObject;
+    if (created?.blobId) {
+      return { status: "published", blobId: created.blobId, objectId: created.id ?? null, hash };
+    }
+    if (data.alreadyCertified?.blobId) {
+      return { status: "already_certified", blobId: data.alreadyCertified.blobId, objectId: null, hash };
+    }
+    return { status: "failed", blobId: null, objectId: null, hash, error: "walrus CLI response missing blobId" };
+  } catch (error) {
+    return {
+      status: binary ? "failed" : "not_configured",
+      blobId: null,
+      objectId: null,
+      hash,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+}
+
+async function publishWithWalrusSdk(value: unknown, hash: string): Promise<WalrusBlobPointer> {
+  const secret = process.env.WALRUS_SDK_WALLET_KEY ?? process.env.SESSION_WALLET_KEY ?? process.env.ORACLE_WALLET_KEY;
+  if (!secret || process.env.WALRUS_SDK_DISABLED === "true") return { status: "not_configured", blobId: null, objectId: null, hash };
+  try {
+    const signer = Ed25519Keypair.fromSecretKey(secret);
+    const client = getSuiGrpcClient().$extend(walrus());
+    const result = (await client.walrus.writeBlob({
+      blob: new TextEncoder().encode(stableJson(value)),
+      deletable: true,
+      epochs: Number(process.env.WALRUS_BLOB_EPOCHS ?? 12),
+      signer,
+    })) as { blobId?: string; id?: string; blobObject?: { id?: string } };
+    if (!result.blobId) return { status: "failed", blobId: null, objectId: null, hash, error: "Walrus SDK response missing blobId" };
+    return { status: "published", blobId: result.blobId, objectId: result.id ?? result.blobObject?.id ?? null, hash };
+  } catch (error) {
+    return { status: "failed", blobId: null, objectId: null, hash, error: error instanceof Error ? error.message : String(error) };
+  }
+}
+
+export async function publishJsonBlob(kind: string, value: unknown): Promise<WalrusBlobPointer> {
+  const hash = contentHash(value);
+  const httpPointer = await publishWithHttpPublisher(kind, value, hash);
+  if (httpPointer.status !== "not_configured") return httpPointer;
+  const sdkPointer = await publishWithWalrusSdk(value, hash);
+  if (sdkPointer.status !== "not_configured" && sdkPointer.status !== "failed") return sdkPointer;
+  if (sdkPointer.status === "failed" && process.env.WALRUS_CLI_DISABLED === "true") return sdkPointer;
+  return publishWithWalrusCli(kind, value, hash);
 }

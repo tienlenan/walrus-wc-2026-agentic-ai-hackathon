@@ -6,6 +6,7 @@ import { SUI_NETWORK } from "./sui-clients.js";
 import { contentHash, publishJsonBlob, type WalrusBlobPointer } from "./walrus-blob.js";
 import { getWorldCupSnapshot } from "./world-cup-data.js";
 import { PLAYER_ROAST_TRAITS, buildPlayerRoastMemoryDocuments } from "../data/player-roast-traits.js";
+import { getLatestDailyBriefing } from "./briefing-store.js";
 
 export const WORLD_CUP_GLOBAL_NAMESPACE = "daily-walrus:global:world-cup-2026";
 
@@ -58,6 +59,22 @@ export interface RuntimeTrackingDto {
     outputRecords: number;
     globalScheduleBlobUrl: string | null;
     globalScheduleObjectUrl: string | null;
+  };
+  briefings: {
+    latest: {
+      id: string;
+      title: string;
+      status: string;
+      briefingDate: string;
+      contentHash: string;
+      walrusBlobId: string | null;
+      walrusObjectId: string | null;
+      walrusBlobUrl: string | null;
+      walrusObjectUrl: string | null;
+      memoryStatus: string;
+      outputTxDigest: string | null;
+      updatedAt: string;
+    } | null;
   };
   fixtures: {
     total: number;
@@ -625,13 +642,14 @@ async function outputRecordCount(): Promise<number> {
 }
 
 export async function getRuntimeTracking(): Promise<RuntimeTrackingDto> {
-  const [snapshot, memoryStatus, teamMemoryStatus, playerRoastMemoryStatus, profiles, outputs] = await Promise.all([
+  const [snapshot, memoryStatus, teamMemoryStatus, playerRoastMemoryStatus, profiles, outputs, latestBriefing] = await Promise.all([
     getGameSnapshot(null),
     getGlobalWorldCupMemoryStatus(),
     getGlobalWorldCupMemoryStatus("not_synced", "world_cup_teams"),
     getGlobalWorldCupMemoryStatus("not_synced", "player_roast_traits"),
     profileBlobCount().catch(() => 0),
     outputRecordCount().catch(() => 0),
+    getLatestDailyBriefing().catch(() => null),
   ]);
   const fixtures = snapshot.fixtures;
   const contractIds = [
@@ -665,11 +683,29 @@ export async function getRuntimeTracking(): Promise<RuntimeTrackingDto> {
       url: objectUrl(objectId),
     })),
     walrus: {
-      publisherConfigured: Boolean(process.env.WALRUS_PUBLISHER_URL),
+      publisherConfigured: Boolean(process.env.WALRUS_PUBLISHER_URL || latestBriefing?.proof.walrusBlobId),
       profileBlobs: profiles,
       outputRecords: outputs,
       globalScheduleBlobUrl: blobUrl(memoryStatus.walrusBlobId),
       globalScheduleObjectUrl: memoryStatus.walrusObjectId ? objectUrl(memoryStatus.walrusObjectId) : null,
+    },
+    briefings: {
+      latest: latestBriefing
+        ? {
+            id: latestBriefing.id,
+            title: latestBriefing.title,
+            status: latestBriefing.status,
+            briefingDate: latestBriefing.briefingDate,
+            contentHash: latestBriefing.proof.contentHash,
+            walrusBlobId: latestBriefing.proof.walrusBlobId,
+            walrusObjectId: latestBriefing.proof.walrusObjectId,
+            walrusBlobUrl: latestBriefing.proof.walrusBlobUrl,
+            walrusObjectUrl: latestBriefing.proof.walrusObjectUrl,
+            memoryStatus: latestBriefing.proof.memoryStatus,
+            outputTxDigest: latestBriefing.proof.outputTxDigest,
+            updatedAt: latestBriefing.updatedAt,
+          }
+        : null,
     },
     fixtures: {
       total: fixtures.length,

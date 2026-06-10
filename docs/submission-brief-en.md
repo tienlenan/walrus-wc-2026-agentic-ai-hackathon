@@ -25,6 +25,13 @@ Core promise: **you can verify the project works from links and object IDs** (no
   - Realtime stream + polling fallback.
 - **Roast wall**
   - Team and player roast actions backed by memory context.
+- **Daily What's Up**
+  - Multi-agent workflow: orchestrator, scout, synthesizer, writer, moderator, publisher.
+  - Writer loads prior dispatch summaries from `daily-walrus:global:world-cup-2026:briefings` before writing.
+  - Duplicate-risk drafts are rejected and re-scouted up to three attempts.
+  - Full article payload is published to Walrus Blob on mainnet.
+  - Dispatch metadata is remembered in briefing Walrus Memory so Gil can answer later questions about what was published.
+  - Runtime tracking exposes the latest dispatch hash/blob/memory/Sui receipt status.
 
 ## 3) Architecture Summary
 - **Frontend:** React + Vite (Walrus Sites mainnet)
@@ -33,6 +40,7 @@ Core promise: **you can verify the project works from links and object IDs** (no
 - **On-chain:** Sui Move contract (`Prediction`, `OutputRecord`, `MatchRegistry`, `Scoreboard`)
 - **Persistence/cache:** Supabase (Postgres) — non-canonical layer
 - **Optional proof:** raw Walrus blob publish/anchor path where configured
+- **Agentic publishing:** Daily What's Up workflow with persisted agent traces and Walrus proof payloads
 
 ## 4) Hackathon Fit
 - Memory depth: before/after behavior and persistent recall.
@@ -55,12 +63,21 @@ Final submission must use mainnet IDs and URLs only.
 - Walrus Memory / MemWal account: `0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51`.
 - Walrus Memory relayer: `https://relayer.memory.walrus.xyz`.
 - Walrus Memory global namespace: `daily-walrus:global:world-cup-2026`.
+- Walrus Memory briefing namespace: `daily-walrus:global:world-cup-2026:briefings`.
 - Walrus Memory namespace URL: `https://relayer.memory.walrus.xyz/account/0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51/namespace/daily-walrus%3Aglobal%3Aworld-cup-2026`.
 - Per-user memory namespace pattern used by the app: `daily-walrus:<sui-address>`.
 - Mainnet memory sync evidence:
   - Schedule memory: `world_cup_schedule`, synced, content hash `a42baa72cf1e627c5330667f730600d239795a521489f52ffd24c4f5b075a5f5`, 104 fixtures, 104 open matches, updated `2026-06-09T17:06:13.109Z`.
   - Team/player memory: `world_cup_teams`, synced, content hash `9d561534f1179d30d76845bd862598a91597fa44673ed5cf93097f53987c16b7`, 48 teams, 1248 players, 49 memory docs, updated `2026-06-09T17:07:50.215Z`.
   - Player roast memory: `player_roast_traits`, synced, content hash `0061009a1c5ec8786f9b7e0c50691faa0f01c4a435decf67eff1a2bd56f8ac34`, 8 players, 8 memory docs, updated `2026-06-09T17:06:13.961Z`.
+- Daily What's Up proof:
+  - Latest item: `Gil's Daily What's Up - Jun 10, 2026`, date `2026-06-10`.
+  - Briefing namespace: `daily-walrus:global:world-cup-2026:briefings`.
+  - Walrus blob: `g83hrVh7U-V2olfyUsvECGFnLTeaFKKhwA0BGXeMgn4`.
+  - Walrus object: `0xcdac7bf4884ebdecb01cfef0078c9585078142718d77b017441e01a677a4d3a3`.
+  - Content hash: `529cf6132e7ca253f0f86fe02dc9cf2b4edc69a1b52cb394cfdcd5d660d5d7c1`.
+  - Sui receipt: `5YLPQ17mtzSLEQ5o7CH7LqDos351HHr5VKKEnTJRR28`.
+  - Anti-repeat evidence: loaded `1` previous briefing, novelty score `0.025`, duplicate `false`.
 - Walrus team profile blobs: 48 published mainnet blob/object pairs. Full proof snapshot: `submission-pack/proof/mainnet-runtime-ids.json`.
 
 Current public URL status: `https://roast2026wc.wal.app/` is live and points to the mainnet Walrus Site object above.
@@ -78,6 +95,7 @@ Mainnet fixture seed status: 104/104 World Cup fixtures registered in the mainne
   - open links to inspect objects.
 - Output objects for actions (chat/roast/prediction) can be verified by tx and object hashes.
 - Team schedule and squad content are traceable through seeded data + namespace memory sync.
+- Daily What's Up can be verified through the `#briefings` page and `/api/tracking/runtime`: content hash, summary metadata in Walrus Memory, explicit Walrus blob status, and Sui `OutputRecord` receipt status.
 
 ## 7) Internal Testnet Verification
 These IDs prove the flow was tested before mainnet. Do not paste them into the final submission form as production proof.

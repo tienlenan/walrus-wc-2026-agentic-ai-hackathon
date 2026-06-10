@@ -12,6 +12,7 @@ Landing ("THE DAILY WALRUS" front page)
  ├─ Connect + Sign in with Sui (wallet address → resourceId)
  ├─ Newsroom (main chat with Gil)            ← core screen
  ├─ Predictions desk (place & view predictions)
+ ├─ Daily What's Up (public agentic dispatches + proof)
  ├─ My Record / Gil's Notebook (memory panel + history)
  ├─ Leaderboard (realtime)
  ├─ Before/After (proves the memory)         ← for judges & demo
@@ -75,6 +76,19 @@ Landing ("THE DAILY WALRUS" front page)
 1. In the Memory panel / Report card → a **"Verify on Walrus/Sui"** button.
 2. Opens the Walrus `blobId` and/or Sui `OutputRecord`/`Prediction` object → shows the real memory/snapshot/output proof.
 3. Serves NF-5 (verifiability) & builds trust at judging time.
+
+## Flow 9 — Daily What's Up publishing (agentic web) ⭐
+**Goal:** show an autonomous multi-agent workflow that uses Walrus Memory as editorial memory, not just output storage.
+1. Admin/cron triggers `POST /api/oracle/briefings/run` for a date/type/focus.
+2. Orchestrator starts an `agent_runs` row and loads recent dispatch summaries from `daily-walrus:global:world-cup-2026:briefings`.
+3. Scout gathers fixed schedule facts, team profile memory, player roast traits, official links, configured web sources, and manual side stories.
+4. Synthesizer builds fresh angles and passes "avoid recent summaries" to the writer.
+5. Writer creates an English markdown article; novelty check compares the draft against briefing memory.
+6. If duplicate risk is high, the workflow rejects the draft and re-runs scout/synthesis/writing up to 3 attempts.
+7. Moderator strips wagering language and rejects unsupported source references.
+8. Publisher writes full JSON to Walrus Blob, remembers short metadata in the dedicated briefing namespace, stores UI index data, and anchors an optional Sui `OutputRecord`.
+9. User opens **Daily What's Up**: article, sources, agent trace, novelty score, blob/object links, memory namespace, and tx digest are visible.
+10. User asks Gil about today's dispatch; Gil can recall the published summary from global briefing memory.
 
 ---
 

@@ -19,6 +19,8 @@ in [`docs/`](docs).
 - **Leaderboard** — prediction accuracy, in realtime.
 - **Gil's Notebook** — see exactly what Gil remembers about you, verifiable on‑chain.
 - **Shareable report cards** — auto‑generated roast cards to screenshot and post.
+- **Daily What's Up** — multi-agent dispatches with editorial memory, anti-repeat checks,
+  Walrus Blob payloads, and Sui/Walrus proof links.
 
 ## 🧱 Tech stack
 | Layer | Choice |
@@ -101,6 +103,7 @@ Planning & design (written in English):
 - ✅ Web app · server · Supabase schema · Gil persona · wallet session · i18n/settings
 - ✅ Walrus Memory spine via MemWal: per-user notebook + global WC2026 schedule/team memory
 - ✅ Predictions, on-chain gating, oracle scoring, leaderboard, roast wall, team profiles, runtime tracking
+- ✅ Daily What's Up: six-role agent workflow, briefing memory dedupe, Walrus Blob proof, Sui receipt
 - ✅ Testnet verification completed: 104/104 fixtures registered, prediction submit → score → settle → indexer replay
 - ✅ Mainnet contract + Walrus Site object deployed; 104/104 fixtures registered on-chain
 - ✅ Public Walrus URL live: `https://roast2026wc.wal.app/`

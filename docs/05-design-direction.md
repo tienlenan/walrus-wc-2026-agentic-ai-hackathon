@@ -72,10 +72,32 @@ A grizzled walrus commentator, "has watched the World Cup since 1954". **Tusks =
 | Fixtures/results | A **scoreboard** in mono inside a frame, like the results table at the back of the paper |
 | My Record / Notebook | **"Gil's Notebook"** — a notebook page, facts as cut-and-paste clippings |
 | Leaderboard | A **ranking table** styled as a "standings" column |
+| Daily What's Up | A **newswire dispatch page**: article column, source clippings, agent trace, novelty stamp, and proof strip |
 | Before/After | **Two newspaper pages side by side**: "DAY-1 ISSUE" vs "LATEST ISSUE" |
 | Empty/loading | "Gil is rummaging through his notebook…", "The newsroom is going to press…" |
 
-## 6. "Gil's Report Card" — shareable (1080×1350) ⭐
+## 6. Daily What's Up design
+Daily What's Up should feel like the newsroom's public dispatch board, not an admin log. The screen is still a newspaper page, but the information hierarchy is technical enough for judges:
+
+1. **Lead column:** rendered markdown article with a dateline, short summary, and Gil-style section headers.
+2. **Proof strip:** content hash, Walrus blob link, Walrus object link, memory status/namespace, and Sui tx digest.
+3. **Source clippings:** each source as a compact clipping card with title, source type, URL, and fact bullets.
+4. **Agent trace:** collapsed by default, expandable as "newsroom chain of custody"; shows role, status, timing, novelty score, and retry notes.
+5. **Novelty stamp:** a small editorial stamp such as `FRESH ANGLE · 0.025` or `RE-SCOUTED 2/3`; never hide duplicate-retry evidence.
+6. **History rail:** previous dispatches in a narrow column; selected state uses a hard ink border, not a soft card glow.
+
+Design rule: source/proof details are supporting evidence, so they should be dense and scannable. The article remains the main visual object.
+
+## 7. Briefing memory UX
+The dedicated briefing memory path is part of the product story:
+
+- Label it as **Editorial Memory** or **Briefing Memory**, not generic "tracking".
+- Use copy like "Gil checked previous dispatches before filing this one."
+- Show the namespace `daily-walrus:global:world-cup-2026:briefings` in a proof row with copy/open actions.
+- If a draft was rejected for duplication, show a trace row: `Duplicate risk → scout again`.
+- Keep the anti-repeat result short: `Novelty 0.025 · Fresh enough`.
+
+## 8. "Gil's Report Card" — shareable (1080×1350) ⭐
 An auto-generated image to screenshot and post with **#Walrus / #TrustTheTusk**. Layout top→bottom:
 1. **Masthead bar**: "THE DAILY WALRUS · PREDICTION REPORT CARD" + dateline.
 2. **Hero**: Gil (expression matching the form) on the left + a red-stamped **grade A+→F** on the right.
@@ -85,21 +107,22 @@ An auto-generated image to screenshot and post with **#Walrus / #TrustTheTusk**.
 6. **Footer**: "Powered by Walrus · stored forever, just like your losing takes" + a teal mark.
 > Render with canvas/`satori`→PNG on the server, or html-to-image on the client.
 
-## 7. World Cup 2026 iconography — DO / DON'T
+## 9. World Cup 2026 iconography — DO / DON'T
 Co-hosted by the **USA/Canada/Mexico**, summer 2026, **48 teams** (a big bracket fits the theme well).
 **DO (safe, drawable yourself):** a generic pentagon-hexagon ball (CC0); pitch markings (center circle, penalty box) as geometry; a **bracket/knockout tree**, scoreboard, clock; generic confetti/scarves/bunting; maple leaf / cactus-sun / stars-and-stripes **as neutral geometric motifs**; boots, whistle, yellow-red cards, corner flag.
 **DON'T (trademark-infringing):** ❌ **FIFA** names/crests, the **championship trophy**, the **official 2026 logo/mascot**; ❌ national-team/federation crests, **kits**, **sponsor logos**; ❌ the **official ball/typeface**; ❌ **real player names/faces** in marketing imagery (roasting in gameplay is fine, but don't ship portraits); ❌ claiming to be "official" — always make it clear this is a fan/parody app.
 
-## 8. Accessibility & responsive
+## 10. Accessibility & responsive
 - Contrast: ink on paper passes; red/teal only for accents, not for small text on a near-matching background.
 - Mobile-first: the masthead shrinks, the column grid → 1 column; the scoreboard scrolls horizontally.
 - Don't rely on color to convey correct/wrong → include a ✔/✗ icon + label.
 - Respect `prefers-reduced-motion` (disable confetti/heavy animation).
 
-## 9. To-do when building the UI
+## 11. To-do when building the UI
 - [ ] Draw/generate the **6 Gil expressions** (sticker sheet) + 1 nameplate logo.
 - [ ] Build the **design tokens** (CSS vars / Tailwind theme) from §3.
 - [ ] Core components: Masthead, VerdictPullQuote, Scoreboard, PredictionSlip, NotebookCard, BeforeAfter, ReportCard.
+- [ ] DailyWhat'sUp page: ArticleColumn, ProofStrip, SourceClippings, AgentTrace, NoveltyStamp, HistoryRail.
 - [ ] Roast card generator (satori/canvas).
 - [ ] Halftone + hard-shadow utilities.
 > When entering the UI-build phase, consider running the **hallmark** skill to audit/raise quality and keep it "anti-AI-slop".

@@ -27,6 +27,11 @@ Required keys:
 - `MEMWAL_ACCOUNT_ID`, `MEMWAL_DELEGATE_KEY`, `MEMWAL_RELAYER_URL`
 - `AI_GATEWAY_API_KEY`, `DATABASE_URL`
 - `MASTRA_URL` (server endpoint)
+- Optional daily briefing keys: `BRIEFING_SOURCE_URLS`, `BRIEFING_SIDE_STORIES_JSON`, `BRIEFING_PUBLISHER_WALLET_KEY`, `BRIEFING_POST_SCORE_ENABLED`
+- Walrus blob publishing order:
+  1. `WALRUS_PUBLISHER_URL` private HTTP publisher, if configured.
+  2. `@mysten/walrus` TypeScript SDK with `WALRUS_SDK_WALLET_KEY` or `SESSION_WALLET_KEY`; this wallet must hold enough WAL and SUI.
+  3. Local Walrus CLI fallback through `WALRUS_BINARY`, unless `WALRUS_CLI_DISABLED=true`.
 
 Funding gate:
 - Active deploy wallet: `0xf5ca4f02cf58d6448b6429c691b53c89c56b30c3ded38b45e73ce78829e99f6d`.
@@ -87,9 +92,14 @@ Funding gate:
    - `https://gil-var-shamebook-api.vercel.app`
 3. Verify:
    ```bash
-   curl -sS https://gil-var-shamebook-api.vercel.app/
-   curl -sS https://gil-var-shamebook-api.vercel.app/api/world-cup/snapshot
-   ```
+curl -sS https://gil-var-shamebook-api.vercel.app/
+curl -sS https://gil-var-shamebook-api.vercel.app/api/world-cup/snapshot
+curl -sS https://gil-var-shamebook-api.vercel.app/api/briefings/latest
+```
+   Expected Daily What's Up shape:
+   - root object contains `briefing`.
+   - `briefing.proof.memwalNamespace` is `daily-walrus:global:world-cup-2026:briefings`.
+   - `briefing.contentJson.novelty.duplicate` is `false` before using the post as proof.
 4. CORS must allow:
    - `https://roast2026wc.wal.app`
    - `http://localhost:5173`
@@ -103,6 +113,16 @@ Funding gate:
 
 ## 7) Final validation
 - Confirm `/api/tracking/runtime` shows mainnet contract + memory sync status.
+- Run or verify one daily briefing:
+  ```bash
+  ORACLE_ADMIN_TOKEN=<token> \
+  curl -sS -X POST https://gil-var-shamebook-api.vercel.app/api/oracle/briefings/run \
+    -H "content-type: application/json" \
+    -H "x-oracle-token: $ORACLE_ADMIN_TOKEN" \
+    -d '{"type":"daily","force":true}'
+  ```
+- Confirm `#briefings` opens, Walrus blob link opens if publisher is configured, and tracking shows latest Daily What's Up status.
+- Confirm Daily What's Up trace shows `previousBriefings`, novelty score, and retry rows if duplicate drafts were rejected.
 - Post a smoke transaction from frontend with wallet and confirm tx + object IDs exist.
 - Update `docs/submission-brief-en.md` and `docs/submission-checklist.md` with final mainnet package, object, and URL values.
 

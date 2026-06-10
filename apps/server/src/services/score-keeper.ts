@@ -5,6 +5,7 @@ import { indexOnce } from "./event-indexer.js";
 import { syncGlobalWorldCupMemory } from "./global-world-cup-memory.js";
 import { getSuiGrpcClient } from "./sui-clients.js";
 import { syncUserPredictionMemory } from "./user-prediction-memory.js";
+import { runDailyBriefingWorkflow } from "./daily-briefing-workflow.js";
 
 type PredictionPayload = { a?: number | string; b?: number | string };
 
@@ -257,6 +258,11 @@ async function syncScheduleMemoryAfterScore(matchId: string): Promise<void> {
     await syncGlobalWorldCupMemory({ reason: `score:${matchId}`, force: true });
   } catch (error) {
     console.error("[score] global memory sync failed:", error instanceof Error ? error.message : error);
+  }
+  if (process.env.BRIEFING_POST_SCORE_ENABLED === "true") {
+    void runDailyBriefingWorkflow({ type: "post_match", focus: `match ${matchId}`, force: true }).catch((error) =>
+      console.error("[score] post-match briefing failed:", error instanceof Error ? error.message : error),
+    );
   }
 }
 

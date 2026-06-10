@@ -19,6 +19,9 @@ import {
 } from "./services/global-world-cup-memory.js";
 import { PLAYER_ROAST_TRAITS } from "./data/player-roast-traits.js";
 import { syncUserPredictionMemory } from "./services/user-prediction-memory.js";
+import { getDailyBriefing, getLatestDailyBriefing, listAgentRuns, listDailyBriefings } from "./services/briefing-store.js";
+import { runDailyBriefingWorkflow } from "./services/daily-briefing-workflow.js";
+import type { BriefingType } from "./services/briefing-types.js";
 
 const PORT = Number(process.env.PORT ?? 4111);
 const ALLOWED = (
@@ -107,6 +110,7 @@ export const server = createServer(async (req, res) => {
     return json(res, 200, { ok: true, service: "the-daily-walrus", memoryEnabled: isMemoryEnabled() });
   }
   try {
+    const url = new URL(req.url ?? "/", `http://${req.headers.host ?? "localhost"}`);
     if (req.method === "GET" && req.url?.startsWith("/api/game/snapshot")) {
       const subject = verifySession(bearer(req));
       return json(res, 200, await getGameSnapshot(subject?.startsWith("0x") ? subject : null));
@@ -119,6 +123,20 @@ export const server = createServer(async (req, res) => {
     }
     if (req.method === "GET" && req.url?.startsWith("/api/tracking/runtime")) {
       return json(res, 200, await getRuntimeTracking());
+    }
+    if (req.method === "GET" && url.pathname === "/api/briefings/latest") {
+      const type = url.searchParams.get("type") as BriefingType | null;
+      return json(res, 200, { briefing: await getLatestDailyBriefing(type ?? undefined) });
+    }
+    if (req.method === "GET" && url.pathname === "/api/briefings") {
+      const limit = Number(url.searchParams.get("limit") ?? 12);
+      const type = url.searchParams.get("type") as BriefingType | null;
+      return json(res, 200, { briefings: await listDailyBriefings(limit, type ?? undefined) });
+    }
+    if (req.method === "GET" && url.pathname.startsWith("/api/briefings/")) {
+      const id = decodeURIComponent(url.pathname.replace("/api/briefings/", ""));
+      const briefing = await getDailyBriefing(id);
+      return briefing ? json(res, 200, { briefing }) : json(res, 404, { error: "briefing not found" });
     }
     if (req.method === "GET" && req.url?.startsWith("/api/game/stream")) {
       return streamGameSnapshot(res);
@@ -201,6 +219,15 @@ export const server = createServer(async (req, res) => {
       if (!oracleAuthorized(req)) return json(res, 401, { error: "oracle token required" });
       const body = JSON.parse((await readBody(req)) || "{}") as { reason?: string; force?: boolean };
       return json(res, 200, await syncGlobalPlayerRoastMemory({ reason: body.reason ?? "oracle", force: Boolean(body.force) }));
+    }
+    if (req.method === "POST" && req.url === "/api/oracle/briefings/run") {
+      if (!oracleAuthorized(req)) return json(res, 401, { error: "oracle token required" });
+      const body = JSON.parse((await readBody(req)) || "{}") as { date?: string; type?: BriefingType; focus?: string; force?: boolean };
+      return json(res, 200, await runDailyBriefingWorkflow(body));
+    }
+    if (req.method === "GET" && url.pathname === "/api/oracle/briefings/runs") {
+      if (!oracleAuthorized(req)) return json(res, 401, { error: "oracle token required" });
+      return json(res, 200, { runs: await listAgentRuns(Number(url.searchParams.get("limit") ?? 20)) });
     }
 
     // --- Auth: sign-in-with-Sui ---

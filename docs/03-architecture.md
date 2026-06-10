@@ -8,6 +8,7 @@
 > This is the crux for meeting the "all agent state and memory on Walrus" criterion while still using Supabase for fast queries. If Supabase is lost, we **restore from Walrus**.
 > **Wallet-required writes:** every user-facing output action uses a verified Sui session. Raw output payloads go to Walrus when a publisher is configured; an owned Sui `OutputRecord` stores `blobId + contentHash` as the public proof. Supabase only indexes the proof.
 > **Global schedule memory:** WC2026 fixture memory lives in `daily-walrus:global:world-cup-2026`; Gil recalls it alongside per-user memory so schedule Q&A does not depend on a single user's notebook. Runtime proof/status is exposed at `/api/tracking/runtime` and the `#tracking` UI page.
+> **Agentic Daily What's Up:** the autonomous publisher creates Gil-style World Cup dispatches, stores summary metadata in global Walrus Memory, indexes the post in Supabase, and optionally anchors the blob/hash with a Sui `OutputRecord`.
 
 ## 1. System diagram
 ```
@@ -96,6 +97,7 @@ const r = await memwal.recall({ query: "What do we know about this user's footba
 | **Profile snapshot** | fan profile (JSON) at a point in time | raw `writeBlob`/Quilt from the session wallet; pointer in Supabase |
 | **Predictions snapshot** | prediction ledger (JSON) | periodic Quilt batch |
 | **Output payload** | Gil chat replies, roast cards, vote payload hashes | raw Walrus publisher when configured; Sui `OutputRecord` always anchors hash/pointer |
+| **Daily What's Up payload** | article markdown, source facts, agent trace, proof metadata | raw Walrus publisher; global MemWal summary; optional Sui `OutputRecord` pointer |
 
 ### 3.1.1 On Sui (owned proof objects)
 | Object | Owner | Content |
@@ -180,6 +182,36 @@ request with { resource: suiAddress, thread }
 | `getMyRecord` | `{}` | the user's W–L, accuracy, streak |
 | `getLeaderboard` | `{ limit? }` | top by accuracy |
 | `verifyOnWalrus` | `{ kind }` | returns `blobId/objectId` + an aggregator/explorer URL to verify |
+
+## 5.1 Agentic Daily What's Up
+
+Daily What's Up adds a six-role workflow without changing the app name:
+
+1. **Orchestrator** creates an idempotent run for a date/type.
+2. **Scout agent** reads fixture gates, team/player cache, official schedule links, configured public sources, and optional manual side stories.
+3. **Synthesizer agent** converts source facts into match angles, team notes, player watch, and memory hooks.
+4. **Writer agent** loads the dedicated briefing memory path (`daily-walrus:global:world-cup-2026:briefings`), writes an English Gil-style markdown article, and avoids recent summaries.
+5. **Moderator agent** removes wagering language, rejects unsupported source IDs, and keeps the tone as fun commentary.
+6. **Publisher agent** writes the full JSON payload to Walrus Blob when configured, remembers a short summary in `daily-walrus:global:world-cup-2026:briefings`, stores the UI row in `daily_briefings`, and optionally signs a Sui `OutputRecord`.
+
+If the generated article is too close to recent briefing memory, the workflow rejects that draft and re-runs scout/synthesis/writing up to three attempts before publishing.
+
+Runtime endpoints:
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/briefings/latest` | Latest public briefing for UI teaser/page |
+| `GET /api/briefings` | Briefing history |
+| `GET /api/briefings/:id` | One briefing by ID or slug |
+| `POST /api/oracle/briefings/run` | Protected manual/cron publisher path |
+| `GET /api/oracle/briefings/runs` | Protected run ledger |
+
+Data tables:
+
+| Table | Purpose |
+|---|---|
+| `daily_briefings` | UI index, proof pointers, source list, agent trace |
+| `agent_runs` | workflow status, input/output JSON, failure ledger |
 
 ## 6. Deployment
 | Component | Infrastructure | Notes |

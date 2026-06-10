@@ -17,6 +17,7 @@ function statusText(enabled: boolean, on: string, off: string): string {
 function LinkAction({ href, label }: { href: string | null; label: string }) {
   const { t } = useI18n();
   if (!href) return <span className="tracking-muted">{t("tracking.noUrl")}</span>;
+  if (href.startsWith("#")) return <a href={href}>{label}</a>;
   return (
     <a href={href} target="_blank" rel="noreferrer">
       {label}
@@ -47,6 +48,7 @@ export function RuntimeTracking() {
   const memory = tracking?.memory.lastSync;
   const teamMemory = tracking?.memory.teamSync;
   const playerRoastMemory = tracking?.memory.playerRoastSync;
+  const latestBriefing = tracking?.briefings.latest;
   const closedCount = useMemo(() => {
     if (!tracking) return 0;
     return tracking.fixtures.closedFinished + tracking.fixtures.closedKickoff + tracking.fixtures.unknown;
@@ -192,6 +194,40 @@ export function RuntimeTracking() {
                     <strong>{shortId(memory?.walrusObjectId)}</strong>
                   </div>
                   <LinkAction href={tracking.walrus.globalScheduleObjectUrl} label={t("tracking.open")} />
+                </div>
+              </div>
+            </article>
+
+            <article className="tracking-panel">
+              <h3>{t("tracking.latestBriefing")}</h3>
+              <div className="tracking-rows">
+                <div className="tracking-row">
+                  <div>
+                    <span>{latestBriefing?.briefingDate ?? t("tracking.noSync")}</span>
+                    <strong>{latestBriefing?.title ?? "-"}</strong>
+                  </div>
+                  <LinkAction href={latestBriefing ? "#briefings" : null} label={t("tracking.open")} />
+                </div>
+                <div className="tracking-row">
+                  <div>
+                    <span>{t("tracking.briefingBlob")}</span>
+                    <strong>{shortId(latestBriefing?.walrusBlobId)}</strong>
+                  </div>
+                  <LinkAction href={latestBriefing?.walrusBlobUrl ?? null} label={t("tracking.open")} />
+                </div>
+                <div className="tracking-row">
+                  <div>
+                    <span>{t("tracking.briefingObject")}</span>
+                    <strong>{shortId(latestBriefing?.walrusObjectId ?? latestBriefing?.outputTxDigest)}</strong>
+                  </div>
+                  <LinkAction href={latestBriefing?.walrusObjectUrl ?? null} label={t("tracking.open")} />
+                </div>
+                <div className="tracking-row">
+                  <div>
+                    <span>{t("tracking.briefingMemory")}</span>
+                    <strong>{latestBriefing?.memoryStatus ?? "not_synced"}</strong>
+                  </div>
+                  <small>{latestBriefing?.contentHash ? shortId(latestBriefing.contentHash) : t("tracking.noSync")}</small>
                 </div>
               </div>
             </article>

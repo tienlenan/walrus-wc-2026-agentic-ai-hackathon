@@ -110,6 +110,22 @@ export interface RuntimeTracking {
     globalScheduleBlobUrl: string | null;
     globalScheduleObjectUrl: string | null;
   };
+  briefings: {
+    latest: {
+      id: string;
+      title: string;
+      status: string;
+      briefingDate: string;
+      contentHash: string;
+      walrusBlobId: string | null;
+      walrusObjectId: string | null;
+      walrusBlobUrl: string | null;
+      walrusObjectUrl: string | null;
+      memoryStatus: string;
+      outputTxDigest: string | null;
+      updatedAt: string;
+    } | null;
+  };
   fixtures: {
     total: number;
     registered: number;

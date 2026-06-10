@@ -534,6 +534,10 @@
                 <h3>Tracking UI</h3>
                 <p>Judges inspect object IDs, blob pointers, memory namespaces, and API status.</p>
               </article>
+              <article class="node teal">
+                <h3>Daily What's Up</h3>
+                <p>Six-role newsroom workflow writes dispatches with editorial memory and novelty proof.</p>
+              </article>
             </div>
 
             <div class="component-grid">
@@ -560,6 +564,10 @@
               <article class="component">
                 <h3><span class="icon">S</span>Sui Objects</h3>
                 <p>Prediction gates, settlement state, score records, and output hashes stay compact and public.</p>
+              </article>
+              <article class="component">
+                <h3><span class="icon">D</span>Dispatch Pipeline</h3>
+                <p>Orchestrator, scout, synthesizer, writer, moderator, and publisher produce traceable Daily What's Up posts.</p>
               </article>
             </div>
           </section>
@@ -597,7 +605,7 @@
             <h1>How the memory spine works</h1>
           </div>
           <p>
-            Four clear paths power the demo: signed picks, chat answers, static World Cup memory, and public runtime tracking.
+            Five clear paths power the demo: signed picks, chat answers, static World Cup memory, agentic dispatches, and public runtime tracking.
           </p>
         </header>
 
@@ -633,6 +641,16 @@
           </article>
 
           <article class="lane">
+            <div class="lane-label">Daily What's Up</div>
+            <div class="lane-content">
+              <div class="flow-step"><strong>Load memory</strong><span>Recent dispatch summaries come from the briefing namespace.</span></div>
+              <div class="flow-step"><strong>Scout facts</strong><span>Schedule, team, player, official, web, and side-story sources.</span></div>
+              <div class="flow-step"><strong>Check novelty</strong><span>Duplicate-risk drafts re-scout up to three attempts.</span></div>
+              <div class="flow-step"><strong>Publish proof</strong><span>Blob payload, memory summary, UI index, and Sui receipt.</span></div>
+            </div>
+          </article>
+
+          <article class="lane">
             <div class="lane-label">Tracking</div>
             <div class="lane-content">
               <div class="flow-step"><strong>Contract IDs</strong><span>Package, registry, scoreboard, caps, and tx digests.</span></div>
@@ -650,6 +668,7 @@
               <li>Walrus Site object deployed on Mainnet.</li>
               <li>104 fixtures registered in the Sui MatchRegistry.</li>
               <li>Team profiles and gallery media expose Walrus blob pointers.</li>
+              <li>Daily What's Up exposes blob, memory namespace, Sui receipt, and novelty proof.</li>
               <li>Tracking page keeps proof links in one place.</li>
             </ul>
           </article>
@@ -658,6 +677,7 @@
             <h2>Storage split</h2>
             <ul>
               <li><strong>Walrus Memory:</strong> global schedule and wallet notebooks.</li>
+              <li><strong>Briefing Memory:</strong> editorial memory for anti-repeat writing.</li>
               <li><strong>Walrus Blob:</strong> media, team data, generated payloads.</li>
               <li><strong>Sui:</strong> signed receipts, gate state, content hashes.</li>
               <li><strong>Supabase:</strong> rebuildable cache for fast UI reads.</li>
@@ -671,7 +691,10 @@
           Walrus Site object: 0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158<br />
           Sui package: 0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb<br />
           MemWal account: 0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51<br />
-          Global namespace: daily-walrus:global:world-cup-2026
+          Global namespace: daily-walrus:global:world-cup-2026<br />
+          Briefing namespace: daily-walrus:global:world-cup-2026:briefings<br />
+          Latest dispatch blob: g83hrVh7U-V2olfyUsvECGFnLTeaFKKhwA0BGXeMgn4<br />
+          Latest novelty proof: previousBriefings=1 · score=0.025 · duplicate=false
         </div>
 
         <footer class="footer">

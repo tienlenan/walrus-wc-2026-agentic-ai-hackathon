@@ -29,8 +29,10 @@
 | Team profiles | `submission-pack/assets/screenshots/screenshot-team-profiles.png` |
 | Gallery | `submission-pack/assets/screenshots/screenshot-gallery.png` |
 | Tracking | `submission-pack/assets/screenshots/screenshot-tracking.png` |
+| Daily What's Up | `submission-pack/assets/screenshots/screenshot-briefings.png` |
+| Tracking with Daily What's Up proof | `submission-pack/assets/screenshots/screenshot-tracking-briefing-proof.png` |
 
-Screenshot set refreshed after the 12-card English-only cartoon gallery update.
+Screenshot set refreshed after the 12-card English-only cartoon gallery update and Daily What's Up feature.
 
 ## Demo Video
 
@@ -49,4 +51,5 @@ If Airtable upload count or file size is limited, upload this reduced set:
 4. `submission-pack/assets/docs/storage-memory-explainer.pdf`
 5. `submission-pack/assets/screenshots/screenshot-predictions.png`
 6. `submission-pack/assets/screenshots/screenshot-notebook.png`
-7. `submission-pack/assets/screenshots/screenshot-tracking.png`
+7. `submission-pack/assets/screenshots/screenshot-briefings.png`
+8. `submission-pack/assets/screenshots/screenshot-tracking-briefing-proof.png`

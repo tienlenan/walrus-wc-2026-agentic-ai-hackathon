@@ -19,6 +19,7 @@ The app has four main runtime zones:
 | Gil Agent API | Mastra tools for fixtures, team profiles, predictions, memory recall, roasts, and output anchoring | Runtime tracking API and generated output records |
 | Walrus | Blob payloads, gallery media, team/player data, global memory, wallet memory | Blob IDs, Walrus Site URL, Walrus Memory namespace |
 | Sui | Prediction gates, settlement, score records, output proof objects | Package/object IDs, transaction digests, content hashes |
+| Daily What's Up Pipeline | Orchestrator, scout, synthesizer, writer, moderator, publisher | Agent trace, novelty score, Walrus blob, briefing memory namespace |
 
 Supabase is only an index/cache for fast UI reads and leaderboard queries. It is not the canonical memory store.
 
@@ -48,6 +49,15 @@ Global memory flow:
 2. Postponed fixtures, knockout pairings, and final results update the same namespace.
 3. Gil answers schedule/team questions from memory instead of hardcoded page text.
 
+Daily What's Up editorial memory flow:
+
+1. Orchestrator loads recent published summaries from `daily-walrus:global:world-cup-2026:briefings`.
+2. Scout collects schedule/team/player/source facts.
+3. Synthesizer and writer build a fresh article while avoiding previous angles.
+4. Novelty check compares the draft against briefing memory.
+5. Duplicate-risk drafts are rejected and re-scouted up to three attempts.
+6. Publisher stores full article JSON on Walrus Blob, remembers a short summary in the briefing namespace, indexes the UI row, and optionally anchors a Sui `OutputRecord`.
+
 ## Requirements Fit
 
 - Persistent AI memory: Walrus Memory stores global and wallet-scoped recall.
@@ -55,6 +65,7 @@ Global memory flow:
 - Prediction integrity: match gates close before kickoff and settle after result seed/oracle update.
 - Submission tracking: a dedicated tracking page lists deployed package, object, memory, blob, and site links.
 - Perceived performance: a lightweight splash and top progress bar cover initial bundle load and lazy route transitions.
+- Agentic content quality: Daily What's Up loads editorial memory and avoids repeating published angles before it writes.
 
 ## Mainnet Proof Snapshot
 
@@ -66,4 +77,10 @@ Global memory flow:
 - Scoreboard: `0xfed0e2738f38965144bdcc840d4bf79ff0c9d75a9afd04753cd4f13c763cec10`
 - Walrus Memory account: `0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51`
 - Walrus Memory namespace: `daily-walrus:global:world-cup-2026`
+- Walrus briefing memory namespace: `daily-walrus:global:world-cup-2026:briefings`
+- Latest Daily What's Up blob: `g83hrVh7U-V2olfyUsvECGFnLTeaFKKhwA0BGXeMgn4`
+- Latest Daily What's Up object: `0xcdac7bf4884ebdecb01cfef0078c9585078142718d77b017441e01a677a4d3a3`
+- Latest Daily What's Up content hash: `529cf6132e7ca253f0f86fe02dc9cf2b4edc69a1b52cb394cfdcd5d660d5d7c1`
+- Latest Daily What's Up Sui receipt: `5YLPQ17mtzSLEQ5o7CH7LqDos351HHr5VKKEnTJRR28`
+- Latest Daily What's Up novelty proof: `previousBriefings=1`, `score=0.025`, `duplicate=false`
 - Team profile blobs: 48/48 published on Walrus Mainnet.

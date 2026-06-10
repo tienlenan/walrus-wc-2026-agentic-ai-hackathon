@@ -676,6 +676,37 @@
   color: var(--ink-soft);
 }
 
+.footer-text {
+  flex: 1 1 20rem;
+}
+
+.footer-links {
+  display: inline-flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.footer-links a,
+.footer-links button {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 0.28rem 0.5rem;
+}
+
+.footer-links a:hover,
+.footer-links button:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
 .stamp {
   font-family: var(--font-display);
   text-transform: uppercase;

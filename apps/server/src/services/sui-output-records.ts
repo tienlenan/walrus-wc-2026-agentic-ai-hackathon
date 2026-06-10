@@ -1,7 +1,7 @@
 import { getPool } from "@daily-walrus/db";
 
 const OUTPUT_KINDS = new Set(["chat", "roast", "match_vote", "notebook_query", "profile_pointer"]);
-const RESOURCE_TYPES = new Set(["chat_message", "roast", "match_vote", "notebook_query", "team_profile", "gift_reveal"]);
+const RESOURCE_TYPES = new Set(["chat_message", "roast", "match_vote", "notebook_query", "team_profile", "gift_reveal", "daily_briefing"]);
 
 export interface RegisterOutputInput {
   outputKind?: string;

@@ -15,6 +15,8 @@ const loadTeamProfiles = () => import("./components/team-profiles").then((mod) =
 const loadGalleryWall = () => import("./components/gallery-wall").then((mod) => ({ default: mod.GalleryWall }));
 const loadMemoryNotebook = () => import("./components/memory-notebook").then((mod) => ({ default: mod.MemoryNotebook }));
 const loadRuntimeTracking = () => import("./components/runtime-tracking").then((mod) => ({ default: mod.RuntimeTracking }));
+const loadDailyBriefings = () => import("./components/daily-briefings").then((mod) => ({ default: mod.DailyBriefings }));
+const loadLatestBriefingTeaser = () => import("./components/daily-briefings").then((mod) => ({ default: mod.LatestBriefingTeaser }));
 
 const WalletProviders = lazy(loadWalletProviders);
 const ConnectBar = lazy(loadConnectBar);
@@ -27,10 +29,12 @@ const TeamProfiles = lazy(loadTeamProfiles);
 const GalleryWall = lazy(loadGalleryWall);
 const MemoryNotebook = lazy(loadMemoryNotebook);
 const RuntimeTracking = lazy(loadRuntimeTracking);
+const DailyBriefings = lazy(loadDailyBriefings);
+const LatestBriefingTeaser = lazy(loadLatestBriefingTeaser);
 
-type ReferencePageKey = "team-profiles" | "gallery" | "notebook" | "tracking";
+type ReferencePageKey = "team-profiles" | "gallery" | "notebook" | "tracking" | "briefings";
 
-const REFERENCE_PAGES = new Set<string>(["team-profiles", "gallery", "notebook", "tracking"]);
+const REFERENCE_PAGES = new Set<string>(["team-profiles", "gallery", "notebook", "tracking", "briefings"]);
 const BOOT_IMAGES = [
   "/gallery/cartoon-walrus-better-than-idols.svg",
   "/gallery/cartoon-ronaldo-airmail.svg",
@@ -56,9 +60,21 @@ const BOOT_LINES = {
   en: EN_BOOT_LINES,
 } as const;
 const BOOT_SPLASH_MIN_MS = 10000;
+const GITHUB_URL = "https://github.com/tienlenan/walrus-wc-2026-agentic-ai-hackathon";
+const COOKIE_CONSENT_KEY = "gil.cookie-consent.v1";
+
+type LegalDialog = "privacy" | "terms" | null;
 
 function currentHash(): string {
   return window.location.hash.replace(/^#/, "");
+}
+
+function loadCookieConsent(): boolean {
+  try {
+    return localStorage.getItem(COOKIE_CONSENT_KEY) === "accepted";
+  } catch {
+    return false;
+  }
 }
 
 function bootLineFor(lang: "vi" | "en", index: number): string {
@@ -81,6 +97,8 @@ export default function App() {
   const { t, lang, setLang } = useI18n();
   const { formatDate, timeZoneLabel } = useTimeSettings();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [legalDialog, setLegalDialog] = useState<LegalDialog>(null);
+  const [cookieConsentVisible, setCookieConsentVisible] = useState(() => !loadCookieConsent());
   const [hash, setHash] = useState(currentHash);
   const [routeLoading, setRouteLoading] = useState(false);
   const [bootSplashVisible, setBootSplashVisible] = useState(true);
@@ -165,6 +183,9 @@ export default function App() {
         <button type="button" className="settings-btn" onClick={() => setSettingsOpen(true)}>
           {t("set.open")}
         </button>
+        <a className="github-btn" href={GITHUB_URL} target="_blank" rel="noreferrer" aria-label={t("github.open")}>
+          <GitHubIcon />
+        </a>
       </div>
 
       <header className="masthead">
@@ -196,6 +217,7 @@ export default function App() {
         <NavLink href="#predictions" label={t("nav.predictions")} />
         <NavLink href="#leaderboard" label={t("nav.leaderboard")} />
         <NavLink href="#roasts" label={t("nav.roasts")} />
+        <NavLink href="#briefings" label={t("nav.briefings")} reference />
         <NavLink href="#team-profiles" label={t("nav.teams")} reference />
         <NavLink href="#gallery" label={t("nav.gallery")} reference />
         <NavLink href="#notebook" label={t("nav.notebook")} reference />
@@ -211,6 +233,9 @@ export default function App() {
         <ReferencePage page={referencePage} />
       ) : (
         <>
+          <Suspense fallback={null}>
+            <LatestBriefingTeaser />
+          </Suspense>
           <div id="newsroom" className="section-anchor">
             <Suspense fallback={<SectionSkeleton title={t("nav.gil")} />}>
               <WalletProviders>
@@ -251,13 +276,101 @@ export default function App() {
       <footer className="footer">
         <span className="stamp">{t("footer.stamp")}</span>
         <span className="footer-text">{t("footer.text")}</span>
+        <nav className="footer-links" aria-label={t("footer.legalNav")}>
+          <a href={GITHUB_URL} target="_blank" rel="noreferrer">
+            {t("footer.github")}
+          </a>
+          <button type="button" onClick={() => setLegalDialog("privacy")}>
+            {t("footer.privacy")}
+          </button>
+          <button type="button" onClick={() => setLegalDialog("terms")}>
+            {t("footer.terms")}
+          </button>
+        </nav>
       </footer>
+
+      {cookieConsentVisible && (
+        <CookieConsent
+          onAccept={() => {
+            try {
+              localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
+            } catch {
+              // Ignore storage failures; consent still hides for this session.
+            }
+            setCookieConsentVisible(false);
+          }}
+          onOpenPrivacy={() => setLegalDialog("privacy")}
+        />
+      )}
+
+      {legalDialog && <LegalDialogModal type={legalDialog} onClose={() => setLegalDialog(null)} />}
 
       {settingsOpen && (
         <Suspense fallback={null}>
           <SettingsPanel onClose={() => setSettingsOpen(false)} />
         </Suspense>
       )}
+    </div>
+  );
+}
+
+function GitHubIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M12 2C6.48 2 2 6.58 2 12.25c0 4.52 2.86 8.35 6.84 9.71.5.09.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 6.96c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.64 1.03 2.76 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .27.18.59.69.49A10.15 10.15 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"
+      />
+    </svg>
+  );
+}
+
+function CookieConsent({ onAccept, onOpenPrivacy }: { onAccept: () => void; onOpenPrivacy: () => void }) {
+  const { t } = useI18n();
+  return (
+    <section className="cookie-consent" role="dialog" aria-live="polite" aria-label={t("cookie.title")}>
+      <div>
+        <strong>{t("cookie.title")}</strong>
+        <p>{t("cookie.copy")}</p>
+      </div>
+      <div className="cookie-actions">
+        <button type="button" className="cookie-secondary" onClick={onOpenPrivacy}>
+          {t("cookie.privacy")}
+        </button>
+        <button type="button" className="cookie-primary" onClick={onAccept}>
+          {t("cookie.accept")}
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function LegalDialogModal({ type, onClose }: { type: Exclude<LegalDialog, null>; onClose: () => void }) {
+  const { t } = useI18n();
+  const prefix = `legal.${type}`;
+  return (
+    <div className="legal-overlay" onClick={onClose} role="presentation">
+      <section className="legal-modal" onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby={`${type}-title`}>
+        <div className="legal-head">
+          <div>
+            <span>{t("legal.kicker")}</span>
+            <h3 id={`${type}-title`}>{t(`${prefix}.title`)}</h3>
+          </div>
+          <button type="button" onClick={onClose} aria-label={t("set.close")}>
+            ×
+          </button>
+        </div>
+        <div className="legal-body">
+          {[1, 2, 3, 4].map((item) => (
+            <p key={item}>{t(`${prefix}.${item}`)}</p>
+          ))}
+        </div>
+        <div className="legal-actions">
+          <button type="button" onClick={onClose}>
+            {t("legal.close")}
+          </button>
+        </div>
+      </section>
     </div>
   );
 }
@@ -306,6 +419,7 @@ function ReferencePage({ page }: { page: ReferencePageKey }) {
   const content: Record<ReferencePageKey, ReactNode> = {
     "team-profiles": <TeamProfiles />,
     gallery: <GalleryWall />,
+    briefings: <DailyBriefings />,
     notebook: (
       <WalletProviders>
         <MemoryNotebook />

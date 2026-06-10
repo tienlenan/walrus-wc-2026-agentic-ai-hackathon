@@ -31,12 +31,20 @@
 - Namespace URL: `https://relayer.memory.walrus.xyz/account/0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51/namespace/daily-walrus%3Aglobal%3Aworld-cup-2026`.
 - Per-user namespace pattern: `daily-walrus:<sui-address>`.
 - Memory sync proof:
-  - Schedule: `world_cup_schedule`, `synced`, hash `a42baa72cf1e627c5330667f730600d239795a521489f52ffd24c4f5b075a5f5`, 104 fixtures.
-  - Teams: `world_cup_teams`, `synced`, hash `9d561534f1179d30d76845bd862598a91597fa44673ed5cf93097f53987c16b7`, 48 teams, 1248 players.
-  - Player traits: `player_roast_traits`, `synced`, hash `0061009a1c5ec8786f9b7e0c50691faa0f01c4a435decf67eff1a2bd56f8ac34`, 8 memory docs.
+  - Schedule: `world_cup_schedule`, `synced`, hash `a42baa72cf1e627c5330667f730600d239795a521489f52ffd24c4f5b075a5f5`, blob `UGGUBW_s_LDfqWv9I32GEdd1SbeUtRBJvPwownxtDfg`, object `0xe4a8c5bfb33aca640e538d87660750fbc48326af5adc9fdef75b79d0e1920464`, 104 fixtures.
+  - Teams: `world_cup_teams`, `synced`, hash `9d561534f1179d30d76845bd862598a91597fa44673ed5cf93097f53987c16b7`, blob `IvQqm3nhUHvf40i2xp8_TaKByPbyY9wyDME0cGO_OlQ`, object `0xb29510c934badd5a8ca6b8e371a483158765feaf51459ee9e28d14964fe68bbe`, 48 teams, 1248 players.
+  - Player traits: `player_roast_traits`, `synced`, hash `0061009a1c5ec8786f9b7e0c50691faa0f01c4a435decf67eff1a2bd56f8ac34`, blob `IASxHvh3WN3oA8nlVnFblYpbZPol8Q6yY8bs3z7acHc`, object `0xaecc072004e173b32ab7e4f41d5d74638f4eda3912739133c2e0496f23014251`, 8 memory docs.
 - Team profile blob/object proof file: `submission-pack/proof/mainnet-runtime-ids.json`.
 - Track ID / session evidence
 - Short verification note: "How a judge can verify memory + scoring in 3 clicks"
+- Daily What's Up proof:
+  - Latest item: `Gil's Daily What's Up - Jun 10, 2026`, type `daily`, date `2026-06-10`.
+  - Memory status: `synced`, namespace `daily-walrus:global:world-cup-2026:briefings`, hash `529cf6132e7ca253f0f86fe02dc9cf2b4edc69a1b52cb394cfdcd5d660d5d7c1`.
+  - Walrus blob ID: `g83hrVh7U-V2olfyUsvECGFnLTeaFKKhwA0BGXeMgn4`.
+  - Walrus object ID: `0xcdac7bf4884ebdecb01cfef0078c9585078142718d77b017441e01a677a4d3a3`.
+  - Walrus aggregator URL: `https://aggregator.walrus-mainnet.walrus.space/v1/blobs/g83hrVh7U-V2olfyUsvECGFnLTeaFKKhwA0BGXeMgn4`.
+  - Sui `OutputRecord` digest: `5YLPQ17mtzSLEQ5o7CH7LqDos351HHr5VKKEnTJRR28`.
+  - Duplicate guard: loaded `1` previous briefing memory item, novelty score `0.025`, no retry needed.
 - Do not use testnet object IDs in the final form.
 
 ## Mainnet Fixture Seed
@@ -78,9 +86,11 @@
   - `screenshot-team-profiles.png`
   - `screenshot-gallery.png`
   - `screenshot-roasts.png`
+  - `screenshot-briefings.png`
+  - `screenshot-tracking-briefing-proof.png`
 - Demo video:
   - Duration < 3 minutes
-  - Show: connect wallet → submit prediction → settle flow → leaderboard update → memory proof page
+  - Show: connect wallet → submit prediction → settle flow → leaderboard update → Daily What's Up proof → memory proof page
 
 ## Remaining Mainnet Blocker
 - Sui contract is published on mainnet.

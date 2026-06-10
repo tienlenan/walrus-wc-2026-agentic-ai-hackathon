@@ -12,7 +12,8 @@ tags:
   - sui
   - deploy
   - submission
-blockedBy: []
+blockedBy:
+  - 260610-overflow-agentic-daily-briefings
 blocks: []
 created: '2026-06-09T00:00:00.000Z'
 createdBy: ct
@@ -59,4 +60,3 @@ hard gates:
 - Gas policy on mainnet causes sponsored/keeper flow to fail during public judging.
 - Walrus Sites config/route mismatch (SPA 404 after deep links).
 - Incomplete submission assets for judges to verify memory/state quickly.
-

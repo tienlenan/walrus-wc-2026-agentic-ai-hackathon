@@ -260,6 +260,65 @@ create unique index if not exists sui_output_records_tx_uidx on sui_output_recor
 create index if not exists sui_output_records_user_idx on sui_output_records(user_id, created_at desc);
 create index if not exists sui_output_records_resource_idx on sui_output_records(resource_type, resource_id);
 
+-- Agentic daily briefings. Walrus Blob stores the full public payload; this table
+-- is the UI index and operational ledger.
+create table if not exists daily_briefings (
+  id uuid primary key default uuid_generate_v4(),
+  briefing_date date not null,
+  briefing_type text not null default 'daily',
+  status text not null default 'draft',
+  title text not null,
+  slug text not null,
+  summary text not null,
+  markdown text not null,
+  content_json jsonb not null default '{}'::jsonb,
+  sources jsonb not null default '[]'::jsonb,
+  agent_trace jsonb not null default '[]'::jsonb,
+  content_hash text not null,
+  walrus_blob_id text,
+  walrus_object_id text,
+  walrus_status text not null default 'not_configured',
+  memwal_namespace text,
+  memory_status text not null default 'not_configured',
+  output_object_id text,
+  output_tx_digest text,
+  published_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique(briefing_date, briefing_type)
+);
+alter table daily_briefings add column if not exists briefing_type text not null default 'daily';
+alter table daily_briefings add column if not exists status text not null default 'draft';
+alter table daily_briefings add column if not exists slug text not null default 'daily-briefing';
+alter table daily_briefings add column if not exists content_json jsonb not null default '{}'::jsonb;
+alter table daily_briefings add column if not exists sources jsonb not null default '[]'::jsonb;
+alter table daily_briefings add column if not exists agent_trace jsonb not null default '[]'::jsonb;
+alter table daily_briefings add column if not exists walrus_blob_id text;
+alter table daily_briefings add column if not exists walrus_object_id text;
+alter table daily_briefings add column if not exists walrus_status text not null default 'not_configured';
+alter table daily_briefings add column if not exists memwal_namespace text;
+alter table daily_briefings add column if not exists memory_status text not null default 'not_configured';
+alter table daily_briefings add column if not exists output_object_id text;
+alter table daily_briefings add column if not exists output_tx_digest text;
+alter table daily_briefings add column if not exists published_at timestamptz;
+create unique index if not exists daily_briefings_date_type_uidx on daily_briefings(briefing_date, briefing_type);
+create index if not exists daily_briefings_date_idx on daily_briefings(briefing_date desc, briefing_type);
+create index if not exists daily_briefings_status_idx on daily_briefings(status, published_at desc);
+
+create table if not exists agent_runs (
+  id uuid primary key default uuid_generate_v4(),
+  workflow_type text not null,
+  workflow_key text not null,
+  status text not null default 'running',
+  input_json jsonb not null default '{}'::jsonb,
+  output_json jsonb not null default '{}'::jsonb,
+  error text,
+  started_at timestamptz not null default now(),
+  completed_at timestamptz
+);
+create index if not exists agent_runs_workflow_idx on agent_runs(workflow_type, workflow_key, started_at desc);
+create index if not exists agent_runs_status_idx on agent_runs(status, started_at desc);
+
 -- Gil roast wall. Text/card first; image URL is optional stretch.
 create table if not exists roasts (
   id uuid primary key default uuid_generate_v4(),

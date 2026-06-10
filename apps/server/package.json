@@ -11,7 +11,9 @@
     "indexer:replay": "node --env-file=../../.env.local --import tsx src/dev/rebuild-indexer.ts",
     "register:fixtures": "node --env-file=../../.env.local --import tsx src/dev/register-fixtures.ts",
     "score:match": "node --env-file=../../.env.local --import tsx src/dev/score-match.ts",
+    "briefings:daily": "node --env-file=../../.env.local --import tsx src/dev/run-daily-briefing.ts",
     "publish:team-profiles": "node --env-file=../../.env.local --import tsx src/dev/publish-team-profile-blobs.ts",
+    "test": "node --env-file=../../.env.local --import tsx --test src/services/*.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -22,6 +24,7 @@
     "@daily-walrus/walrus": "workspace:*",
     "@mastra/core": "latest",
     "@mysten/sui": "2.17.0",
+    "@mysten/walrus": "1.1.7",
     "@protobuf-ts/grpcweb-transport": "2.11.1",
     "zod": "^3"
   },

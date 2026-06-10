@@ -5,7 +5,7 @@
 ## 1. Goals & scope
 Build an AI agent (the **Gil the Walrus** mascot) themed around the **FIFA World Cup 2026** with **persistent memory on Walrus Mainnet**, clearly demonstrating behavioral change over time (before/after), plus a public web interface to "see" the memory working (prediction history, roast, leaderboard).
 
-**In scope (MVP):** chat with Gil, match predictions, prediction scoring, MemWal memory, personalized roasting, fixtures/results, leaderboard, shareable roast card, Mainnet deployment.
+**In scope (MVP):** chat with Gil, match predictions, prediction scoring, MemWal memory, personalized roasting, fixtures/results, leaderboard, shareable roast card, Daily What's Up agentic publishing, Mainnet deployment.
 **Out of scope (for now):** social login, payments, native mobile app, full localization, self-trained models.
 
 ---
@@ -48,6 +48,15 @@ Mapped directly from the event rules. These are pass/fail criteria.
 - **F-QA-4** Chat answers render Markdown via Streamdown and tool results via structured JSON parts, not raw JSON text.
 - **F-QA-5** Mastra tools cover fixture lookup by group/team/date/prediction gate and team-profile lookup by team/player alias.
 
+### 3.3a Daily What's Up agentic publishing (P1)
+- **F-BRIEF-1** A protected workflow can publish a Daily What's Up dispatch for a date/type/focus.
+- **F-BRIEF-2** The workflow uses distinct roles: orchestrator, scout, synthesizer, writer, moderator, and publisher.
+- **F-BRIEF-3** Scout can load fixture gates, team/player profile memory, official schedule references, configured web sources, and manual side stories.
+- **F-BRIEF-4** Writer must load a dedicated briefing memory path (`daily-walrus:global:world-cup-2026:briefings`) before writing.
+- **F-BRIEF-5** The workflow must reject duplicate-risk drafts and re-run scout/synthesis/writing up to 3 attempts before publishing.
+- **F-BRIEF-6** Published dispatches store the full payload on Walrus Blob, short summary metadata in Walrus Memory, UI index data in Supabase, and an optional Sui `OutputRecord`.
+- **F-BRIEF-7** The public UI exposes article markdown, sources, agent trace, blob/object links, memory namespace, content hash, and novelty result.
+
 ### 3.4 Memory-display interface (P0 — required by R-H4)
 - **F-UI-1** **Prediction history**: a timeline of predictions + correct/wrong + streak.
 - **F-UI-2** **Memory panel / "Gil's notebook"**: shows what Gil currently remembers about you (read from Walrus → proves on-chain).
@@ -61,6 +70,7 @@ Mapped directly from the event rules. These are pass/fail criteria.
 - **F-W-2** Memory written to **Walrus Mainnet**; store the `blobId`/account id to verify.
 - **F-W-3** (Hedge) A **raw `@mysten/walrus` write path** from the session wallet to prove on-chain independently of the relayer.
 - **F-W-4** A **"verify on Walrus"** page/button: opens the blob/object on an explorer/aggregator from the UI.
+- **F-W-5** Daily What's Up proof uses the same verifier model: blob/object links, memory namespace, content hash, and optional Sui receipt.
 
 ---
 
@@ -73,6 +83,7 @@ Mapped directly from the event rules. These are pass/fail criteria.
 - **NF-6 Availability:** responsive (desktop + mobile), fast loading on Walrus Sites (optimized assets).
 - **NF-7 Content safety:** roasts are for entertainment, avoiding real hate/offense; avoid FIFA/player trademark infringement (see design-direction §iconography).
 - **NF-8 Reproducibility:** seed data + a script to rebuild a "account with history" for the demo.
+- **NF-9 Anti-repetition:** public agentic content must load recent published memory and avoid repeating the same article angle.
 
 ---
 
