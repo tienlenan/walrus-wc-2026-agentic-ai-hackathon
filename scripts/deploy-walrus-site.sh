@@ -11,6 +11,13 @@ SITE_BUILDER_CONFIG="${SITE_BUILDER_CONFIG:-}"
 cd "$ROOT"
 pnpm --filter @daily-walrus/web build
 
+# Portal serves blob bytes verbatim (no negotiated compression). Opt-in brotli
+# precompression + static content-encoding headers; verify portal honors
+# ws-resources.json headers before making this the default.
+if [[ "${WALRUS_PRECOMPRESS:-0}" == "1" ]]; then
+  node scripts/precompress-walrus-assets.mjs apps/web/dist
+fi
+
 if [[ "$SITE_BUILDER" != */* ]] && ! command -v "$SITE_BUILDER" >/dev/null 2>&1; then
   echo "site-builder not found. Set SITE_BUILDER_BIN or install Walrus Sites CLI." >&2
   exit 1

@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { BootSplash } from "./components/boot-splash";
 import { DeferredSection } from "./components/deferred-section";
 import { getSession, subscribeSession } from "./lib/auth";
 import { useI18n } from "./lib/i18n";
@@ -16,6 +17,7 @@ const loadGalleryWall = () => import("./components/gallery-wall").then((mod) => 
 const loadMemoryNotebook = () => import("./components/memory-notebook").then((mod) => ({ default: mod.MemoryNotebook }));
 const loadRuntimeTracking = () => import("./components/runtime-tracking").then((mod) => ({ default: mod.RuntimeTracking }));
 const loadDailyBriefings = () => import("./components/daily-briefings").then((mod) => ({ default: mod.DailyBriefings }));
+const loadMatchCenter = () => import("./components/match-center").then((mod) => ({ default: mod.MatchCenter }));
 const loadLatestBriefingTeaser = () => import("./components/latest-briefing-teaser").then((mod) => ({ default: mod.LatestBriefingTeaser }));
 const loadGuidePage = () => import("./components/guide-page").then((mod) => ({ default: mod.GuidePage }));
 
@@ -30,20 +32,13 @@ const GalleryWall = lazy(loadGalleryWall);
 const MemoryNotebook = lazy(loadMemoryNotebook);
 const RuntimeTracking = lazy(loadRuntimeTracking);
 const DailyBriefings = lazy(loadDailyBriefings);
+const MatchCenter = lazy(loadMatchCenter);
 const LatestBriefingTeaser = lazy(loadLatestBriefingTeaser);
 const GuidePage = lazy(loadGuidePage);
 
-type ReferencePageKey = "guide" | "team-profiles" | "gallery" | "notebook" | "tracking" | "briefings";
+type ReferencePageKey = "guide" | "team-profiles" | "gallery" | "notebook" | "tracking" | "briefings" | "matches";
 
-const REFERENCE_PAGES = new Set<string>(["guide", "team-profiles", "gallery", "notebook", "tracking", "briefings"]);
-const BOOT_IMAGES = [
-  "/gallery/cartoon-walrus-better-than-idols.svg",
-  "/gallery/cartoon-ronaldo-airmail.svg",
-  "/gallery/cartoon-messi-walking-chess.svg",
-  "/gallery/cartoon-gyokeres-hair-xg.svg",
-  "/gallery/cartoon-haaland-loading-service.svg",
-  "/gallery/cartoon-england-penalty-lawyer.svg",
-];
+const REFERENCE_PAGES = new Set<string>(["guide", "team-profiles", "gallery", "notebook", "tracking", "briefings", "matches"]);
 const VI_BOOT_LINES = [
   "Gil đang hỏi VAR xem ai dự đoán tệ nhất.",
   "Walrus đang niêm phong biên lai nhục.",
@@ -181,7 +176,10 @@ export default function App() {
     return () => document.documentElement.classList.remove("app-route-loading");
   }, [routeLoading]);
 
-  const referencePage = useMemo(() => (REFERENCE_PAGES.has(hash) ? (hash as ReferencePageKey) : null), [hash]);
+  const referencePage = useMemo(() => {
+    const key = hash.split("?")[0] ?? "";
+    return REFERENCE_PAGES.has(key) ? (key as ReferencePageKey) : null;
+  }, [hash]);
 
   const date = formatDate(new Date(), {
     weekday: "long",
@@ -246,6 +244,7 @@ export default function App() {
         <NavLink href="#roasts" label={t("nav.roasts")} />
         <NavLink href="#guide" label={t("nav.guide")} reference />
         <NavLink href="#briefings" label={t("nav.briefings")} reference />
+        <NavLink href="#matches" label={t("nav.matches")} reference />
         <NavLink href="#team-profiles" label={t("nav.teams")} reference />
         <NavLink href="#gallery" label={t("nav.gallery")} reference />
         <NavLink href="#notebook" label={t("nav.notebook")} reference />
@@ -395,23 +394,6 @@ function LegalDialogModal({ type, onClose }: { type: Exclude<LegalDialog, null>;
   );
 }
 
-function BootSplash({ line }: { line: string }) {
-  return (
-    <div className="boot-splash-stage" role="status" aria-live="polite">
-      <div className="boot-chaos" aria-hidden="true">
-        {BOOT_IMAGES.map((src, index) => (
-          <img key={src} className={`boot-chaos-card card-${index + 1}`} src={src} alt="" />
-        ))}
-      </div>
-      <div className="boot-splash-card">
-        <img src="/app-icon.svg" alt="" aria-hidden="true" />
-        <span>Loading the evidence desk</span>
-        <strong>{line}</strong>
-      </div>
-    </div>
-  );
-}
-
 function SectionSkeleton({ title }: { title: string }) {
   return (
     <div className="section-skeleton" aria-hidden="true">
@@ -441,6 +423,7 @@ function ReferencePage({ page }: { page: ReferencePageKey }) {
     "team-profiles": <TeamProfiles />,
     gallery: <GalleryWall />,
     briefings: <DailyBriefings />,
+    matches: <MatchCenter />,
     notebook: <MemoryNotebook />,
     tracking: <RuntimeTracking />,
   };
