@@ -8,10 +8,12 @@ import {
   useSuiClient,
   useSwitchAccount,
 } from "@mysten/dapp-kit";
-import { signIn, signOut, getSession, type Session } from "../lib/auth";
+import { signIn } from "../lib/auth";
 import { useI18n } from "../lib/i18n";
 import { SUI_NETWORKS, formatMistAsSui, type AppSuiNetwork } from "../lib/sui-network";
 import { useSuiGasBalance } from "../lib/use-sui-gas-balance";
+import { useVerifiedSession } from "../lib/wallet-session";
+import { useWalletSessionStore } from "../lib/wallet-session-store";
 import "./connect-bar.css";
 
 function shortAddress(address: string): string {
@@ -26,13 +28,13 @@ export function ConnectBar() {
   const { mutateAsync: signPersonalMessage } = useSignPersonalMessage();
   const { mutateAsync: switchAccount } = useSwitchAccount();
   const { mutateAsync: disconnectWallet } = useDisconnectWallet();
-  const [session, setSession] = useState<Session | null>(getSession);
+  const { signedIn } = useVerifiedSession();
+  const clearSession = useWalletSessionStore((state) => state.clearSession);
   const [names, setNames] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [walletBusy, setWalletBusy] = useState(false);
   const gas = useSuiGasBalance(account?.address);
 
-  const signedIn = Boolean(session && account && session.address === account.address);
   const accountOptions = useMemo(() => accounts.filter((item) => item.address), [accounts]);
   const accountAddressKey = accountOptions.map((item) => item.address).join("|");
   const faucetUrl = SUI_NETWORKS[gas.network as AppSuiNetwork]?.faucetUrl ?? null;
@@ -69,11 +71,10 @@ export function ConnectBar() {
     if (!account) return;
     setBusy(true);
     try {
-      const s = await signIn(account.address, async (bytes) => {
+      await signIn(account.address, async (bytes) => {
         const { signature } = await signPersonalMessage({ message: bytes });
         return signature;
       });
-      setSession(s);
     } catch (e) {
       console.error("[auth] sign-in failed:", e);
     } finally {
@@ -95,8 +96,7 @@ export function ConnectBar() {
   async function doDisconnect() {
     setWalletBusy(true);
     try {
-      signOut();
-      setSession(null);
+      clearSession();
       await disconnectWallet();
     } finally {
       setWalletBusy(false);

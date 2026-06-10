@@ -3,12 +3,23 @@
 import { createHmac, timingSafeEqual, randomBytes } from "node:crypto";
 import { verifyPersonalMessageSignature } from "@mysten/sui/verify";
 
-// Set SESSION_SECRET in production. The random fallback resets sessions on restart.
-const SESSION_SECRET = process.env.SESSION_SECRET ?? randomBytes(32).toString("hex");
+const SESSION_SECRET =
+  process.env.SESSION_SECRET ??
+  process.env.AUTH_SECRET ??
+  "daily-walrus-session-secret-configure-SESSION_SECRET-for-production";
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const NONCE_TTL_MS = 5 * 60 * 1000;
 
 const nonces = new Map<string, { nonce: string; exp: number }>();
+
+if (!process.env.SESSION_SECRET && !process.env.AUTH_SECRET && process.env.NODE_ENV === "production") {
+  console.warn("[auth] SESSION_SECRET is not configured; using deterministic fallback for session stability.");
+}
+
+function normalizeSuiAddress(address: string | null | undefined): string | null {
+  const value = address?.trim().toLowerCase();
+  return value?.startsWith("0x") ? value : null;
+}
 
 function signPayload(payload: string): string {
   return createHmac("sha256", SESSION_SECRET).update(payload).digest("base64url");
@@ -21,21 +32,25 @@ function makeToken(subject: string): string {
 
 /** Return the personal-message payload that the user signs. */
 export function issueNonce(address: string): string {
+  const subject = normalizeSuiAddress(address);
+  if (!subject) throw new Error("address required");
   const nonce = randomBytes(16).toString("hex");
-  nonces.set(address, { nonce, exp: Date.now() + NONCE_TTL_MS });
-  return `The Daily Walrus sign-in\naddress: ${address}\nnonce: ${nonce}`;
+  nonces.set(subject, { nonce, exp: Date.now() + NONCE_TTL_MS });
+  return `The Daily Walrus sign-in\naddress: ${subject}\nnonce: ${nonce}`;
 }
 
 /** Verify the personal-message signature and issue a session token for the verified address. */
 export async function verifyAndIssueSession(address: string, signature: string): Promise<string | null> {
-  const rec = nonces.get(address);
+  const subject = normalizeSuiAddress(address);
+  if (!subject) return null;
+  const rec = nonces.get(subject);
   if (!rec || Date.now() > rec.exp) return null;
-  const message = `The Daily Walrus sign-in\naddress: ${address}\nnonce: ${rec.nonce}`;
+  const message = `The Daily Walrus sign-in\naddress: ${subject}\nnonce: ${rec.nonce}`;
   try {
     const pubkey = await verifyPersonalMessageSignature(new TextEncoder().encode(message), signature);
-    if (pubkey.toSuiAddress() !== address) return null;
-    nonces.delete(address);
-    return makeToken(address);
+    if (normalizeSuiAddress(pubkey.toSuiAddress()) !== subject) return null;
+    nonces.delete(subject);
+    return makeToken(subject);
   } catch {
     return null;
   }
@@ -56,8 +71,9 @@ export function verifySession(token?: string | null): string | null {
   const last = payload.lastIndexOf(".");
   const subject = payload.slice(0, last);
   const exp = Number(payload.slice(last + 1));
-  if (!exp || Date.now() > exp || !subject) return null;
-  return subject;
+  const address = normalizeSuiAddress(subject);
+  if (!exp || Date.now() > exp || !address) return null;
+  return address;
 }
 
 /** Extract the token from Authorization: Bearer <token>. */

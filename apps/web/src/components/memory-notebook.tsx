@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { getNotebook } from "../lib/world-cup-api";
-import { signOut } from "../lib/auth";
 import { useI18n } from "../lib/i18n";
 import { useVerifiedSession } from "../lib/wallet-session";
+import { useWalletSessionStore } from "../lib/wallet-session-store";
 import "./memory-notebook.css";
 
 export function MemoryNotebook() {
   const { t } = useI18n();
   const { signedIn } = useVerifiedSession();
+  const clearSession = useWalletSessionStore((state) => state.clearSession);
   const [query, setQuery] = useState("bad takes, favourite teams, predictions, roasts");
   const [memories, setMemories] = useState<string[]>([]);
   const [memoryEnabled, setMemoryEnabled] = useState(false);
@@ -29,7 +30,7 @@ export function MemoryNotebook() {
     } catch (err) {
       const message = err instanceof Error ? err.message : "";
       if (message.includes("401")) {
-        signOut();
+        clearSession();
         setMemories([]);
         setError(t("memory.sessionExpired"));
       } else {

@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
 import { useCurrentAccount } from "@mysten/dapp-kit";
-import { getSession, subscribeSession, type Session } from "./auth";
+import { normalizeSuiAddress, type Session } from "./auth";
+import { ensureWalletSessionStoreSubscription, useWalletSessionStore } from "./wallet-session-store";
+
+ensureWalletSessionStoreSubscription();
 
 export function useVerifiedSession(): {
   accountAddress: string | null;
@@ -8,13 +10,12 @@ export function useVerifiedSession(): {
   signedIn: boolean;
 } {
   const account = useCurrentAccount();
-  const [session, setSession] = useState<Session | null>(() => getSession());
-
-  useEffect(() => subscribeSession(() => setSession(getSession())), []);
+  const session = useWalletSessionStore((state) => state.session);
+  const accountAddress = normalizeSuiAddress(account?.address);
 
   return {
-    accountAddress: account?.address ?? null,
+    accountAddress,
     session,
-    signedIn: Boolean(account && session && session.address === account.address),
+    signedIn: Boolean(accountAddress && session?.token && session.address === accountAddress),
   };
 }

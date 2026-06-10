@@ -8,10 +8,18 @@ export interface Session {
   address: string;
 }
 
+export function normalizeSuiAddress(address: string | null | undefined): string | null {
+  const value = address?.trim().toLowerCase();
+  return value?.startsWith("0x") ? value : null;
+}
+
 export function getSession(): Session | null {
   try {
     const s = localStorage.getItem(KEY);
-    return s ? (JSON.parse(s) as Session) : null;
+    if (!s) return null;
+    const parsed = JSON.parse(s) as Partial<Session>;
+    const address = normalizeSuiAddress(parsed.address);
+    return parsed.token && address ? { token: parsed.token, address } : null;
   } catch {
     return null;
   }
@@ -40,10 +48,13 @@ export async function signIn(
   address: string,
   signMessage: (bytes: Uint8Array) => Promise<string>,
 ): Promise<Session> {
+  const normalizedAddress = normalizeSuiAddress(address);
+  if (!normalizedAddress) throw new Error("address required");
+
   const nonceRes = await fetch(`${BASE}/api/auth/nonce`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ address }),
+    body: JSON.stringify({ address: normalizedAddress }),
   });
   if (!nonceRes.ok) throw new Error(`nonce ${nonceRes.status}`);
   const { message } = (await nonceRes.json()) as { message: string };
@@ -53,12 +64,12 @@ export async function signIn(
   const verifyRes = await fetch(`${BASE}/api/auth/verify`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ address, signature }),
+    body: JSON.stringify({ address: normalizedAddress, signature }),
   });
   if (!verifyRes.ok) throw new Error(`verify ${verifyRes.status}`);
   const { token } = (await verifyRes.json()) as { token: string };
 
-  const session: Session = { token, address };
+  const session: Session = { token, address: normalizedAddress };
   localStorage.setItem(KEY, JSON.stringify(session));
   notifySessionChanged();
   return session;
