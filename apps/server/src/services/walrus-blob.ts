@@ -163,9 +163,13 @@ async function publishWithWalrusSdk(value: unknown, hash: string): Promise<Walru
 export async function publishJsonBlob(kind: string, value: unknown): Promise<WalrusBlobPointer> {
   const hash = contentHash(value);
   const httpPointer = await publishWithHttpPublisher(kind, value, hash);
-  if (httpPointer.status !== "not_configured") return httpPointer;
+  if (httpPointer.status === "published" || httpPointer.status === "already_certified") return httpPointer;
   const sdkPointer = await publishWithWalrusSdk(value, hash);
   if (sdkPointer.status !== "not_configured" && sdkPointer.status !== "failed") return sdkPointer;
   if (sdkPointer.status === "failed" && process.env.WALRUS_CLI_DISABLED === "true") return sdkPointer;
-  return publishWithWalrusCli(kind, value, hash);
+  const cliPointer = await publishWithWalrusCli(kind, value, hash);
+  if (cliPointer.status === "failed" && httpPointer.status === "failed") {
+    return { ...cliPointer, error: `${httpPointer.error ?? "HTTP publisher failed"}; ${cliPointer.error ?? "Walrus CLI failed"}` };
+  }
+  return cliPointer;
 }

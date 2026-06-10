@@ -12,7 +12,8 @@ Captured on: 2026-06-09
 - Walrus Memory global namespace synced on mainnet.
 - 48/48 team profile blob/object pairs published on Walrus Mainnet.
 - `apps/web/public/ws-resources.json` updated with the mainnet site object ID.
-- Submission screenshots refreshed from localhost after the latest mainnet build.
+- Submission screenshots refreshed from the public `wal.app` URL after the latest mainnet build.
+- Real public-app demo video recorded from `https://roast2026wc.wal.app/`.
 
 ## Mainnet IDs
 
@@ -58,7 +59,6 @@ Full runtime ID snapshot, including 48 team profile Walrus blob/object pairs: `s
 
 ## Remaining Manual Submission Items
 
-1. Record or attach the final sub-3-minute demo video.
-2. Fill personal/team contact fields in Airtable.
-3. Add DeepSurge project link.
-4. Add X post URL after posting the demo/screenshot with `#Walrus`.
+1. Fill personal/team contact fields in Airtable.
+2. Add DeepSurge project link.
+3. Add X post URL after posting the demo/screenshot with `#Walrus`.

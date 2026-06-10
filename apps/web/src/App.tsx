@@ -62,7 +62,7 @@ const BOOT_LINES = {
   vi: VI_BOOT_LINES,
   en: EN_BOOT_LINES,
 } as const;
-const BOOT_SPLASH_MIN_MS = 10000;
+const BOOT_SPLASH_MIN_MS = 5000;
 const GITHUB_URL = "https://github.com/tienlenan/walrus-wc-2026-agentic-ai-hackathon";
 const COOKIE_CONSENT_KEY = "gil.cookie-consent.v1";
 const ONBOARDING_SETTINGS_PREFIX = "gil:onboarding-settings:";

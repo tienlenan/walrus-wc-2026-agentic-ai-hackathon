@@ -73,10 +73,10 @@ Final submission must use mainnet IDs and URLs only.
 - Daily What's Up proof:
   - Latest item: `Gil's Daily What's Up - Jun 10, 2026`, date `2026-06-10`.
   - Briefing namespace: `daily-walrus:global:world-cup-2026:briefings`.
-  - Walrus blob: `g83hrVh7U-V2olfyUsvECGFnLTeaFKKhwA0BGXeMgn4`.
-  - Walrus object: `0xcdac7bf4884ebdecb01cfef0078c9585078142718d77b017441e01a677a4d3a3`.
-  - Content hash: `529cf6132e7ca253f0f86fe02dc9cf2b4edc69a1b52cb394cfdcd5d660d5d7c1`.
-  - Sui receipt: `5YLPQ17mtzSLEQ5o7CH7LqDos351HHr5VKKEnTJRR28`.
+  - Walrus blob: `w-M8jICdQOW-HE2GAwsuAUJRn3DgakvT82cYXXFZ11E`.
+  - Walrus object: `0x8191c033c28fe4876f71bb136bfcfa7b4165f3de203f058b3abbb7afaf6d6035`.
+  - Content hash: `bad2146329f579b70c108936be3900591c6239935b1c33d1326810b2bd98b56b`.
+  - Sui receipt: `D23CGDAVV8AjCs7Mvox1AUb2hvxsXGi43BBsM3MsQ753`.
   - Anti-repeat evidence: loaded `1` previous briefing, novelty score `0.025`, duplicate `false`.
 - Walrus team profile blobs: 48 published mainnet blob/object pairs. Full proof snapshot: `submission-pack/proof/mainnet-runtime-ids.json`.
 
@@ -109,7 +109,7 @@ These IDs prove the flow was tested before mainnet. Do not paste them into the f
   - Settle match 2: `7xhVSDGbR5wocVs8iNMVgB4ZgMSAshZ4uyqX93LtdRDw`
 
 ## 8) Submission Outputs (Ready to Attach)
-- Demo video ≤ 3:00 (record a real walkthrough after SuiNS/public URL is connected)
+- Demo video ≤ 3:00: `submission-pack/video/gil-var-shamebook-real-app-demo.mp4` (real public-app screencast, 23.2s, 1280x720 H.264)
 - Poster (vertical + optional horizontal)
 - Screenshots pack:
   - home / predictions / leaderboard / roasts / team profiles / gallery / notebook / tracking

@@ -39,11 +39,11 @@
 - Short verification note: "How a judge can verify memory + scoring in 3 clicks"
 - Daily What's Up proof:
   - Latest item: `Gil's Daily What's Up - Jun 10, 2026`, type `daily`, date `2026-06-10`.
-  - Memory status: `synced`, namespace `daily-walrus:global:world-cup-2026:briefings`, hash `529cf6132e7ca253f0f86fe02dc9cf2b4edc69a1b52cb394cfdcd5d660d5d7c1`.
-  - Walrus blob ID: `g83hrVh7U-V2olfyUsvECGFnLTeaFKKhwA0BGXeMgn4`.
-  - Walrus object ID: `0xcdac7bf4884ebdecb01cfef0078c9585078142718d77b017441e01a677a4d3a3`.
-  - Walrus aggregator URL: `https://aggregator.walrus-mainnet.walrus.space/v1/blobs/g83hrVh7U-V2olfyUsvECGFnLTeaFKKhwA0BGXeMgn4`.
-  - Sui `OutputRecord` digest: `5YLPQ17mtzSLEQ5o7CH7LqDos351HHr5VKKEnTJRR28`.
+  - Memory status: `synced`, namespace `daily-walrus:global:world-cup-2026:briefings`, hash `bad2146329f579b70c108936be3900591c6239935b1c33d1326810b2bd98b56b`.
+  - Walrus blob ID: `w-M8jICdQOW-HE2GAwsuAUJRn3DgakvT82cYXXFZ11E`.
+  - Walrus object ID: `0x8191c033c28fe4876f71bb136bfcfa7b4165f3de203f058b3abbb7afaf6d6035`.
+  - Walrus aggregator URL: `https://aggregator.walrus-mainnet.walrus.space/v1/blobs/w-M8jICdQOW-HE2GAwsuAUJRn3DgakvT82cYXXFZ11E`.
+  - Sui `OutputRecord` digest: `D23CGDAVV8AjCs7Mvox1AUb2hvxsXGi43BBsM3MsQ753`.
   - Duplicate guard: loaded `1` previous briefing memory item, novelty score `0.025`, no retry needed.
 - Do not use testnet object IDs in the final form.
 
@@ -89,14 +89,16 @@
   - `screenshot-briefings.png`
   - `screenshot-tracking-briefing-proof.png`
 - Demo video:
-  - Duration < 3 minutes
-  - Show: connect wallet → submit prediction → settle flow → leaderboard update → Daily What's Up proof → memory proof page
+  - Ready: `submission-pack/video/gil-var-shamebook-real-app-demo.mp4`
+  - Duration: 23.2 seconds
+  - Source: real public-app screencast from `https://roast2026wc.wal.app/`
+  - Shows: splash → predictions → Daily What's Up proof → tracking → gallery → guide/settings
 
-## Remaining Mainnet Blocker
+## Mainnet Status
 - Sui contract is published on mainnet.
 - Walrus Sites object is deployed on mainnet.
-- Public `wal.app` browsing still needs a SuiNS name pointed at site object `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`.
-- After SuiNS is configured, record a real sub-3-minute demo video and paste the final public URL into Airtable.
+- Public `wal.app` browsing is live at `https://roast2026wc.wal.app/`.
+- Real sub-3-minute demo video is ready in `submission-pack/video/`.
 
 ## Post-Submit Actions
 - Post link with `#Walrus` on X.

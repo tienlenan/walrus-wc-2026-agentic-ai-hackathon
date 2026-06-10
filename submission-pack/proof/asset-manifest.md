@@ -31,14 +31,16 @@
 | Tracking | `submission-pack/assets/screenshots/screenshot-tracking.png` |
 | Daily What's Up | `submission-pack/assets/screenshots/screenshot-briefings.png` |
 | Tracking with Daily What's Up proof | `submission-pack/assets/screenshots/screenshot-tracking-briefing-proof.png` |
+| Guide | `submission-pack/assets/screenshots/screenshot-guide.png` |
+| Guide Dr. Gil settings | `submission-pack/assets/screenshots/screenshot-guide-dr-gil-settings.png` |
 
-Screenshot set refreshed after the 12-card English-only cartoon gallery update and Daily What's Up feature.
+Screenshot set refreshed from the public `wal.app` app after the Guide Dr. Gil and Daily What's Up proof-link updates.
 
 ## Demo Video
 
 | Asset | Path |
 |---|---|
-| Real demo video | `TODO: record after SuiNS/public URL is connected` |
+| Real public-app demo video | `submission-pack/video/gil-var-shamebook-real-app-demo.mp4` |
 | Fallback slideshow source | `submission-pack/video/demo-slideshow.html` |
 
 ## Preferred Upload Set

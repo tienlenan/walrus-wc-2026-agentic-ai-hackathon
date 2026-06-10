@@ -57,8 +57,8 @@ to three attempts.
 
 ## Latest Mainnet Proof
 
-- Blob: `g83hrVh7U-V2olfyUsvECGFnLTeaFKKhwA0BGXeMgn4`
-- Object: `0xcdac7bf4884ebdecb01cfef0078c9585078142718d77b017441e01a677a4d3a3`
-- Content hash: `529cf6132e7ca253f0f86fe02dc9cf2b4edc69a1b52cb394cfdcd5d660d5d7c1`
-- Sui receipt: `5YLPQ17mtzSLEQ5o7CH7LqDos351HHr5VKKEnTJRR28`
+- Blob: `w-M8jICdQOW-HE2GAwsuAUJRn3DgakvT82cYXXFZ11E`
+- Object: `0x8191c033c28fe4876f71bb136bfcfa7b4165f3de203f058b3abbb7afaf6d6035`
+- Content hash: `bad2146329f579b70c108936be3900591c6239935b1c33d1326810b2bd98b56b`
+- Sui receipt: `D23CGDAVV8AjCs7Mvox1AUb2hvxsXGi43BBsM3MsQ753`
 - Novelty: loaded `1` previous briefing, score `0.025`, duplicate `false`

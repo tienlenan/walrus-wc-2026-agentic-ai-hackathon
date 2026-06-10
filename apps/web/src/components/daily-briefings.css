@@ -129,6 +129,18 @@
   margin: 0.2rem 0;
 }
 
+.briefing-proof-value {
+  display: block;
+  min-width: 0;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.briefing-proof-value:hover {
+  color: var(--teal-deep);
+  text-decoration: underline;
+}
+
 .briefing-sidebar {
   display: grid;
   align-content: start;

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Streamdown } from "streamdown";
 import { getLatestBriefing, listBriefings, type DailyBriefing } from "../lib/briefings-api";
 import { useI18n } from "../lib/i18n";
+import { APP_SUI_NETWORK } from "../lib/sui-network";
 import { useTimeSettings } from "../lib/time-settings";
 import "streamdown/styles.css";
 import "./daily-briefings.css";
@@ -22,17 +23,32 @@ function ProofLink({ href, label }: { href: string | null; label: string }) {
   );
 }
 
+function suiTxUrl(digest: string | null | undefined): string | null {
+  return digest ? `https://suiscan.xyz/${APP_SUI_NETWORK}/tx/${digest}` : null;
+}
+
+function ProofValue({ href, value }: { href: string | null; value: string | null | undefined }) {
+  const text = shortId(value);
+  if (!href || !value) return <strong>{text}</strong>;
+  return (
+    <a className="briefing-proof-value" href={href} target="_blank" rel="noreferrer">
+      <strong>{text}</strong>
+    </a>
+  );
+}
+
 function ProofStrip({ briefing }: { briefing: DailyBriefing }) {
   const { t } = useI18n();
   return (
     <div className="briefing-proof-strip">
       <div>
         <span>{t("briefings.hash")}</span>
-        <strong>{shortId(briefing.proof.contentHash)}</strong>
+        <ProofValue href={briefing.proof.walrusBlobUrl} value={briefing.proof.contentHash} />
+        <ProofLink href={briefing.proof.walrusBlobUrl} label={t("tracking.open")} />
       </div>
       <div>
         <span>{t("briefings.blob")}</span>
-        <strong>{shortId(briefing.proof.walrusBlobId)}</strong>
+        <ProofValue href={briefing.proof.walrusBlobUrl} value={briefing.proof.walrusBlobId} />
         <ProofLink href={briefing.proof.walrusBlobUrl} label={t("tracking.open")} />
       </div>
       <div>
@@ -41,7 +57,8 @@ function ProofStrip({ briefing }: { briefing: DailyBriefing }) {
       </div>
       <div>
         <span>{t("briefings.sui")}</span>
-        <strong>{shortId(briefing.proof.outputTxDigest)}</strong>
+        <ProofValue href={suiTxUrl(briefing.proof.outputTxDigest)} value={briefing.proof.outputTxDigest} />
+        <ProofLink href={suiTxUrl(briefing.proof.outputTxDigest)} label={t("tracking.open")} />
       </div>
     </div>
   );

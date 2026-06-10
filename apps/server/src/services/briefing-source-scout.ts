@@ -3,6 +3,28 @@ import { getWorldCupSnapshot, getWorldCupSnapshotWithProfileBlobs } from "./worl
 import { PLAYER_ROAST_TRAITS } from "../data/player-roast-traits.js";
 import type { BriefingSource } from "./briefing-types.js";
 
+function shortId(value: string): string {
+  if (value.length <= 18) return value;
+  return `${value.slice(0, 8)}...${value.slice(-4)}`;
+}
+
+function walrusAggregatorUrl(): string {
+  const network = process.env.SUI_NETWORK === "testnet" ? "testnet" : "mainnet";
+  return (
+    process.env.WALRUS_AGGREGATOR_URL ??
+    (network === "mainnet" ? "https://aggregator.walrus-mainnet.walrus.space" : "https://aggregator.walrus-testnet.walrus.space")
+  ).replace(/\/$/, "");
+}
+
+function walrusBlobUrl(blobId: string): string {
+  return `${walrusAggregatorUrl()}/v1/blobs/${blobId}`;
+}
+
+function walrusProfileLink(blobId: string | null | undefined, status: string | null | undefined): string {
+  if (blobId) return `[${shortId(blobId)}](${walrusBlobUrl(blobId)})`;
+  return status ?? "not_published";
+}
+
 function dateKey(value: Date): string {
   return value.toISOString().slice(0, 10);
 }
@@ -120,7 +142,7 @@ export async function runScoutAgent(input: { date: string; focus?: string }): Pr
     facts: teams.length
       ? teams.map(
           (team) =>
-            `${team.flagEmoji} ${team.name} are in Group ${team.groupName}; coach ${team.coach ?? "TBA"}; ${team.squad.length} squad rows; Walrus profile ${team.walrusBlobId ?? team.walrusStatus}.`,
+            `${team.flagEmoji} ${team.name} are in Group ${team.groupName}; coach ${team.coach ?? "TBA"}; ${team.squad.length} squad rows; Walrus profile ${walrusProfileLink(team.walrusBlobId, team.walrusStatus)}.`,
         )
       : [`${worldCup.teams.length} team profiles and ${worldCup.teams.reduce((sum, team) => sum + team.squad.length, 0)} players are loaded.`],
   };

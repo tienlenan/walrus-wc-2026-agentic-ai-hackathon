@@ -78,9 +78,9 @@ Daily What's Up editorial memory flow:
 - Walrus Memory account: `0x416245a6d474f48e139e0ca6e3f6c89ae6edb9f15f2a6f0c2b5be1157fca2c51`
 - Walrus Memory namespace: `daily-walrus:global:world-cup-2026`
 - Walrus briefing memory namespace: `daily-walrus:global:world-cup-2026:briefings`
-- Latest Daily What's Up blob: `g83hrVh7U-V2olfyUsvECGFnLTeaFKKhwA0BGXeMgn4`
-- Latest Daily What's Up object: `0xcdac7bf4884ebdecb01cfef0078c9585078142718d77b017441e01a677a4d3a3`
-- Latest Daily What's Up content hash: `529cf6132e7ca253f0f86fe02dc9cf2b4edc69a1b52cb394cfdcd5d660d5d7c1`
-- Latest Daily What's Up Sui receipt: `5YLPQ17mtzSLEQ5o7CH7LqDos351HHr5VKKEnTJRR28`
+- Latest Daily What's Up blob: `w-M8jICdQOW-HE2GAwsuAUJRn3DgakvT82cYXXFZ11E`
+- Latest Daily What's Up object: `0x8191c033c28fe4876f71bb136bfcfa7b4165f3de203f058b3abbb7afaf6d6035`
+- Latest Daily What's Up content hash: `bad2146329f579b70c108936be3900591c6239935b1c33d1326810b2bd98b56b`
+- Latest Daily What's Up Sui receipt: `D23CGDAVV8AjCs7Mvox1AUb2hvxsXGi43BBsM3MsQ753`
 - Latest Daily What's Up novelty proof: `previousBriefings=1`, `score=0.025`, `duplicate=false`
 - Team profile blobs: 48/48 published on Walrus Mainnet.
