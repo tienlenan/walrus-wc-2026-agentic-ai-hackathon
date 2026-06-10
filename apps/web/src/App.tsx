@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { DeferredSection } from "./components/deferred-section";
+import { getSession, subscribeSession } from "./lib/auth";
 import { useI18n } from "./lib/i18n";
 import { useTimeSettings } from "./lib/time-settings";
 import "./styles/ui-controls.css";
@@ -17,6 +18,7 @@ const loadMemoryNotebook = () => import("./components/memory-notebook").then((mo
 const loadRuntimeTracking = () => import("./components/runtime-tracking").then((mod) => ({ default: mod.RuntimeTracking }));
 const loadDailyBriefings = () => import("./components/daily-briefings").then((mod) => ({ default: mod.DailyBriefings }));
 const loadLatestBriefingTeaser = () => import("./components/daily-briefings").then((mod) => ({ default: mod.LatestBriefingTeaser }));
+const loadGuidePage = () => import("./components/guide-page").then((mod) => ({ default: mod.GuidePage }));
 
 const WalletProviders = lazy(loadWalletProviders);
 const ConnectBar = lazy(loadConnectBar);
@@ -31,10 +33,11 @@ const MemoryNotebook = lazy(loadMemoryNotebook);
 const RuntimeTracking = lazy(loadRuntimeTracking);
 const DailyBriefings = lazy(loadDailyBriefings);
 const LatestBriefingTeaser = lazy(loadLatestBriefingTeaser);
+const GuidePage = lazy(loadGuidePage);
 
-type ReferencePageKey = "team-profiles" | "gallery" | "notebook" | "tracking" | "briefings";
+type ReferencePageKey = "guide" | "team-profiles" | "gallery" | "notebook" | "tracking" | "briefings";
 
-const REFERENCE_PAGES = new Set<string>(["team-profiles", "gallery", "notebook", "tracking", "briefings"]);
+const REFERENCE_PAGES = new Set<string>(["guide", "team-profiles", "gallery", "notebook", "tracking", "briefings"]);
 const BOOT_IMAGES = [
   "/gallery/cartoon-walrus-better-than-idols.svg",
   "/gallery/cartoon-ronaldo-airmail.svg",
@@ -62,6 +65,7 @@ const BOOT_LINES = {
 const BOOT_SPLASH_MIN_MS = 10000;
 const GITHUB_URL = "https://github.com/tienlenan/walrus-wc-2026-agentic-ai-hackathon";
 const COOKIE_CONSENT_KEY = "gil.cookie-consent.v1";
+const ONBOARDING_SETTINGS_PREFIX = "gil:onboarding-settings:";
 
 type LegalDialog = "privacy" | "terms" | null;
 
@@ -75,6 +79,10 @@ function loadCookieConsent(): boolean {
   } catch {
     return false;
   }
+}
+
+function onboardingKey(address: string): string {
+  return `${ONBOARDING_SETTINGS_PREFIX}${address.toLowerCase()}`;
 }
 
 function bootLineFor(lang: "vi" | "en", index: number): string {
@@ -97,6 +105,7 @@ export default function App() {
   const { t, lang, setLang } = useI18n();
   const { formatDate, timeZoneLabel } = useTimeSettings();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsOnboarding, setSettingsOnboarding] = useState(false);
   const [legalDialog, setLegalDialog] = useState<LegalDialog>(null);
   const [cookieConsentVisible, setCookieConsentVisible] = useState(() => !loadCookieConsent());
   const [hash, setHash] = useState(currentHash);
@@ -125,6 +134,34 @@ export default function App() {
       window.clearInterval(lineTimer);
     };
   }, []);
+
+  useEffect(() => {
+    const maybeOpenOnboarding = () => {
+      const session = getSession();
+      if (!session?.address) return;
+      const key = onboardingKey(session.address);
+      try {
+        if (localStorage.getItem(key) === "done") return;
+        localStorage.setItem(key, "done");
+      } catch {
+        // If storage is unavailable, show once for this session.
+      }
+      setSettingsOnboarding(true);
+      setSettingsOpen(true);
+    };
+    maybeOpenOnboarding();
+    return subscribeSession(maybeOpenOnboarding);
+  }, []);
+
+  function openSettings() {
+    setSettingsOnboarding(false);
+    setSettingsOpen(true);
+  }
+
+  function closeSettings() {
+    setSettingsOpen(false);
+    setSettingsOnboarding(false);
+  }
 
   useEffect(() => {
     const updateHash = () => {
@@ -180,7 +217,7 @@ export default function App() {
             EN
           </button>
         </div>
-        <button type="button" className="settings-btn" onClick={() => setSettingsOpen(true)}>
+        <button type="button" className="settings-btn" onClick={openSettings}>
           {t("set.open")}
         </button>
         <a className="github-btn" href={GITHUB_URL} target="_blank" rel="noreferrer" aria-label={t("github.open")}>
@@ -217,6 +254,7 @@ export default function App() {
         <NavLink href="#predictions" label={t("nav.predictions")} />
         <NavLink href="#leaderboard" label={t("nav.leaderboard")} />
         <NavLink href="#roasts" label={t("nav.roasts")} />
+        <NavLink href="#guide" label={t("nav.guide")} reference />
         <NavLink href="#briefings" label={t("nav.briefings")} reference />
         <NavLink href="#team-profiles" label={t("nav.teams")} reference />
         <NavLink href="#gallery" label={t("nav.gallery")} reference />
@@ -239,7 +277,7 @@ export default function App() {
           <div id="newsroom" className="section-anchor">
             <Suspense fallback={<SectionSkeleton title={t("nav.gil")} />}>
               <WalletProviders>
-                <NewsDeskChat onOpenSettings={() => setSettingsOpen(true)} />
+                <NewsDeskChat onOpenSettings={openSettings} />
               </WalletProviders>
             </Suspense>
           </div>
@@ -307,7 +345,7 @@ export default function App() {
 
       {settingsOpen && (
         <Suspense fallback={null}>
-          <SettingsPanel onClose={() => setSettingsOpen(false)} />
+          <SettingsPanel onClose={closeSettings} onboarding={settingsOnboarding} />
         </Suspense>
       )}
     </div>
@@ -417,6 +455,7 @@ function NavLink({ href, label, reference = false }: { href: string; label: stri
 function ReferencePage({ page }: { page: ReferencePageKey }) {
   const { t } = useI18n();
   const content: Record<ReferencePageKey, ReactNode> = {
+    guide: <GuidePage />,
     "team-profiles": <TeamProfiles />,
     gallery: <GalleryWall />,
     briefings: <DailyBriefings />,

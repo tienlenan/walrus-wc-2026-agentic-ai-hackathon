@@ -118,6 +118,14 @@
   padding-bottom: 0.5rem;
   margin-bottom: 0.9rem;
 }
+.settings-head span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--red, #c8102e);
+  font: 900 0.66rem/1 var(--font-mono, monospace);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 .settings-head h3 {
   margin: 0;
   font: 800 1.1rem/1 Georgia, serif;
@@ -135,11 +143,99 @@
   margin-bottom: 0.9rem;
 }
 .settings-field span {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.42rem;
   font: 700 0.78rem/1 system-ui, sans-serif;
   letter-spacing: 0.03em;
   margin-bottom: 0.35rem;
   color: var(--ink, #1a1a1a);
+}
+
+.settings-icon {
+  width: 1.45rem;
+  height: 1.45rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--ink, #1a1a1a);
+  border-radius: 999px;
+  background: var(--teal, #37c3b0);
+  color: var(--ink, #1a1a1a);
+  flex: 0 0 auto;
+  font: 900 0.58rem/1 var(--font-mono, monospace);
+  letter-spacing: 0;
+}
+
+.settings-onboarding {
+  margin-bottom: 0.9rem;
+  padding: 0.8rem;
+  border: 1.5px dashed var(--ink, #1a1a1a);
+  background: color-mix(in srgb, var(--teal, #37c3b0) 12%, transparent);
+}
+
+.settings-onboarding span {
+  display: block;
+  color: var(--red, #c8102e);
+  font: 900 0.64rem/1 var(--font-mono, monospace);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.settings-onboarding strong {
+  display: block;
+  margin: 0.28rem 0;
+  color: var(--ink, #1a1a1a);
+  font: 900 1.05rem/1 var(--font-masthead, Georgia, serif);
+}
+
+.settings-onboarding p,
+.settings-onboarding li {
+  color: var(--ink, #1a1a1a);
+  font: 500 0.78rem/1.4 system-ui, sans-serif;
+}
+
+.settings-onboarding p {
+  margin: 0 0 0.45rem;
+}
+
+.settings-onboarding ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.settings-roast-preview {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0 0 0.9rem;
+  padding: 0.6rem;
+  border: 1.5px solid var(--ink, #1a1a1a);
+  background: var(--paper-2, #fff);
+}
+
+.settings-roast-preview img {
+  width: 5.5rem;
+  height: 4.2rem;
+  object-fit: cover;
+  border: 1.5px solid var(--ink, #1a1a1a);
+  background: var(--paper, #f4f1ea);
+}
+
+.settings-roast-preview figcaption span {
+  display: block;
+  color: var(--ink-soft, #555);
+  font: 900 0.62rem/1 var(--font-mono, monospace);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.settings-roast-preview figcaption strong {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--ink, #1a1a1a);
+  font: 900 1rem/1.1 var(--font-masthead, Georgia, serif);
 }
 .settings-field select,
 .settings-field textarea {

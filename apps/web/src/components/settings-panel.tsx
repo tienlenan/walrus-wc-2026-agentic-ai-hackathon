@@ -4,8 +4,14 @@ import { loadAiSettings, saveAiSettings, type AiSettings } from "../lib/ai-setti
 import { useTimeSettings, type TimeZoneSetting } from "../lib/time-settings";
 import "../styles/ui-controls.css";
 
-/** AI settings modal: language, roast severity, and custom instructions for Gil. */
-export function SettingsPanel({ onClose }: { onClose: () => void }) {
+const SEVERITY_PREVIEW: Record<AiSettings["roastSeverity"], string> = {
+  light: "/gallery/cartoon-messi-walking-chess.svg",
+  standard: "/gallery/cartoon-walrus-better-than-idols.svg",
+  savage: "/gallery/cartoon-ronaldo-airmail.svg",
+};
+
+/** AI settings modal: language, roast severity, timezone, and custom instructions for Gil. */
+export function SettingsPanel({ onClose, onboarding = false }: { onClose: () => void; onboarding?: boolean }) {
   const { t } = useI18n();
   const { selectedTimeZone, effectiveTimeZone, timeZoneOptions, setSelectedTimeZone } = useTimeSettings();
   const [s, setS] = useState<AiSettings>(() => loadAiSettings());
@@ -23,14 +29,41 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
     <div className="settings-overlay" onClick={onClose} role="presentation">
       <div className="settings-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
         <div className="settings-head">
-          <h3>{t("set.title")}</h3>
+          <div>
+            <span>{onboarding ? t("onboarding.kicker") : t("set.kicker")}</span>
+            <h3>{t("set.title")}</h3>
+          </div>
           <button className="settings-x" onClick={onClose} aria-label={t("set.close")}>
             ✕
           </button>
         </div>
 
+        {onboarding && (
+          <div className="settings-onboarding">
+            <span>{t("onboarding.kicker")}</span>
+            <strong>{t("onboarding.title")}</strong>
+            <p>{t("onboarding.copy")}</p>
+            <ul>
+              <li>{t("onboarding.lang")}</li>
+              <li>{t("onboarding.timezone")}</li>
+              <li>{t("onboarding.prompt")}</li>
+            </ul>
+          </div>
+        )}
+
+        <figure className="settings-roast-preview">
+          <img src={SEVERITY_PREVIEW[s.roastSeverity]} alt="" />
+          <figcaption>
+            <span>{t("set.previewKicker")}</span>
+            <strong>{t(`set.preview.${s.roastSeverity}`)}</strong>
+          </figcaption>
+        </figure>
+
         <label className="settings-field">
-          <span>{t("set.aiLang")}</span>
+          <span>
+            <IconBadge label="文" />
+            {t("set.aiLang")}
+          </span>
           <select
             value={s.aiLang}
             onChange={(e) => setS({ ...s, aiLang: e.target.value as AiSettings["aiLang"] })}
@@ -42,7 +75,10 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
         </label>
 
         <label className="settings-field">
-          <span>{t("set.severity")}</span>
+          <span>
+            <IconBadge label="!" />
+            {t("set.severity")}
+          </span>
           <select
             value={s.roastSeverity}
             onChange={(e) =>
@@ -59,7 +95,10 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
         </label>
 
         <label className="settings-field">
-          <span>{t("set.timezone")}</span>
+          <span>
+            <IconBadge label="TZ" />
+            {t("set.timezone")}
+          </span>
           <select value={tz} onChange={(e) => setTz(e.target.value as TimeZoneSetting)}>
             <option value="auto">{t("set.timezoneAuto").replace("{timezone}", effectiveTimeZone)}</option>
             {timeZoneOptions.map((zone) => (
@@ -72,7 +111,10 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
         </label>
 
         <label className="settings-field">
-          <span>{t("set.instr")}</span>
+          <span>
+            <IconBadge label="✎" />
+            {t("set.instr")}
+          </span>
           <textarea
             rows={4}
             value={s.instructions}
@@ -91,5 +133,13 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function IconBadge({ label }: { label: string }) {
+  return (
+    <i className="settings-icon" aria-hidden="true">
+      {label}
+    </i>
   );
 }
