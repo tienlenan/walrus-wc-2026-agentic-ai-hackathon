@@ -19,7 +19,8 @@
     "deploy:walrus-site": "./scripts/deploy-walrus-site.sh",
     "keep-alive": "apps/server/node_modules/.bin/tsx scripts/keep-alive.ts",
     "register:fixtures": "pnpm --filter @daily-walrus/server register:fixtures",
-    "score:match": "pnpm --filter @daily-walrus/server score:match"
+    "score:match": "pnpm --filter @daily-walrus/server score:match",
+    "capture:screenshots": "node scripts/capture-submission-screenshots.cjs"
   },
   "devDependencies": {
     "typescript": "^5.6.3"
