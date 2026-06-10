@@ -60,8 +60,15 @@ Funding gate:
    WALRUS_BINARY=/Users/mpdh/.local/share/suiup/binaries/mainnet/walrus-v1.49.1 \
    WALRUS_SITE_CONTEXT=mainnet \
    WALRUS_SITE_EPOCHS=12 \
+   WALRUS_PRECOMPRESS=1 \
    ./scripts/deploy-walrus-site.sh
    ```
+   `WALRUS_PRECOMPRESS=1` runs `scripts/precompress-walrus-assets.mjs` after the build:
+   assets under `/assets/*` are stored as brotli bytes and `ws-resources.json` declares
+   `content-encoding: br` + immutable cache headers (portals serve blob bytes verbatim,
+   no negotiated compression). Verify post-deploy with
+   `curl -sI https://roast2026wc.wal.app/assets/<entry>.js | grep content-encoding` → `br`.
+   If the portal ever stops honoring the header, redeploy without the flag.
 2. Confirm deploy output still reports:
    - Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`
    - Public URL: `https://roast2026wc.wal.app/`

@@ -49,6 +49,7 @@
 
 ### 2.1 Frontend — React + Vite (Walrus Sites)
 - Static SPA, built to `dist/`. Deployed with `site-builder ... deploy --epochs N ./dist`.
+- **First-load performance:** the wallet/query provider stack (`@mysten/dapp-kit` + react-query) loads through a lazy boundary in `main.tsx` (`app-providers.tsx`), keeping the entry chunk to React + app shell (~254 kB raw / 81 kB br). Fonts are self-hosted subsetted WOFF2 (`src/styles/fonts.css`, no Google Fonts request). Walrus portals serve blob bytes verbatim with no negotiated compression, so deploys run `scripts/precompress-walrus-assets.mjs` (`WALRUS_PRECOMPRESS=1`): assets are brotli bytes on Walrus and `ws-resources.json` declares `content-encoding: br` + immutable cache headers.
 - **SPA routing**: add `ws-resources.json` at the build root with `{"routes": {"/*": "/index.html"}}` (Walrus Sites is static, no server fallback → missing this file means a 404 when refreshing a sub-route).
 - Calls the Mastra server via `@mastra/client-js`; **sends `{ memory: { resource: <suiAddress>, thread: <id> } }`** on every request → this is how memory follows the user.
 - Chat, roast, match vote, and predictions require wallet connect + sign-in-with-Sui. Predictions create dedicated owned `Prediction` objects; chat/roast/vote create owned `OutputRecord` pointer objects.
@@ -63,6 +64,7 @@
 - **Generative UI contract:** the chat service prefetches deterministic fixture/profile/private-history tool results when the user intent is clear, injects a compact tool context into Gil's prompt, and returns `parts[]` alongside `text`. These parts follow the AI SDK UIMessage shape (`text`, `tool-getFixtures`, `tool-getTeamProfile`, `tool-getMyPredictions`, `tool-getMyRoasts`, `tool-getMyMatchVotes`, `tool-getMyOutputRecords`, `tool-getMyDappActions`, `tool-getMyGameRecord`) so the frontend can render sourced cards.
 - **Memory hooks:** after each turn → `remember` new facts into MemWal; mirror a profile snapshot to Walrus (async, without blocking the response).
 - **Live-data ops:** protected oracle/admin paths run dry-run/apply sync jobs, store provider sync ledgers, and expose public read-only match-center data.
+- **Cold start & caching:** the AI stack (`@mastra/core` via chat/roast/briefing services) is dynamically imported at its routes so fast JSON reads never pay its ~400ms+ import on a serverless cold start; the read-only roast feed lives in `roast-feed.ts` for the same reason. Public read endpoints return `cache-control: public, s-maxage=N, stale-while-revalidate=M` for Vercel edge caching (world-cup snapshot 300/600, briefings 300/3600, roasts 30/120, live matches 15/60, traits 3600/86400); `GET /api/game/snapshot` stays uncached because its payload is session-personalized. The SSE game stream shares one anonymous snapshot computation per tick across all connected clients.
 
 ### 2.3 Walrus Memory (MemWal) — the star
 - Package `@mysten-incubation/memwal` (beta). Quick start:

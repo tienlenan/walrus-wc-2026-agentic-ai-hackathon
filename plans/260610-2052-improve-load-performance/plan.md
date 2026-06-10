@@ -3,7 +3,7 @@ title: Improve Web and API Load Performance
 description: >-
   Cut first-load time on roast2026wc.wal.app (uncompressed 657 kB entry JS, ~10s
   asset fetch) and API cold-start/read latency on the Vercel function.
-status: pending
+status: completed
 priority: P1
 effort: 3d
 branch: main
@@ -45,7 +45,7 @@ Constraints (user decisions — do not reverse):
 | 3 | [Fonts and Boot Assets](./phase-03-fonts-and-boot-assets.md) | Completed |
 | 4 | [Server Cold Start](./phase-04-server-cold-start.md) | Completed |
 | 5 | [API Read Caching](./phase-05-api-read-caching.md) | Completed |
-| 6 | [Verify and Document](./phase-06-verify-and-document.md) | Pending |
+| 6 | [Verify and Document](./phase-06-verify-and-document.md) | Completed |
 
 ## Targets
 
