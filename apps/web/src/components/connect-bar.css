@@ -113,3 +113,13 @@
   border-color: var(--teal);
   color: #fff;
 }
+
+.wallet-auth-error {
+  max-width: min(52vw, 24rem);
+  color: var(--red);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}

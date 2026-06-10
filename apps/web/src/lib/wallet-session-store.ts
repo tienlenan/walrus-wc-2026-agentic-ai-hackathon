@@ -3,12 +3,14 @@ import { getSession, signOut, subscribeSession, type Session } from "./auth";
 
 interface WalletSessionState {
   session: Session | null;
+  setSession: (session: Session) => void;
   refreshSession: () => void;
   clearSession: () => void;
 }
 
 export const useWalletSessionStore = create<WalletSessionState>((set) => ({
   session: getSession(),
+  setSession: (session) => set({ session }),
   refreshSession: () => set({ session: getSession() }),
   clearSession: () => {
     signOut();

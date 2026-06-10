@@ -29,10 +29,12 @@ export function ConnectBar() {
   const { mutateAsync: switchAccount } = useSwitchAccount();
   const { mutateAsync: disconnectWallet } = useDisconnectWallet();
   const { signedIn } = useVerifiedSession();
+  const setSession = useWalletSessionStore((state) => state.setSession);
   const clearSession = useWalletSessionStore((state) => state.clearSession);
   const [names, setNames] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [walletBusy, setWalletBusy] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
   const gas = useSuiGasBalance(account?.address);
 
   const accountOptions = useMemo(() => accounts.filter((item) => item.address), [accounts]);
@@ -70,13 +72,16 @@ export function ConnectBar() {
   async function doSignIn() {
     if (!account) return;
     setBusy(true);
+    setAuthError(null);
     try {
-      await signIn(account.address, async (bytes) => {
+      const session = await signIn(account.address, async (bytes) => {
         const { signature } = await signPersonalMessage({ message: bytes });
         return signature;
       });
+      setSession(session);
     } catch (e) {
       console.error("[auth] sign-in failed:", e);
+      setAuthError(e instanceof Error ? e.message : "sign-in failed");
     } finally {
       setBusy(false);
     }
@@ -141,6 +146,7 @@ export function ConnectBar() {
             {busy ? t("wallet.signing") : t("wallet.signIn")}
           </button>
         )}
+        {authError && <span className="wallet-auth-error">{authError}</span>}
       </div>
     </div>
   );
