@@ -105,9 +105,9 @@
   border: 2px solid var(--ink, #1a1a1a);
   border-radius: 4px;
   box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
-  width: fit-content;
-  min-width: min(360px, 100%);
-  max-width: min(460px, calc(100vw - 2rem));
+  width: min(900px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
   padding: 1.1rem 1.2rem 1.3rem;
 }
 .settings-head {
@@ -140,7 +140,7 @@
 }
 .settings-field {
   display: block;
-  margin-bottom: 0.9rem;
+  margin: 0;
 }
 .settings-field span {
   display: flex;
@@ -168,7 +168,7 @@
 }
 
 .settings-onboarding {
-  margin-bottom: 0.9rem;
+  margin: 0;
   padding: 0.8rem;
   border: 1.5px dashed var(--ink, #1a1a1a);
   background: color-mix(in srgb, var(--teal, #37c3b0) 12%, transparent);
@@ -206,18 +206,18 @@
 
 .settings-roast-preview {
   display: grid;
-  grid-template-columns: 5.5rem 1fr;
-  gap: 0.75rem;
-  align-items: center;
-  margin: 0 0 0.9rem;
+  gap: 0.65rem;
+  align-content: start;
+  margin: 0;
   padding: 0.6rem;
   border: 1.5px solid var(--ink, #1a1a1a);
   background: var(--paper-2, #fff);
 }
 
 .settings-roast-preview img {
-  width: 5.5rem;
-  height: 4.2rem;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  height: auto;
   object-fit: cover;
   border: 1.5px solid var(--ink, #1a1a1a);
   background: var(--paper, #f4f1ea);
@@ -237,6 +237,29 @@
   color: var(--ink, #1a1a1a);
   font: 900 1rem/1.1 var(--font-masthead, Georgia, serif);
 }
+
+.settings-body {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.82fr) minmax(360px, 1.18fr);
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.settings-side {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.settings-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.settings-field-wide {
+  grid-column: 1 / -1;
+}
+
 .settings-field select,
 .settings-field textarea {
   width: 100%;
@@ -249,6 +272,7 @@
   padding: 0.5rem 0.6rem;
 }
 .settings-field textarea {
+  min-height: 6.4rem;
   resize: vertical;
 }
 .settings-field small {
@@ -261,7 +285,7 @@
   display: flex;
   gap: 0.6rem;
   justify-content: flex-end;
-  margin-top: 0.4rem;
+  margin-top: 0.9rem;
 }
 .settings-save,
 .settings-close {
@@ -411,7 +435,50 @@
   color: var(--ink, #1a1a1a);
 }
 
+@media (max-width: 760px) {
+  .settings-modal {
+    width: min(560px, calc(100vw - 1rem));
+    padding: 0.95rem;
+  }
+
+  .settings-body {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-side {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .settings-roast-preview img {
+    aspect-ratio: 4 / 3;
+  }
+}
+
 @media (max-width: 640px) {
+  .settings-overlay {
+    align-items: stretch;
+    padding: 0.5rem;
+  }
+
+  .settings-modal {
+    width: 100%;
+    max-height: calc(100vh - 1rem);
+  }
+
+  .settings-side,
+  .settings-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-actions {
+    justify-content: stretch;
+  }
+
+  .settings-save,
+  .settings-close {
+    flex: 1 1 0;
+  }
+
   .cookie-consent {
     grid-template-columns: 1fr;
   }
