@@ -51,6 +51,10 @@ alter table fixtures add column if not exists venue text;
 alter table fixtures add column if not exists city text;
 alter table fixtures add column if not exists chain_registered boolean not null default false;
 alter table fixtures add column if not exists source_url text;
+alter table fixtures add column if not exists provider_fixture_id text;
+alter table fixtures add column if not exists provider_name text;
+alter table fixtures add column if not exists provider_updated_at timestamptz;
+alter table fixtures add column if not exists live_updated_at timestamptz;
 create index if not exists fixtures_kickoff_idx on fixtures(kickoff);
 create index if not exists fixtures_group_idx on fixtures(group_name, kickoff);
 
@@ -346,6 +350,134 @@ alter table roasts add column if not exists walrus_blob_id text;
 alter table roasts add column if not exists walrus_status text not null default 'not_configured';
 create index if not exists roasts_created_idx on roasts(created_at desc);
 create index if not exists roasts_target_idx on roasts(target_type, target_id, created_at desc);
+
+-- Official-season live data operations. Provider payloads are normalized into
+-- app-owned rows; providers remain replaceable.
+create table if not exists provider_entity_map (
+  entity_type text not null,
+  local_id text not null,
+  provider text not null,
+  provider_id text not null,
+  meta jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now(),
+  primary key (entity_type, local_id, provider)
+);
+
+create table if not exists provider_sync_runs (
+  id uuid primary key default uuid_generate_v4(),
+  provider text not null,
+  job_type text not null,
+  scope text not null,
+  mode text not null default 'dry_run',
+  status text not null default 'running',
+  fetched_count int not null default 0,
+  applied_count int not null default 0,
+  content_hash text,
+  error text,
+  started_at timestamptz not null default now(),
+  completed_at timestamptz
+);
+create index if not exists provider_sync_runs_started_idx on provider_sync_runs(started_at desc);
+
+create table if not exists match_live_states (
+  match_id text primary key references fixtures(match_id) on delete cascade,
+  provider text not null,
+  provider_fixture_id text,
+  status text not null default 'unknown',
+  period text,
+  elapsed int,
+  home_score int,
+  away_score int,
+  source_url text,
+  source_fetched_at timestamptz,
+  source_updated_at timestamptz,
+  content_hash text,
+  raw jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists match_events (
+  id text primary key,
+  match_id text not null references fixtures(match_id) on delete cascade,
+  provider text not null,
+  provider_event_id text,
+  minute int,
+  extra_minute int,
+  event_type text not null,
+  detail text,
+  team_code text,
+  team_name text,
+  player_name text,
+  assist_name text,
+  comments text,
+  source_url text,
+  raw jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
+create index if not exists match_events_match_idx on match_events(match_id, minute, id);
+
+create table if not exists match_lineups (
+  id uuid primary key default uuid_generate_v4(),
+  match_id text not null references fixtures(match_id) on delete cascade,
+  team_code text,
+  team_name text not null,
+  provider text not null,
+  provider_team_id text,
+  formation text,
+  coach text,
+  confirmed boolean not null default false,
+  source_url text,
+  raw jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now(),
+  unique(match_id, provider, team_name)
+);
+
+create table if not exists match_lineup_players (
+  id uuid primary key default uuid_generate_v4(),
+  match_id text not null references fixtures(match_id) on delete cascade,
+  team_code text,
+  team_name text not null,
+  provider text not null,
+  provider_player_id text,
+  shirt_number int,
+  player_name text not null,
+  position text,
+  role text not null,
+  grid text,
+  pitch_x numeric,
+  pitch_y numeric,
+  updated_at timestamptz not null default now()
+);
+create index if not exists match_lineup_players_match_idx on match_lineup_players(match_id, team_code, role);
+
+create table if not exists player_availability (
+  id uuid primary key default uuid_generate_v4(),
+  match_id text references fixtures(match_id) on delete cascade,
+  team_code text,
+  team_name text not null,
+  provider text not null,
+  provider_player_id text,
+  player_name text not null,
+  status text not null,
+  note text,
+  reason text,
+  source_url text,
+  raw jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+create index if not exists player_availability_team_idx on player_availability(team_code, status, updated_at desc);
+create unique index if not exists player_availability_provider_uidx
+  on player_availability(provider, (coalesce(match_id, '')), team_name, player_name, status);
+
+create table if not exists admin_live_data_overrides (
+  id uuid primary key default uuid_generate_v4(),
+  target_type text not null,
+  target_id text not null,
+  payload jsonb not null,
+  reason text not null,
+  source_url text,
+  created_at timestamptz not null default now()
+);
 
 drop view if exists leaderboard;
 

@@ -65,12 +65,12 @@ export async function chatWithGil(
     customInstructions: opts.customInstructions,
     memories,
   });
-  const toolRender = await buildChatToolParts(message).catch((error) => {
+  const toolRender = await buildChatToolParts({ resourceId, message }).catch((error) => {
     console.error("[chat] tool render failed:", error instanceof Error ? error.message : error);
     return { parts: [] as ChatRenderPart[], context: [] as string[] };
   });
   const toolContext = toolRender.context.length
-    ? `\n\n# Tool results already fetched for this turn\n${toolRender.context.map((line) => `- ${line}`).join("\n")}\nUse these facts in the answer. Do not invent extra fixtures/results.`
+    ? `\n\n# Tool results already fetched for this turn\n${toolRender.context.map((line) => `- ${line}`).join("\n")}\nUse these facts in the answer. Do not invent extra fixtures/results or user dapp history.`
     : "";
 
   const res = await gil.generate([

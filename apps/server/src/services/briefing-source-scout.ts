@@ -2,6 +2,7 @@ import { getGameSnapshot, type FixtureDto } from "./game-snapshot.js";
 import { getWorldCupSnapshot, getWorldCupSnapshotWithProfileBlobs } from "./world-cup-data.js";
 import { PLAYER_ROAST_TRAITS } from "../data/player-roast-traits.js";
 import type { BriefingSource } from "./briefing-types.js";
+import { getLiveMatchDetail } from "./live-data/live-match-service.js";
 
 function shortId(value: string): string {
   if (value.length <= 18) return value;
@@ -40,6 +41,36 @@ function fixtureLabel(fixture: FixtureDto): string {
   const score = fixture.homeScore == null || fixture.awayScore == null ? "" : ` Result ${fixture.homeScore}-${fixture.awayScore}.`;
   const gate = fixture.predictionOpen ? "Prediction gate is open" : `Prediction gate is ${fixture.predictionStatus.replace(/_/g, " ")}`;
   return `M${fixture.matchId}: ${fixture.home} vs ${fixture.away}, ${group}, ${kickoff}, ${fixture.venue ?? "venue TBA"}, ${gate}.${score}`;
+}
+
+async function liveMatchSource(fixtures: FixtureDto[]): Promise<BriefingSource | null> {
+  const candidates = fixtures.slice(0, 3);
+  const details = (await Promise.all(candidates.map((fixture) => getLiveMatchDetail(fixture.matchId).catch(() => null)))).filter(Boolean);
+  const facts = details.flatMap((detail) => {
+    if (!detail) return [];
+    const score = detail.live?.homeScore == null || detail.live?.awayScore == null ? "score not available" : `${detail.live.homeScore}-${detail.live.awayScore}`;
+    const status = detail.live?.status ?? detail.fixture.status;
+    const lineupFacts = detail.lineups.length
+      ? [`Lineups loaded for ${detail.lineups.map((lineup) => `${lineup.teamName}${lineup.confirmed ? " confirmed" : " projected"}`).join(", ")}.`]
+      : ["Lineups are not available yet."];
+    const availabilityFacts = detail.availability.length
+      ? [`Availability notes: ${detail.availability.slice(0, 5).map((item) => `${item.playerName} ${item.status}`).join("; ")}.`]
+      : ["No availability notes indexed yet."];
+    return [
+      `M${detail.fixture.matchId} live status ${status}; ${detail.fixture.home} vs ${detail.fixture.away}; ${score}; stale=${detail.stale}.`,
+      ...lineupFacts,
+      ...availabilityFacts,
+    ];
+  });
+  if (facts.length === 0) return null;
+  return {
+    sourceId: "live-1",
+    kind: "live_match",
+    title: "Live match operations cache",
+    url: null,
+    publishedAt: new Date().toISOString(),
+    facts: facts.slice(0, 10),
+  };
 }
 
 function selectFixtures(fixtures: FixtureDto[], date: string, focus?: string): FixtureDto[] {
@@ -170,6 +201,7 @@ export async function runScoutAgent(input: { date: string; focus?: string }): Pr
   const webSources = (
     await Promise.all(configuredUrls().map((url, index) => fetchConfiguredSource(url, index)))
   ).filter((source): source is BriefingSource => Boolean(source));
+  const liveSource = await liveMatchSource(selectedFixtures);
 
-  return [fixtureSource, teamSource, officialSource, playerSource, ...manualSideStories(), ...webSources];
+  return [fixtureSource, teamSource, officialSource, playerSource, ...(liveSource ? [liveSource] : []), ...manualSideStories(), ...webSources];
 }

@@ -1,7 +1,7 @@
 # The Daily Walrus — Project Plan
 
 > **Walrus Memory World Cup** submission (Jun 5–24, 2026, results Jul 2, 2026).
-> Related docs: [requirements](02-requirements.md) · [architecture](03-architecture.md) · [user-flows](04-user-flows.md) · [design-direction](05-design-direction.md) · [research-notes](06-research-notes.md)
+> Related docs: [requirements](02-requirements.md) · [architecture](03-architecture.md) · [user-flows](04-user-flows.md) · [design-direction](05-design-direction.md) · [research-notes](06-research-notes.md) · [live-data ops](wc-live-data-ops-runbook.md)
 
 ## TL;DR
 **The Daily Walrus** = an "AI sports newspaper" about the 2026 World Cup, hosted by the mascot **Gil — a grizzled, sharp-tongued walrus commentator**. Users predict outcomes and drop hot-takes; Gil **remembers** every prediction/opinion (stored on **Walrus Memory / Mainnet**), tracks their record, and then **roasts** you using your own history. The killer feature: **real memory** creates a clear difference between "day-1 Gil" and "day-5+ Gil".
@@ -10,6 +10,7 @@
 A 2026 World Cup AI buddy in the style of a **classic sports tabloid** ("THE DAILY WALRUS — EST. 2026"):
 - **Q&A**: fixtures, results, lighthearted match analysis.
 - **Predictions**: users guess the scoreline/winner for each match and the whole tournament; the system scores correct/wrong over time.
+- **Live match operations**: provider-backed cache for public match state, timeline, lineups, and availability; final scoring remains oracle-gated.
 - **Memory + roasting**: Gil remembers your favorite team, your "hot-takes", and your prediction record → personalized roasts ("Picking that team again? My tusks would choose better").
 - **Shareable moment**: "Gil's Report Card" — an auto-generated grade/roast card to screenshot and post with #Walrus.
 

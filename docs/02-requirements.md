@@ -5,7 +5,7 @@
 ## 1. Goals & scope
 Build an AI agent (the **Gil the Walrus** mascot) themed around the **FIFA World Cup 2026** with **persistent memory on Walrus Mainnet**, clearly demonstrating behavioral change over time (before/after), plus a public web interface to "see" the memory working (prediction history, roast, leaderboard).
 
-**In scope (MVP):** chat with Gil, match predictions, prediction scoring, MemWal memory, personalized roasting, fixtures/results, leaderboard, shareable roast card, Daily What's Up agentic publishing, Mainnet deployment.
+**In scope (MVP):** chat with Gil, match predictions, prediction scoring, MemWal memory, personalized roasting, fixtures/results, leaderboard, shareable roast card, Daily What's Up agentic publishing, live match operations cache, Mainnet deployment.
 **Out of scope (for now):** social login, payments, native mobile app, full localization, self-trained models.
 
 ---
@@ -47,6 +47,7 @@ Mapped directly from the event rules. These are pass/fail criteria.
 - **F-QA-3** Hot-take debate: Gil remembers your old stance and "calls you out" when you're inconsistent.
 - **F-QA-4** Chat answers render Markdown via Streamdown and tool results via structured JSON parts, not raw JSON text.
 - **F-QA-5** Mastra tools cover fixture lookup by group/team/date/prediction gate and team-profile lookup by team/player alias.
+- **F-QA-6** Private chat tools cover wallet-scoped dapp history: predictions, roasts, MVP/worst votes, Sui/Walrus proof records, score record, and a unified action timeline.
 
 ### 3.3a Daily What's Up agentic publishing (P1)
 - **F-BRIEF-1** A protected workflow can publish a Daily What's Up dispatch for a date/type/focus.
@@ -57,10 +58,20 @@ Mapped directly from the event rules. These are pass/fail criteria.
 - **F-BRIEF-6** Published dispatches store the full payload on Walrus Blob, short summary metadata in Walrus Memory, UI index data in Supabase, and an optional Sui `OutputRecord`.
 - **F-BRIEF-7** The public UI exposes article markdown, sources, agent trace, blob/object links, memory namespace, content hash, and novelty result.
 
+### 3.3b World Cup live data operations (P1)
+- **F-LIVE-1** A provider adapter layer can seed/update World Cup fixtures, live state, match events, lineups, and player availability without making the provider the scoring authority.
+- **F-LIVE-2** The system supports a static/open schedule fallback plus a pluggable API-Football provider for richer live data when credentials are configured.
+- **F-LIVE-3** Every live-data run records provider, job type, scope, mode, status, fetched/applied count, content hash, error, and timestamps in an admin sync ledger.
+- **F-LIVE-4** Public users can view match status, score, timeline, lineup pitch, and injury/suspension availability from the rebuildable cache.
+- **F-LIVE-5** Admin/oracle endpoints are token-gated and support dry-run before apply for `fixtures_full`, `live_tick`, `finalize_result`, `lineups`, and `pre_match`.
+- **F-LIVE-6** Final score settlement remains an explicit oracle action; provider data can assist operator review but must not auto-settle predictions by itself.
+- **F-LIVE-7** Daily What's Up scout can include live match state, lineup availability, and injury/suspension notes as source facts.
+
 ### 3.4 Memory-display interface (P0 — required by R-H4)
 - **F-UI-1** **Prediction history**: a timeline of predictions + correct/wrong + streak.
 - **F-UI-2** **Memory panel / "Gil's notebook"**: shows what Gil currently remembers about you (read from Walrus → proves on-chain).
 - **F-UI-2a** Inline "Gil remembers" evidence inside chat is collapsed by default and expandable per answer.
+- **F-UI-2b** Gil Desk renders private history tool cards for "what did I predict/roast/do in the dapp?" without exposing another wallet's data.
 - **F-UI-3** **Leaderboard**: accuracy ranking (realtime).
 - **F-UI-4** **Roast card generator**: generates the "Gil's Report Card" image to download/post.
 - **F-UI-5** **Before/after viewer**: places Gil's "day 1" vs "now" answers side by side for the same question.
@@ -98,4 +109,5 @@ Mapped directly from the event rules. These are pass/fail criteria.
 - **Must:** F-MEM-1..6, F-PRED-1..3, F-UI-1/2/5, F-W-1/2, all of §2.
 - **Should:** F-QA-1..3, F-UI-3/4, F-PRED-4, F-W-3/4.
 - **Could:** voice, localization, pixel mini-game, roast-card NFT.
+- **Could:** paid/redundant live sports provider, automated cron scheduling for official match windows.
 - **Won't (now):** native mobile, payments, social login.

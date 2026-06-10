@@ -1,0 +1,142 @@
+.lineup-shell {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.lineup-shell-empty {
+  border: 1px dashed var(--rule);
+  padding: 1rem;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+}
+
+.lineup-team {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  min-width: 0;
+}
+
+.lineup-team-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  align-items: start;
+  padding: 0.65rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.lineup-team-head h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 1;
+  font-size: 1.25rem;
+}
+
+.lineup-team-head span,
+.lineup-team-head b,
+.bench-list span {
+  font-family: var(--font-mono);
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  font-size: 0.66rem;
+}
+
+.lineup-team-head b {
+  color: var(--teal-deep);
+  white-space: nowrap;
+}
+
+.pitch-half {
+  position: relative;
+  min-height: 24rem;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, transparent 49.7%, rgba(255,255,255,0.65) 49.7% 50.3%, transparent 50.3%),
+    repeating-linear-gradient(0deg, #4f8f60 0 3.2rem, #477f57 3.2rem 6.4rem);
+}
+
+.pitch-half::before {
+  content: "";
+  position: absolute;
+  inset: 0.8rem;
+  border: 2px solid rgba(255,255,255,0.7);
+}
+
+.pitch-half::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5.8rem;
+  aspect-ratio: 1;
+  border: 2px solid rgba(255,255,255,0.7);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pitch-player {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  width: 4.7rem;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+}
+
+.pitch-player strong {
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 1px solid rgba(255,255,255,0.8);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.pitch-player span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.7rem;
+}
+
+.lineup-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.24);
+}
+
+.bench-list {
+  padding: 0.65rem;
+  border-top: 1px solid var(--rule);
+}
+
+.bench-list p {
+  margin: 0.2rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 820px) {
+  .lineup-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .pitch-half {
+    min-height: 21rem;
+  }
+}

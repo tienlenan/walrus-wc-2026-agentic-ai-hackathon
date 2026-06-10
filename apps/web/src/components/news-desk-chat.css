@@ -315,6 +315,72 @@
   font-family: var(--font-mono);
   font-size: 0.78rem;
 }
+.user-tool-card {
+  display: grid;
+  gap: 0.55rem;
+}
+.user-tool-list {
+  display: grid;
+  gap: 0.5rem;
+}
+.user-tool-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.45rem;
+  border-left: 3px solid var(--red);
+  background: var(--paper-2);
+  padding: 0.55rem;
+}
+.user-tool-row b,
+.user-tool-row span,
+.user-tool-row small {
+  display: block;
+}
+.user-tool-row b {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+.user-tool-row span {
+  margin-top: 0.2rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.user-tool-row small {
+  margin-top: 0.2rem;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  overflow-wrap: anywhere;
+}
+.tool-proof-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.tool-proof-chip {
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  line-height: 1.25;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  padding: 0.15rem 0.3rem;
+}
+.tool-proof-chip b {
+  display: inline;
+  color: var(--teal-deep);
+  font-family: inherit;
+  text-transform: uppercase;
+}
+.tool-proof-chip.muted {
+  color: var(--ink-soft);
+}
+.user-tool-empty {
+  margin-top: 0.55rem;
+}
 
 .loading {
   color: var(--ink-soft);

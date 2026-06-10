@@ -6,7 +6,7 @@ export type AgentRunStatus = "running" | "completed" | "failed";
 
 export interface BriefingSource {
   sourceId: string;
-  kind: "fixture_cache" | "team_profile" | "official_schedule" | "configured_web" | "manual_side_story";
+  kind: "fixture_cache" | "team_profile" | "official_schedule" | "configured_web" | "manual_side_story" | "live_match";
   title: string;
   url: string | null;
   publishedAt: string | null;

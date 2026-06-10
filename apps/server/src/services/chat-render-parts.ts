@@ -4,21 +4,33 @@ import {
   type TeamProfileDto,
   type WorldCupFixtureDto,
 } from "./world-cup-data.js";
+import {
+  inferDate,
+  inferGroup,
+  inferPrediction,
+  inferStatus,
+  inferUserActionIntent,
+  isFixtureIntent,
+  isProfileIntent,
+  normalizeText,
+} from "./chat-tool-intents.js";
+import { compactId, toolPart, type ChatRenderPart, type ChatToolPart } from "./chat-tool-parts.js";
+import {
+  getMyDappActions,
+  getMyGameRecord,
+  getMyMatchVotes,
+  getMyOutputRecords,
+  getMyPredictions,
+  getMyRoasts,
+  type MyDappActionsOutput,
+  type MyGameRecordOutput,
+  type MyMatchVotesOutput,
+  type MyOutputRecordsOutput,
+  type MyPredictionsOutput,
+  type MyRoastsOutput,
+} from "./user-action-history.js";
 
-export interface ChatTextPart {
-  type: "text";
-  text: string;
-}
-
-export interface ChatToolPart<TInput = unknown, TOutput = unknown> {
-  type: `tool-${string}`;
-  toolCallId: string;
-  state: "output-available";
-  input: TInput;
-  output: TOutput;
-}
-
-export type ChatRenderPart = ChatTextPart | ChatToolPart;
+export type { ChatRenderPart, ChatTextPart, ChatToolPart } from "./chat-tool-parts.js";
 
 export interface FixtureQueryInput {
   group?: string;
@@ -93,57 +105,6 @@ const TEAM_ALIASES: Record<string, string[]> = {
   POR: ["portugal", "ronaldo", "cr7", "cristiano"],
   SWE: ["sweden", "thuy dien", "thụy điển", "gyokeres", "gyökeres"],
 };
-
-function normalizeText(value: string): string {
-  return value
-    .toLocaleLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "");
-}
-
-function isFixtureIntent(text: string): boolean {
-  return /\b(schedule|fixture|fixtures|match|matches|today|tomorrow|date|group|playing|plays|open|gate|prediction)\b/.test(text)
-    || /\b(lich|tran|bang|keo|du doan|da voi ai|gap ai)\b/.test(text);
-}
-
-function isProfileIntent(text: string): boolean {
-  return /\b(profile|squad|coach|players|team profile|national profile|roster)\b/.test(text)
-    || /\b(ho so|doi hinh|hlv|cau thu)\b/.test(text);
-}
-
-function inferGroup(text: string): string | undefined {
-  const match = text.match(/\b(?:group|bang)\s*([a-l])\b/) ?? text.match(/\bgroup\s+([a-l])\b/);
-  return match?.[1]?.toUpperCase();
-}
-
-function inferDate(text: string): string | undefined {
-  const iso = text.match(/\b(2026-\d{2}-\d{2})\b/);
-  if (iso?.[1]) return iso[1];
-  const today = new Date();
-  if (/\b(today|hom nay)\b/.test(text)) return today.toISOString().slice(0, 10);
-  if (/\b(tomorrow|ngay mai)\b/.test(text)) {
-    today.setUTCDate(today.getUTCDate() + 1);
-    return today.toISOString().slice(0, 10);
-  }
-  const month = text.match(/\b(jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july)\s+(\d{1,2})\b/);
-  if (!month?.[1] || !month[2]) return undefined;
-  const parsed = new Date(`${month[1]} ${month[2]}, 2026 00:00:00 UTC`);
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString().slice(0, 10);
-}
-
-function inferStatus(text: string): FixtureQueryInput["status"] | undefined {
-  if (/\b(finished|settled|done|da xong|xong)\b/.test(text)) return "finished";
-  if (/\b(live|dang da)\b/.test(text)) return "live";
-  if (/\b(upcoming|scheduled|chua da|sap toi)\b/.test(text)) return "scheduled";
-  return undefined;
-}
-
-function inferPrediction(text: string): FixtureQueryInput["prediction"] | undefined {
-  if (/\b(not onchain|not_onchain|chua onchain)\b/.test(text)) return "not_onchain";
-  if (/\b(open|mo keo|con mo|dang mo)\b/.test(text)) return "open";
-  if (/\b(closed|close|khoa|dong)\b/.test(text)) return "closed";
-  return undefined;
-}
 
 function findTeam(teams: TeamProfileDto[], query: string): TeamProfileDto | null {
   const normalized = normalizeText(query);
@@ -256,22 +217,103 @@ export async function getTeamProfileQuery(input: TeamProfileQueryInput): Promise
   };
 }
 
-function toolPart<TInput, TOutput>(toolName: string, input: TInput, output: TOutput): ChatToolPart<TInput, TOutput> {
-  return {
-    type: `tool-${toolName}`,
-    toolCallId: `${toolName}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
-    state: "output-available",
-    input,
-    output,
-  };
+function predictionContext(output: MyPredictionsOutput): string {
+  const latest = output.predictions[0];
+  if (!latest) return "Tool getMyPredictions returned 0 predictions. Tell the user they have not submitted predictions yet.";
+  return `Tool getMyPredictions returned ${output.total} predictions. Latest: ${latest.matchLabel}, ${latest.pickLabel}, result ${latest.result}, oracle ${latest.oracleStatus}, tx ${compactId(latest.proof.txDigest)}.`;
 }
 
-export async function buildChatToolParts(message: string): Promise<{ parts: ChatToolPart[]; context: string[] }> {
+function roastContext(output: MyRoastsOutput): string {
+  const latest = output.roasts[0];
+  if (!latest) return "Tool getMyRoasts returned 0 roasts. Tell the user they have not roasted anyone yet.";
+  return `Tool getMyRoasts returned ${output.total} roasts. Latest target ${latest.targetName}; proof tx ${compactId(latest.proof.txDigest)}; blob ${compactId(latest.proof.blobId)}.`;
+}
+
+function voteContext(output: MyMatchVotesOutput): string {
+  const latest = output.votes[0];
+  if (!latest) return "Tool getMyMatchVotes returned 0 votes. Tell the user they have not voted for MVP or worst player yet.";
+  return `Tool getMyMatchVotes returned ${output.total} votes. Latest: ${latest.kind} ${latest.targetLabel} for ${latest.matchLabel}; proof ${compactId(latest.proof.txDigest)}.`;
+}
+
+function proofContext(output: MyOutputRecordsOutput): string {
+  const latest = output.records[0];
+  if (!latest) return "Tool getMyOutputRecords returned 0 proof records. Tell the user no Sui OutputRecord receipts are indexed yet.";
+  return `Tool getMyOutputRecords returned ${output.total} proof records. Latest: ${latest.outputKind}/${latest.resourceType}, tx ${compactId(latest.proof.txDigest)}, object ${compactId(latest.proof.suiObjectId)}, blob ${compactId(latest.proof.blobId)}.`;
+}
+
+function actionContext(output: MyDappActionsOutput): string {
+  const latest = output.actions[0];
+  if (!latest) return "Tool getMyDappActions returned 0 actions. Tell the user they have no indexed dapp actions yet.";
+  return `Tool getMyDappActions returned ${output.total} actions. Latest: ${latest.actionType} - ${latest.title}; ${latest.summary}; proof ${compactId(latest.proof.txDigest)}.`;
+}
+
+function recordContext(output: MyGameRecordOutput): string {
+  if (!output.exists) return "Tool getMyGameRecord returned no user record yet. Tell the user their score record is empty.";
+  return `Tool getMyGameRecord returned ${output.totalPoints} points, ${output.correct}/${output.graded} correct, streak ${output.streak}, best streak ${output.bestStreak}, accuracy ${output.accuracy ?? "not graded yet"}.`;
+}
+
+async function addUserActionTool(
+  resourceId: string,
+  intent: NonNullable<ReturnType<typeof inferUserActionIntent>>,
+  parts: ChatToolPart[],
+  context: string[],
+): Promise<void> {
+  const input = { limit: 10 };
+  if (intent === "my_predictions") {
+    const output = await getMyPredictions(resourceId, input);
+    parts.push(toolPart("getMyPredictions", input, output));
+    context.push(predictionContext(output));
+    return;
+  }
+  if (intent === "my_roasts") {
+    const output = await getMyRoasts(resourceId, input);
+    parts.push(toolPart("getMyRoasts", input, output));
+    context.push(roastContext(output));
+    return;
+  }
+  if (intent === "my_votes") {
+    const output = await getMyMatchVotes(resourceId, input);
+    parts.push(toolPart("getMyMatchVotes", input, output));
+    context.push(voteContext(output));
+    return;
+  }
+  if (intent === "my_proofs") {
+    const output = await getMyOutputRecords(resourceId, input);
+    parts.push(toolPart("getMyOutputRecords", input, output));
+    context.push(proofContext(output));
+    return;
+  }
+  if (intent === "my_record") {
+    const output = await getMyGameRecord(resourceId);
+    parts.push(toolPart("getMyGameRecord", {}, output));
+    context.push(recordContext(output));
+    return;
+  }
+  const output = await getMyDappActions(resourceId, input);
+  parts.push(toolPart("getMyDappActions", input, output));
+  context.push(actionContext(output));
+}
+
+export interface BuildChatToolPartsInput {
+  resourceId?: string;
+  message: string;
+}
+
+export async function buildChatToolParts(input: string | BuildChatToolPartsInput): Promise<{ parts: ChatToolPart[]; context: string[] }> {
+  const message = typeof input === "string" ? input : input.message;
+  const resourceId = typeof input === "string" ? undefined : input.resourceId;
   const normalized = normalizeText(message);
-  const { teams } = await fixtureSource();
-  const team = findTeam(teams, message);
   const parts: ChatToolPart[] = [];
   const context: string[] = [];
+  const userActionIntent = inferUserActionIntent(normalized);
+
+  if (resourceId?.startsWith("0x") && userActionIntent) {
+    await addUserActionTool(resourceId, userActionIntent, parts, context);
+    return { parts, context };
+  }
+
+  const { teams } = await fixtureSource();
+  const team = findTeam(teams, message);
 
   if (isProfileIntent(normalized) && team) {
     const input = { team: team.code };
@@ -280,7 +322,7 @@ export async function buildChatToolParts(message: string): Promise<{ parts: Chat
     context.push(`Tool getTeamProfile returned ${output.team.name}: coach ${output.team.coach ?? "TBA"}, ${output.squadCount} players, Group ${output.team.groupName}.`);
   }
 
-  if (isFixtureIntent(normalized)) {
+  if (!userActionIntent && isFixtureIntent(normalized)) {
     const input: FixtureQueryInput = {
       group: inferGroup(normalized),
       team: team?.code,

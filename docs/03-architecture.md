@@ -9,6 +9,7 @@
 > **Wallet-required writes:** every user-facing output action uses a verified Sui session. Raw output payloads go to Walrus when a publisher is configured; an owned Sui `OutputRecord` stores `blobId + contentHash` as the public proof. Supabase only indexes the proof.
 > **Global schedule memory:** WC2026 fixture memory lives in `daily-walrus:global:world-cup-2026`; Gil recalls it alongside per-user memory so schedule Q&A does not depend on a single user's notebook. Runtime proof/status is exposed at `/api/tracking/runtime` and the `#tracking` UI page.
 > **Agentic Daily What's Up:** the autonomous publisher creates Gil-style World Cup dispatches, stores summary metadata in global Walrus Memory, indexes the post in Supabase, and optionally anchors the blob/hash with a Sui `OutputRecord`.
+> **Live match operations:** public/provider data updates a rebuildable Supabase cache for fixtures, live state, events, lineups, and availability. Final score settlement remains a separate token-gated oracle action; provider data is evidence, not authority.
 
 ## 1. System diagram
 ```
@@ -59,8 +60,9 @@
 - **Model:** **Gemini via Vercel AI Gateway** — `@ai-sdk/gateway` `createGateway({ apiKey: AI_GATEWAY_API_KEY })('google/gemini-3-flash')`. ⚠️ Passing a bare `google/...` string to Mastra routes to Google directly (requires GOOGLE_API_KEY) → you must use the gateway provider explicitly.
 - **CORS:** allow `https://roast2026wc.wal.app`, local dev, and verified preview origins.
 - **Tools** (each tool is a `createTool` with a zod schema): see §5.
-- **Generative UI contract:** the chat service prefetches deterministic fixture/profile tool results when the user intent is clear, injects a compact tool context into Gil's prompt, and returns `parts[]` alongside `text`. These parts follow the AI SDK UIMessage shape (`text`, `tool-getFixtures`, `tool-getTeamProfile`) so the frontend can render fixture and profile cards.
+- **Generative UI contract:** the chat service prefetches deterministic fixture/profile/private-history tool results when the user intent is clear, injects a compact tool context into Gil's prompt, and returns `parts[]` alongside `text`. These parts follow the AI SDK UIMessage shape (`text`, `tool-getFixtures`, `tool-getTeamProfile`, `tool-getMyPredictions`, `tool-getMyRoasts`, `tool-getMyMatchVotes`, `tool-getMyOutputRecords`, `tool-getMyDappActions`, `tool-getMyGameRecord`) so the frontend can render sourced cards.
 - **Memory hooks:** after each turn → `remember` new facts into MemWal; mirror a profile snapshot to Walrus (async, without blocking the response).
+- **Live-data ops:** protected oracle/admin paths run dry-run/apply sync jobs, store provider sync ledgers, and expose public read-only match-center data.
 
 ### 2.3 Walrus Memory (MemWal) — the star
 - Package `@mysten-incubation/memwal` (beta). Quick start:
@@ -159,6 +161,7 @@ verified wallet user sends a message / roast / vote / prediction
 request with { resource: suiAddress, thread }
   → memwal.recall({ query: context })  → relevant memories
   → deterministic tool resolver fetches fixtures/team profiles when the prompt asks for them
+  → deterministic private resolver fetches wallet-scoped prediction/roast/vote/proof/action history when asked
   → read record/streak from Supabase
   → inject "Gil's notebook" + tool context into the system prompt
   → Gil generates a personalized answer
@@ -177,6 +180,12 @@ request with { resource: suiAddress, thread }
 | `rememberMemory` | `{ fact, tags? }` | `memwal.remember` a new fact |
 | `getFixtures` | `{ group?, team?, date?, status?, prediction?, limit? }` | reads fixture cache, merged with prediction-gate state |
 | `getTeamProfile` | `{ team }` | returns flag, coach, squad sample, fixture list, and Walrus blob proof |
+| `getMyPredictions` | `{ limit? }` | wallet-scoped prediction history with result/points/tx context |
+| `getMyRoasts` | `{ limit? }` | wallet-scoped roast history with Walrus/Sui proof pointers |
+| `getMyMatchVotes` | `{ limit? }` | wallet-scoped MVP/worst-player votes |
+| `getMyOutputRecords` | `{ limit? }` | wallet-owned Sui `OutputRecord` proof index |
+| `getMyDappActions` | `{ limit? }` | merged timeline from predictions, roasts, votes, and output proofs |
+| `getMyGameRecord` | `{}` | wallet-scoped points, accuracy, streak, and graded count |
 | `makePrediction` | `{ matchId, kind, payload }` | writes `predictions` + remember |
 | `scorePredictions` | `{ matchId }` | compares the result → updates correct/wrong, streak |
 | `getMyRecord` | `{}` | the user's W–L, accuracy, streak |
@@ -213,6 +222,64 @@ Data tables:
 | `daily_briefings` | UI index, proof pointers, source list, agent trace |
 | `agent_runs` | workflow status, input/output JSON, failure ledger |
 
+## 5.2 World Cup live data operations
+
+The live-data layer prepares the app for official WC match windows without widening the scoring trust boundary.
+
+Provider strategy:
+
+| Provider | Role |
+|---|---|
+| `openfootball` / static schedule | No-credential fallback for fixture visibility and smoke checks |
+| `api-football` | Credentialed provider for fixture refresh, live events, lineups, and injury/availability data |
+
+Protected jobs:
+
+| Job | Scope | Writes |
+|---|---|---|
+| `fixtures_full` | tournament or provider fixture | fixture cache, provider map, global schedule memory refresh |
+| `live_tick` | match | live state + timeline events |
+| `finalize_result` | match | final provider state for operator review; does not settle predictions by itself |
+| `lineups` | match | team formations, starters, substitutes, coach |
+| `pre_match` | match/team | player availability notes such as injury/suspension |
+
+Public endpoints:
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/matches/live` | List live/upcoming/finished match details for the match center |
+| `GET /api/matches/:matchId/live` | One match with fixture, live state, events, lineups, and availability |
+
+Protected endpoints:
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/admin/live-data/status` | Provider capability/config state and recent sync runs |
+| `POST /api/oracle/live-data/sync` | Dry-run/apply one live-data job |
+| `POST /api/oracle/live-data/override` | Record manual operator override evidence |
+
+Supabase live-data tables:
+
+| Table | Purpose |
+|---|---|
+| `provider_entity_map` | Maps local IDs to provider IDs |
+| `provider_sync_runs` | Run ledger with mode/status/count/hash/error |
+| `match_live_states` | Latest provider live state for a fixture |
+| `match_events` | Timeline events keyed by provider/match |
+| `match_lineups` | Team formation, coach, confirmation state |
+| `match_lineup_players` | Starters/substitutes and pitch grid coordinates |
+| `player_availability` | Injury/suspension/availability notes |
+| `admin_live_data_overrides` | Manual evidence trail for operator corrections |
+
+Operator contract:
+
+1. Run provider jobs in `dry_run` first.
+2. Apply cache updates only when provider data is acceptable.
+3. Compare final provider result with the official visible result.
+4. Call `/api/oracle/score` only after operator review.
+
+Runbook: [wc-live-data-ops-runbook](wc-live-data-ops-runbook.md).
+
 ## 6. Deployment
 | Component | Infrastructure | Notes |
 |---|---|---|
@@ -223,7 +290,7 @@ Data tables:
 | Wallet | Sui Ed25519 | session wallet, funded with **WAL + SUI**; 1 epoch = 14 days |
 
 ## 7. Secrets & configuration (env)
-**Server (Vercel):** `AI_GATEWAY_API_KEY`, `GIL_MODEL` (e.g. `google/gemini-3-flash`), `DATABASE_URL` (Supabase session pooler), `MEMWAL_ACCOUNT_ID`, `MEMWAL_DELEGATE_KEY`, `MEMWAL_RELAYER_URL`, `SESSION_WALLET_KEY` (suiprivkey…), `SUI_RPC_URL`, `WALRUS_AGGREGATOR_URL`, `CORS_ORIGINS`.
+**Server (Vercel):** `AI_GATEWAY_API_KEY`, `GIL_MODEL` (e.g. `google/gemini-3-flash`), `DATABASE_URL` (Supabase session pooler), `MEMWAL_ACCOUNT_ID`, `MEMWAL_DELEGATE_KEY`, `MEMWAL_RELAYER_URL`, `SESSION_WALLET_KEY` (suiprivkey…), `SUI_RPC_URL`, `WALRUS_AGGREGATOR_URL`, `CORS_ORIGINS`, `ORACLE_ADMIN_TOKEN`, `LIVE_DATA_PROVIDER`, `API_FOOTBALL_KEY`, `LIVE_DATA_STALE_MS`.
 **Frontend (Vite, public):** `VITE_MASTRA_URL`, `VITE_SUI_NETWORK=mainnet`, `VITE_WALRUS_AGGREGATOR_URL`, `VITE_SUINS_NAME`.
 > Rule: anything secret → server only. `VITE_*` is always public.
 
@@ -245,4 +312,4 @@ walrus-memory-world-cup/
 - The MemWal ↔ Mastra integration mechanism (AI SDK middleware vs tools) — experiment in M2.
 - Whether the MemWal hosted relayer is enough for "written from your wallet" per the judges → keep the raw `@mysten/walrus` path (§2.5) as proof; ask on Discord.
 - Pin the exact versions of `@mysten-incubation/memwal`, `@mysten/walrus@1.x`, `@mastra/*` (migrating to v1).
-- A World Cup fixtures/results data source (free football API) → cache into `fixtures`.
+- A licensed/reliable live sports data source for official match windows. The adapter is in place; provider choice/limits remain an ops decision.

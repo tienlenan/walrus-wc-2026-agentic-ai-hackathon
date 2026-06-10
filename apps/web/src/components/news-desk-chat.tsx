@@ -1,11 +1,10 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from "react";
-import { askGil, type ChatRenderPart, type ChatToolPart, type FixturesToolOutput, type TeamProfileToolOutput } from "../lib/gil-api";
+import { askGil, type ChatRenderPart } from "../lib/gil-api";
 import { useI18n } from "../lib/i18n";
 import { loadAiSettings, resolveAiLang } from "../lib/ai-settings";
 import { useSuiOutputRecorder } from "../lib/sui-output-record";
 import { useVerifiedSession } from "../lib/wallet-session";
-import { useTimeSettings } from "../lib/time-settings";
-import { teamWithFlag } from "../lib/team-flags";
+import { ToolPartRenderer } from "./chat-tool-cards";
 import "./news-desk-chat.css";
 
 const MarkdownMessage = lazy(() => import("./streamdown-markdown").then((mod) => ({ default: mod.MarkdownMessage })));
@@ -168,110 +167,6 @@ function normalizeForSuggestion(text: string): string {
     .toLocaleLowerCase()
     .normalize("NFD")
     .replace(/\p{Diacritic}/gu, "");
-}
-
-function scoreLabel(fixture: FixturesToolOutput["fixtures"][number]): string | null {
-  if (fixture.homeScore == null || fixture.awayScore == null) return null;
-  return `${fixture.homeScore}-${fixture.awayScore}`;
-}
-
-function GateBadge({ fixture }: { fixture: FixturesToolOutput["fixtures"][number] }) {
-  const label = fixture.predictionOpen ? "Open" : fixture.predictionStatus.replace(/_/g, " ");
-  return <span className={fixture.predictionOpen ? "tool-gate open" : "tool-gate"}>{label}</span>;
-}
-
-function FixturesToolCard({ output }: { output: FixturesToolOutput }) {
-  const { formatDateTime } = useTimeSettings();
-  return (
-    <div className="tool-card fixture-tool-card">
-      <div className="tool-card-head">
-        <div>
-          <span className="tool-kicker">Fixture tool</span>
-          <strong>{output.title}</strong>
-        </div>
-        <span>{output.totalMatches} found</span>
-      </div>
-      <div className="tool-fixtures">
-        {output.fixtures.length === 0 && <div className="tool-empty">No fixture matched that warrant.</div>}
-        {output.fixtures.map((fixture) => (
-          <div className="tool-fixture" key={fixture.matchId}>
-            <div className="tool-fixture-main">
-              <b>
-                {teamWithFlag(fixture.home, fixture.homeTeamCode)} <span>vs</span> {teamWithFlag(fixture.away, fixture.awayTeamCode)}
-              </b>
-              {scoreLabel(fixture) && <em>{scoreLabel(fixture)}</em>}
-            </div>
-            <div className="tool-fixture-meta">
-              <span>M{fixture.matchId}</span>
-              <span>{fixture.groupName ? `Group ${fixture.groupName}` : fixture.stage ?? "Knockout"}</span>
-              <span>{fixture.kickoff ? formatDateTime(fixture.kickoff) : "Kickoff TBA"}</span>
-              <span>{[fixture.venue, fixture.city].filter(Boolean).join(", ")}</span>
-            </div>
-            <GateBadge fixture={fixture} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function TeamProfileToolCard({ output }: { output: TeamProfileToolOutput }) {
-  const { formatDateTime } = useTimeSettings();
-  return (
-    <div className="tool-card team-tool-card">
-      <div className="tool-card-head">
-        <div>
-          <span className="tool-kicker">Team profile tool</span>
-          <strong>
-            {output.team.flagEmoji} {output.team.name}
-          </strong>
-        </div>
-        <span>Group {output.team.groupName}</span>
-      </div>
-      <div className="team-tool-grid">
-        <div>
-          <span>Coach</span>
-          <b>{output.team.coach ?? "TBA"}</b>
-        </div>
-        <div>
-          <span>Squad</span>
-          <b>{output.squadCount} players</b>
-        </div>
-        <div>
-          <span>Walrus blob</span>
-          <b>{output.team.walrusBlobId ? output.team.walrusBlobId.slice(0, 12) : output.team.walrusStatus}</b>
-        </div>
-      </div>
-      <div className="tool-squad">
-        {output.squadSample.map((player) => (
-          <span key={`${player.number}-${player.playerName}`}>
-            #{player.number} {player.playerName} · {player.position}
-          </span>
-        ))}
-      </div>
-      <div className="tool-mini-fixtures">
-        {output.fixtures.slice(0, 3).map((fixture) => (
-          <span key={fixture.matchId}>
-            {teamWithFlag(fixture.home, fixture.homeTeamCode)} vs {teamWithFlag(fixture.away, fixture.awayTeamCode)} ·{" "}
-            {fixture.kickoff ? formatDateTime(fixture.kickoff) : "TBA"}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ToolPartRenderer({ part }: { part: ChatToolPart }) {
-  if (part.state !== "output-available") {
-    return <div className="tool-card tool-pending">Running {part.type.replace("tool-", "")}...</div>;
-  }
-  if (part.type === "tool-getFixtures" && part.output) {
-    return <FixturesToolCard output={part.output as FixturesToolOutput} />;
-  }
-  if (part.type === "tool-getTeamProfile" && part.output) {
-    return <TeamProfileToolCard output={part.output as TeamProfileToolOutput} />;
-  }
-  return <div className="tool-card tool-pending">{part.type.replace("tool-", "")} completed.</div>;
 }
 
 function MessageParts({ message }: { message: Msg }) {

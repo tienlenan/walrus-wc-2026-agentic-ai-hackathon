@@ -13,6 +13,7 @@ Landing ("THE DAILY WALRUS" front page)
  ├─ Newsroom (main chat with Gil)            ← core screen
  ├─ Predictions desk (place & view predictions)
  ├─ Daily What's Up (public agentic dispatches + proof)
+ ├─ Match Center (live state, timeline, lineup pitch, availability)
  ├─ My Record / Gil's Notebook (memory panel + history)
  ├─ Leaderboard (realtime)
  ├─ Before/After (proves the memory)         ← for judges & demo
@@ -34,8 +35,9 @@ Landing ("THE DAILY WALRUS" front page)
 2. The chat service resolves intent and prepares Vercel-style JSON render parts:
    - `tool-getFixtures` for group/team/date/gate schedule questions.
    - `tool-getTeamProfile` for coach, squad, flag, player list, or Walrus blob proof questions.
+   - `tool-getMyPredictions`, `tool-getMyRoasts`, `tool-getMyMatchVotes`, `tool-getMyOutputRecords`, `tool-getMyDappActions`, or `tool-getMyGameRecord` for private wallet history questions.
 3. The agent receives the same tool context in the prompt, then answers in Markdown with a short Gil jab only when it fits.
-4. The frontend renders text through Streamdown and tool results as fixture/profile cards; raw JSON is never shown.
+4. The frontend renders text through Streamdown and tool results as sourced cards; raw JSON is never shown.
 5. Gil `recall`s before answering → injects personal context if any ("Your beloved team is playing again").
 
 ## Flow 3 — Placing a prediction (P0)
@@ -44,11 +46,13 @@ Landing ("THE DAILY WALRUS" front page)
 3. Gil reacts instantly based on **history**: *"Picking the favorite again? Last time you tipped like this you whiffed."*
 4. The prediction is **locked** at kickoff (`locked_at`).
 
-## Flow 4 — Scoring & record updates (automatic when results are in)
-1. A job updates `fixtures` (results) → `scorePredictions(matchId)`.
-2. Each prediction → `correct`/`wrong`; updates **W–L, accuracy, streak**; refreshes `leaderboard_mv`.
-3. `remember` the "moment": *"User missed prediction <match> — streak broken at 0."* → material to roast later.
-4. Realtime pushes updates to the **Leaderboard** & **My Record**.
+## Flow 4 — Scoring & record updates (oracle-gated when results are in)
+1. A live-data job can update cached fixture/live state for operator review.
+2. Operator compares provider result with the official visible result.
+3. Operator calls `/api/oracle/score` for the final score/settle action.
+4. Each prediction → `correct`/`wrong`; updates **W–L, accuracy, streak**; refreshes `leaderboard_mv`.
+5. `remember` the "moment": *"User missed prediction <match> — streak broken at 0."* → material to roast later.
+6. Realtime pushes updates to the **Leaderboard** & **My Record**.
 
 ## Flow 5 — Return session & personalized ROAST (day 2..N) ⭐
 **This is the flow that shows "memory at work".**
@@ -57,7 +61,8 @@ Landing ("THE DAILY WALRUS" front page)
 3. Inline notebook evidence is collapsed by default; the user can expand **Gil remembers** only when they want to inspect the receipts.
 4. Gil opens with the user's own history: *"Hello, master tipster. 2/9 right. Going to praise your beloved team again today, are we?"*
 5. If the user changes their stance → Gil **points out the contradiction**: *"Last week you said France would win, now it's Argentina?"*
-6. The user can click **"What does Gil remember about me?"** → opens the **Memory panel** (read from Walrus) + a **verify on Walrus** link.
+6. The user can ask "What did I predict?", "Who did I roast?", or "What have I done in the dapp?" → Gil uses wallet-scoped tool cards, not another user's data.
+7. The user can click **"What does Gil remember about me?"** → opens the **Memory panel** (read from Walrus) + a **verify on Walrus** link.
 
 ## Flow 6 — Before/After viewer (for judges & video) ⭐
 **Goal:** prove the *Memory Depth & Authenticity* criterion.
@@ -89,6 +94,16 @@ Landing ("THE DAILY WALRUS" front page)
 8. Publisher writes full JSON to Walrus Blob, remembers short metadata in the dedicated briefing namespace, stores UI index data, and anchors an optional Sui `OutputRecord`.
 9. User opens **Daily What's Up**: article, sources, agent trace, novelty score, blob/object links, memory namespace, and tx digest are visible.
 10. User asks Gil about today's dispatch; Gil can recall the published summary from global briefing memory.
+
+## Flow 10 — Official WC live match operations
+**Goal:** keep match data fresh for public viewing and agent briefings without letting a provider auto-settle predictions.
+1. Admin runs `live-data:sync --job=fixtures_full` as a dry-run to inspect provider fixture changes.
+2. Admin applies `fixtures_full` only when the provider output is acceptable; global schedule memory can refresh after apply.
+3. During match windows, admin/cron runs `live_tick` for live state and events.
+4. Before kickoff, admin runs `lineups` and `pre_match` so the public Match Center can show lineup pitch and availability notes.
+5. Public users open **Match Center** (`#matches`) to view status, score, timeline, lineups, and injury/suspension state from the cache.
+6. Daily What's Up scout can include the live match cache as source facts.
+7. At full time, admin runs `finalize_result` dry-run, verifies against the official result, then calls `/api/oracle/score`.
 
 ---
 
