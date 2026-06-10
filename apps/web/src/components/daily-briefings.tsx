@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Streamdown } from "streamdown";
+import { Streamdown, type LinkSafetyModalProps } from "streamdown";
 import { getLatestBriefing, listBriefings, type DailyBriefing } from "../lib/briefings-api";
 import { useI18n } from "../lib/i18n";
 import { APP_SUI_NETWORK } from "../lib/sui-network";
@@ -111,6 +111,48 @@ function AgentTrace({ briefing }: { briefing: DailyBriefing }) {
   );
 }
 
+function ExternalLinkDialog({ isOpen, onClose, onConfirm, url }: LinkSafetyModalProps) {
+  if (!isOpen) return null;
+
+  const host = (() => {
+    try {
+      return new URL(url).host;
+    } catch {
+      return "external site";
+    }
+  })();
+
+  async function copyLink() {
+    await navigator.clipboard.writeText(url).catch(() => undefined);
+  }
+
+  return (
+    <div className="briefing-link-overlay" role="presentation" onClick={onClose}>
+      <div className="briefing-link-dialog" role="dialog" aria-modal="true" aria-labelledby="briefing-link-title" onClick={(event) => event.stopPropagation()}>
+        <div className="briefing-link-head">
+          <div>
+            <span>External Proof</span>
+            <h3 id="briefing-link-title">Open Walrus evidence?</h3>
+          </div>
+          <button type="button" onClick={onClose} aria-label="Close external link dialog">
+            ×
+          </button>
+        </div>
+        <p>This opens a public proof link on {host}. Gil is dramatic, but this receipt is real.</p>
+        <code>{url}</code>
+        <div className="briefing-link-actions">
+          <button type="button" onClick={() => void copyLink()}>
+            Copy link
+          </button>
+          <button type="button" className="primary" onClick={onConfirm}>
+            Open link
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function DailyBriefings() {
   const { t } = useI18n();
   const { formatDate, formatDateTime } = useTimeSettings();
@@ -169,7 +211,9 @@ export function DailyBriefings() {
               <span>{selected.status}</span>
               {selected.publishedAt && <span>{formatDateTime(selected.publishedAt)}</span>}
             </div>
-            <Streamdown>{selected.markdown}</Streamdown>
+            <Streamdown controls={false} linkSafety={{ enabled: true, renderModal: (props) => <ExternalLinkDialog {...props} /> }}>
+              {selected.markdown}
+            </Streamdown>
             <ProofStrip briefing={selected} />
             <AgentTrace briefing={selected} />
           </article>

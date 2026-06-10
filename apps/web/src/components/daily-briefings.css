@@ -97,6 +97,13 @@
   line-height: 1.55;
 }
 
+.briefing-article a {
+  color: var(--teal-deep);
+  font-weight: 700;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
+}
+
 .briefing-meta {
   display: flex;
   flex-wrap: wrap;
@@ -256,6 +263,104 @@
 .briefing-error {
   border-color: var(--red);
   color: var(--red);
+}
+
+.briefing-link-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 2rem);
+  background: color-mix(in srgb, var(--ink) 34%, transparent);
+}
+
+.briefing-link-dialog {
+  width: min(36rem, 100%);
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 0.6rem 0.6rem 0 var(--ink);
+  padding: clamp(1rem, 3vw, 1.35rem);
+}
+
+.briefing-link-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.briefing-link-head span {
+  color: var(--red);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.briefing-link-head h3 {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.briefing-link-head button {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid var(--ink);
+  background: var(--paper-2);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.briefing-link-dialog p {
+  color: var(--ink-soft);
+  margin: 0.9rem 0;
+}
+
+.briefing-link-dialog code {
+  display: block;
+  border: 1px dashed var(--rule);
+  background: color-mix(in srgb, var(--paper-2) 82%, #fff);
+  padding: 0.65rem;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.briefing-link-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.briefing-link-actions button,
+.briefing-link-actions a {
+  border: 1px solid var(--ink);
+  background: var(--paper-2);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  padding: 0.55rem 0.75rem;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.briefing-link-actions .primary {
+  background: var(--ink);
+  color: var(--paper);
 }
 
 .briefing-teaser {
