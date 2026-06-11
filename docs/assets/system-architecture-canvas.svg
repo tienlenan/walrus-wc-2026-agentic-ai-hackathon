@@ -21,7 +21,7 @@
   <text x="1106" y="213" class="mono">&lt;suins&gt;.wal.app</text>
 
   <rect x="70" y="305" width="1300" height="116" class="panel"/>
-  <text x="98" y="344" class="label">Access & API Layer</text>
+  <text x="98" y="344" class="label">Access &amp; API Layer</text>
   <text x="98" y="376" class="small muted">Node HTTP service: sign-in-with-Sui, REST APIs, SSE snapshots, oracle endpoints, CORS, output registration.</text>
   <rect x="920" y="329" width="180" height="52" fill="#fff" stroke="#171411" stroke-width="3"/>
   <text x="944" y="362" class="body">Wallet session</text>
@@ -37,7 +37,7 @@
   <text x="444" y="535" class="body">Gemini via AI Gateway</text>
 
   <rect x="760" y="470" width="610" height="190" class="panel"/>
-  <text x="788" y="510" class="label">Data & Proof Boundary</text>
+  <text x="788" y="510" class="label">Data &amp; Proof Boundary</text>
   <text x="788" y="544" class="small">Walrus Memory is canonical agent memory.</text>
   <text x="788" y="578" class="small">Sui objects are public proof and prediction gate.</text>
   <text x="788" y="612" class="small">Supabase is rebuildable index/cache only.</text>
