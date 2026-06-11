@@ -65,7 +65,7 @@ No gambling, no financial advice, no real-money mechanics. It is a fan commentar
 
 ## Architecture Canvas
 
-![System architecture canvas](docs/assets/system-architecture-canvas.svg)
+![System architecture canvas](docs/assets/system-architecture-canvas.png)
 
 ## Flow
 
