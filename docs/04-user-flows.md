@@ -41,18 +41,20 @@ Landing ("THE DAILY WALRUS" front page)
 5. Gil `recall`s before answering → injects personal context if any ("Your beloved team is playing again").
 
 ## Flow 3 — Placing a prediction (P0)
-1. At the **Predictions desk** the signed-in user picks a match → predicts scoreline/MVP/worst/champion/advance.
-2. Wallet signs a Sui tx → owned `Prediction` object. Supabase mirrors the event and `remember("Prediction <match>: <payload>")` runs through MemWal.
-3. Gil reacts instantly based on **history**: *"Picking the favorite again? Last time you tipped like this you whiffed."*
-4. The prediction is **locked** at kickoff (`locked_at`).
+1. At the **Predictions desk** the signed-in user picks a match → predicts winner/draw, scoreline, MVP, worst player, champion, or team-advance.
+2. For team/player kinds, the user selects from indexed WC teams/squads. No free-text target can be signed.
+3. Wallet signs a Sui tx → owned `Prediction` object. Supabase mirrors the event and `remember("Prediction <match>: <payload>")` runs through MemWal.
+4. Gil reacts instantly based on **history**: *"Picking the favorite again? Last time you tipped like this you whiffed."*
+5. The prediction is **locked** at kickoff (`locked_at`).
 
 ## Flow 4 — Scoring & record updates (oracle-gated when results are in)
 1. A live-data job can update cached fixture/live state for operator review.
 2. Operator compares provider result with the official visible result.
 3. Operator calls `/api/oracle/score` for the final score/settle action.
-4. Each prediction → `correct`/`wrong`; updates **W–L, accuracy, streak**; refreshes `leaderboard_mv`.
-5. `remember` the "moment": *"User missed prediction <match> — streak broken at 0."* → material to roast later.
-6. Realtime pushes updates to the **Leaderboard** & **My Record**.
+4. Scoreline and winner predictions auto-grade from the final score. MVP/worst/champion/advance use oracle/manual correctness with their own point weights.
+5. Each prediction → `correct`/`wrong`; updates **W–L, accuracy, streak**; refreshes `leaderboard_mv`.
+6. `remember` the "moment": *"User missed prediction <match> — streak broken at 0."* → material to roast later.
+7. Realtime pushes updates to the **Leaderboard** & **My Record**.
 
 ## Flow 5 — Return session & personalized ROAST (day 2..N) ⭐
 **This is the flow that shows "memory at work".**
@@ -110,6 +112,7 @@ Landing ("THE DAILY WALRUS" front page)
 ## Empty & error states (don't forget)
 - **Empty:** a new user with no history → Gil "goads" them into placing their first prediction instead of a blank screen.
 - **Result not in yet:** the prediction shows "pending"; don't score early.
+- **No catalog target:** disable submit and show the user the match/team data is not ready instead of allowing arbitrary text.
 - **Network loss/relayer error:** still allow basic chat; write memory with **async retry**; show a light "Gil is rummaging through his notebook…".
 - **Supabase paused/host idle:** keep-alive cron; if slow → a friendly loading state.
 

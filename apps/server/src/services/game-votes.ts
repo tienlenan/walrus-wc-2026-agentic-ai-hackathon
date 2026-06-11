@@ -1,4 +1,5 @@
 import { getPool } from "@daily-walrus/db";
+import { hashToU32 } from "@daily-walrus/shared";
 import { ensureUser } from "./sui-output-records.js";
 
 export type MatchVoteKind = "match_mvp" | "worst_player";
@@ -29,15 +30,6 @@ export interface MatchVoteSummaryDto {
 function assertVoteKind(kind: string): MatchVoteKind {
   if (kind === "match_mvp" || kind === "worst_player") return kind;
   throw new Error("vote kind must be match_mvp or worst_player");
-}
-
-export function hashToU32(value: string): number {
-  let hash = 2166136261;
-  for (let i = 0; i < value.length; i += 1) {
-    hash ^= value.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
 }
 
 async function ensureFixtureExists(matchId: string): Promise<void> {

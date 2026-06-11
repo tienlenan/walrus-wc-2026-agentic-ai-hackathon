@@ -63,6 +63,9 @@ importers:
       '@daily-walrus/contract':
         specifier: workspace:*
         version: link:../../packages/contract
+      '@daily-walrus/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@mysten/dapp-kit':
         specifier: ^1
         version: 1.0.6(@mysten/sui@2.17.0(typescript@5.9.3))(@tanstack/react-query@5.101.0(react@19.2.7))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)

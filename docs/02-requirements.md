@@ -36,9 +36,9 @@ Mapped directly from the event rules. These are pass/fail criteria.
 - **F-MEM-6** A **before/after harness**: an internal tool/route that reproduces the same question with empty vs accumulated memory state to prove the difference (for the demo & judging).
 
 ### 3.2 Predictions & scoring (P0)
-- **F-PRED-1** Users predict: win/draw, (optionally) the scoreline, for each match; plus long-term predictions (champion, top scorer…).
-- **F-PRED-2** Save predictions to a **prediction ledger** (Supabase) with a timestamp, and also `remember` them into MemWal.
-- **F-PRED-3** When a result comes in → **auto-score correct/wrong**, update record & streak.
+- **F-PRED-1** Users predict: winner/draw, scoreline, MVP, worst player, champion, or team-advance. Team/player targets must be picked from indexed `team_profiles` / `team_players`, not free text.
+- **F-PRED-2** Save predictions to a **prediction ledger** (Supabase) with a timestamp, normalized target label/code/player metadata, and also `remember` them into MemWal.
+- **F-PRED-3** When a result comes in → auto-score scoreline/winner, allow oracle/manual scoring for subjective long-tail kinds, and apply per-kind point weights.
 - **F-PRED-4** Lock predictions after kickoff (no editing after the whistle).
 
 ### 3.3 Q&A & analysis (P1)

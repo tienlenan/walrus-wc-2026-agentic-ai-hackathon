@@ -1,7 +1,16 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
-import { buildSubmitPrediction, Kind } from "@daily-walrus/contract";
+import { buildSubmitPrediction } from "@daily-walrus/contract";
 import { getGameSnapshot, saveMatchVote, type Fixture, type GameSnapshot, type MatchVoteSummary } from "../lib/game-api";
+import { getWorldCupSnapshot, type WorldCupSnapshot } from "../lib/world-cup-api";
+import {
+  buildPredictionTargetOptions,
+  contractKindForPrediction,
+  isVotePredictionKind,
+  predictionNeedsFixture,
+  predictionNeedsTarget,
+  type PredictionKindKey,
+} from "../lib/prediction-target-options";
 import { useI18n } from "../lib/i18n";
 import { SUI_NETWORKS, type AppSuiNetwork } from "../lib/sui-network";
 import { useSuiOutputRecorder } from "../lib/sui-output-record";
@@ -11,30 +20,21 @@ import { useTimeSettings } from "../lib/time-settings";
 import { teamWithFlag } from "../lib/team-flags";
 import "./predictions-desk.css";
 
-type KindKey = "scoreline" | "match_mvp" | "worst_player" | "champion" | "advance";
 type GroupFilter = "all" | "knockout" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L";
 
-const KIND_OPTIONS: Array<{ key: KindKey; labelKey: string; kind: number; needsFixture: boolean }> = [
-  { key: "scoreline", labelKey: "pred.kind.scoreline", kind: Kind.Scoreline, needsFixture: true },
-  { key: "match_mvp", labelKey: "pred.kind.match_mvp", kind: Kind.MatchMvp, needsFixture: true },
-  { key: "worst_player", labelKey: "pred.kind.worst_player", kind: Kind.WorstPlayer, needsFixture: true },
-  { key: "champion", labelKey: "pred.kind.champion", kind: Kind.Champion, needsFixture: false },
-  { key: "advance", labelKey: "pred.kind.advance", kind: Kind.Advance, needsFixture: true },
+const KIND_OPTIONS: Array<{ key: PredictionKindKey; labelKey: string }> = [
+  { key: "winner", labelKey: "pred.kind.winner" },
+  { key: "scoreline", labelKey: "pred.kind.scoreline" },
+  { key: "match_mvp", labelKey: "pred.kind.match_mvp" },
+  { key: "worst_player", labelKey: "pred.kind.worst_player" },
+  { key: "champion", labelKey: "pred.kind.champion" },
+  { key: "advance", labelKey: "pred.kind.advance" },
 ];
 
 const GROUP_FILTERS: GroupFilter[] = ["all", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "knockout"];
 
 function shortDigest(digest: string): string {
   return `${digest.slice(0, 10)}...${digest.slice(-6)}`;
-}
-
-function hashToU32(value: string): number {
-  let hash = 2166136261;
-  for (let i = 0; i < value.length; i += 1) {
-    hash ^= value.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
 }
 
 type DateTimeFormatter = ReturnType<typeof useTimeSettings>["formatDateTime"];
@@ -76,10 +76,6 @@ function gateCopy(fixture: Fixture, t: (key: string) => string): string {
   return fixture.predictionLockedReason ?? "Prediction locked.";
 }
 
-function isVoteKind(kind: KindKey): kind is "match_mvp" | "worst_player" {
-  return kind === "match_mvp" || kind === "worst_player";
-}
-
 function voteTitle(summary: MatchVoteSummary | undefined, t: (key: string) => string): string {
   if (!summary || summary.leaders.length === 0) return t("pred.noVotes");
   const top = summary.leaders[0]!;
@@ -95,7 +91,8 @@ export function PredictionsDesk() {
   const recordOutput = useSuiOutputRecorder();
   const { mutateAsync: signAndExecute } = useSignAndExecuteTransaction();
   const [snapshot, setSnapshot] = useState<GameSnapshot | null>(null);
-  const [kindKey, setKindKey] = useState<KindKey>("scoreline");
+  const [worldCupSnapshot, setWorldCupSnapshot] = useState<WorldCupSnapshot | null>(null);
+  const [kindKey, setKindKey] = useState<PredictionKindKey>("winner");
   const [groupFilter, setGroupFilter] = useState<GroupFilter>("all");
   const [matchId, setMatchId] = useState("");
   const [homeScore, setHomeScore] = useState(1);
@@ -111,6 +108,11 @@ export function PredictionsDesk() {
   async function refresh() {
     const next = await getGameSnapshot();
     setSnapshot(next);
+    try {
+      setWorldCupSnapshot(await getWorldCupSnapshot());
+    } catch {
+      setWorldCupSnapshot(null);
+    }
     const firstOpen = next.fixtures.find((fixture) => fixture.predictionOpen) ?? next.fixtures[0];
     if (!matchId && firstOpen) {
       setMatchId(firstOpen.matchId);
@@ -121,7 +123,8 @@ export function PredictionsDesk() {
     void refresh().catch(() => setError(t("pred.loadErr")));
   }, []);
 
-  const option = KIND_OPTIONS.find((o) => o.key === kindKey) ?? KIND_OPTIONS[0]!;
+  const needsFixture = predictionNeedsFixture(kindKey);
+  const needsTarget = predictionNeedsTarget(kindKey);
   const selectedFixture = useMemo(
     () => snapshot?.fixtures.find((fixture) => fixture.matchId === matchId),
     [snapshot?.fixtures, matchId],
@@ -134,36 +137,53 @@ export function PredictionsDesk() {
   }, [groupFilter, snapshot?.fixtures]);
   const openFixtures = useMemo(() => visibleFixtures.filter((fixture) => fixture.predictionOpen), [visibleFixtures]);
   useEffect(() => {
-    if (!option.needsFixture || visibleFixtures.length === 0) return;
+    if (!needsFixture || visibleFixtures.length === 0) return;
     if (!visibleFixtures.some((fixture) => fixture.matchId === matchId)) {
       setMatchId((openFixtures[0] ?? visibleFixtures[0])!.matchId);
     }
-  }, [matchId, openFixtures, option.needsFixture, visibleFixtures]);
+  }, [matchId, needsFixture, openFixtures, visibleFixtures]);
+  const targetOptions = useMemo(
+    () =>
+      buildPredictionTargetOptions({
+        kind: kindKey,
+        fixture: selectedFixture,
+        teams: worldCupSnapshot?.teams ?? [],
+        drawLabel: t("pred.draw"),
+      }),
+    [kindKey, selectedFixture, t, worldCupSnapshot?.teams],
+  );
+  useEffect(() => {
+    if (!needsTarget) return;
+    if (targetOptions.length > 0 && !targetOptions.some((targetOption) => targetOption.value === target)) {
+      setTarget(targetOptions[0]!.value);
+    }
+  }, [needsTarget, target, targetOptions]);
+  const selectedTarget = targetOptions.find((targetOption) => targetOption.value === target) ?? null;
   const selectedVoteSummary = useMemo(
     () => snapshot?.votes.find((vote) => vote.matchId === matchId && vote.kind === kindKey),
     [snapshot?.votes, matchId, kindKey],
   );
   const faucetUrl = SUI_NETWORKS[gas.network as AppSuiNetwork]?.faucetUrl ?? null;
   const gasBlocked = Boolean(signedIn && account && !gas.loading && !gas.hasGas);
-  const gated = option.needsFixture && selectedFixture && !selectedFixture.predictionOpen;
+  const gated = needsFixture && selectedFixture && !selectedFixture.predictionOpen;
   const canSubmit = Boolean(
     signedIn &&
       account &&
       gas.hasGas &&
       !busy &&
-      (!option.needsFixture || (matchId && selectedFixture?.predictionOpen)),
+      (!needsFixture || (matchId && selectedFixture?.predictionOpen)) &&
+      (!needsTarget || selectedTarget),
   );
   const canVote = Boolean(
-    signedIn && gas.hasGas && isVoteKind(kindKey) && matchId && target.trim() && !voteBusy && selectedFixture?.predictionOpen,
+    signedIn && gas.hasGas && isVotePredictionKind(kindKey) && matchId && selectedTarget && !voteBusy && selectedFixture?.predictionOpen,
   );
 
   function buildPayload(): { a: number; b: number; c: number; d: number; e: number } {
     if (kindKey === "scoreline") {
       return { a: Math.max(0, homeScore), b: Math.max(0, awayScore), c: 0, d: 0, e: 0 };
     }
-    const clean = target.trim();
-    if (!clean) throw new Error(t("pred.targetReq"));
-    return { a: hashToU32(clean.toLowerCase()), b: 0, c: 0, d: 0, e: 0 };
+    if (!selectedTarget) throw new Error(t("pred.targetReq"));
+    return selectedTarget.payload;
   }
 
   async function submit(e: FormEvent) {
@@ -176,8 +196,8 @@ export function PredictionsDesk() {
     try {
       const payload = buildPayload();
       const tx = buildSubmitPrediction({
-        matchId: option.needsFixture ? BigInt(matchId) : 0n,
-        kind: option.kind,
+        matchId: needsFixture ? BigInt(matchId) : 0n,
+        kind: contractKindForPrediction(kindKey),
         ...payload,
       });
       const result = await signAndExecute({ transaction: tx });
@@ -193,13 +213,13 @@ export function PredictionsDesk() {
   }
 
   async function submitVote() {
-    if (!isVoteKind(kindKey) || !canVote) return;
+    if (!isVotePredictionKind(kindKey) || !canVote || !selectedTarget) return;
     setVoteBusy(true);
     setVotePhase("saving");
     setError(null);
     setNotice(null);
     try {
-      const votePayload = { matchId, kind: kindKey, targetLabel: target.trim() };
+      const votePayload = { matchId, kind: kindKey, targetLabel: selectedTarget.targetLabel };
       const proof = await recordOutput({
         outputKind: "match_vote",
         resourceType: "match_vote",
@@ -235,7 +255,7 @@ export function PredictionsDesk() {
       <form className="prediction-form" onSubmit={submit}>
         <label>
           {t("pred.betType")}
-          <select value={kindKey} onChange={(e) => setKindKey(e.target.value as KindKey)}>
+          <select value={kindKey} onChange={(e) => setKindKey(e.target.value as PredictionKindKey)}>
             {KIND_OPTIONS.map((item) => (
               <option key={item.key} value={item.key}>
                 {t(item.labelKey)}
@@ -244,7 +264,7 @@ export function PredictionsDesk() {
           </select>
         </label>
 
-        {option.needsFixture && (
+        {needsFixture && (
           <>
             <div className="group-filter full-row" role="group" aria-label={t("pred.groupFilter")}>
               {GROUP_FILTERS.map((item) => (
@@ -306,11 +326,13 @@ export function PredictionsDesk() {
         ) : (
           <label className="full-row">
             {t("pred.target")}
-            <input
-              value={target}
-              onChange={(e) => setTarget(e.target.value)}
-              placeholder={kindKey === "champion" ? t("pred.championPh") : t("pred.targetPh")}
-            />
+            <select value={target} onChange={(e) => setTarget(e.target.value)} disabled={targetOptions.length === 0}>
+              {targetOptions.map((targetOption) => (
+                <option key={targetOption.value} value={targetOption.value}>
+                  {targetOption.label}
+                </option>
+              ))}
+            </select>
           </label>
         )}
 
@@ -319,7 +341,7 @@ export function PredictionsDesk() {
         </button>
       </form>
 
-      {isVoteKind(kindKey) && (
+      {isVotePredictionKind(kindKey) && (
         <div className="vote-panel">
           <div>
             <span>{kindKey === "match_mvp" ? t("pred.votingMvp") : t("pred.votingWorst")}</span>
@@ -343,6 +365,7 @@ export function PredictionsDesk() {
       )}
 
       {gated && selectedFixture && <div className="prediction-alert">{gateCopy(selectedFixture, t)}</div>}
+      {needsTarget && targetOptions.length === 0 && <div className="prediction-alert">{t("pred.noTargets")}</div>}
       {gasBlocked && (
         <div className="prediction-alert gas-alert">
           <span>{t("pred.needGas").replace("{network}", gas.network)}</span>
@@ -356,7 +379,7 @@ export function PredictionsDesk() {
       {gas.error && <div className="prediction-error">{t("pred.gasCheckFailed")}: {gas.error}</div>}
       {notice && <div className="prediction-notice">{notice}</div>}
       {error && <div className="prediction-error">{error}</div>}
-      {option.needsFixture && openFixtures.length === 0 && (
+      {needsFixture && openFixtures.length === 0 && (
         <div className="prediction-alert">{t("pred.noOpen")}</div>
       )}
     </section>

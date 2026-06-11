@@ -100,7 +100,7 @@ create table if not exists predictions (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid not null references users(id) on delete cascade,
   match_id text not null references fixtures(match_id),
-  kind text not null,                      -- winner | scoreline | tournament
+  kind text not null,                      -- winner | scoreline | match_mvp | worst_player | champion | advance
   payload jsonb not null,
   chain_prediction_id text,
   tx_digest text,

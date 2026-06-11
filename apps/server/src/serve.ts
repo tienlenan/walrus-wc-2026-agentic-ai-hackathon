@@ -248,7 +248,7 @@ export const server = createServer(async (req, res) => {
         matchId?: string;
         homeScore?: unknown;
         awayScore?: unknown;
-        manualScores?: Array<{ predictionId: string; points: number; correct: boolean }>;
+        manualScores?: Array<{ predictionId: string; points?: number; correct: boolean }>;
         execute?: boolean;
         settle?: boolean;
       };

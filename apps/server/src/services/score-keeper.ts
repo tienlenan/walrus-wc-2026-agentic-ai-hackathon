@@ -1,15 +1,22 @@
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { buildRecordScores, buildSettleMatch } from "@daily-walrus/contract";
 import { getPool } from "@daily-walrus/db";
+import { PREDICTION_POINTS } from "@daily-walrus/shared";
 import { indexOnce } from "./event-indexer.js";
 import { syncGlobalWorldCupMemory } from "./global-world-cup-memory.js";
 import { getSuiGrpcClient } from "./sui-clients.js";
 import { syncUserPredictionMemory } from "./user-prediction-memory.js";
 import { runDailyBriefingWorkflow } from "./daily-briefing-workflow.js";
 
-type PredictionPayload = { a?: number | string; b?: number | string };
+type PredictionPayload = {
+  a?: number | string;
+  b?: number | string;
+  homeScore?: number | string;
+  awayScore?: number | string;
+  winnerSide?: string;
+};
 
-interface PredictionRow {
+export interface PredictionRow {
   id: string;
   kind: string;
   payload: PredictionPayload;
@@ -20,7 +27,7 @@ interface PredictionRow {
 
 export interface ManualScoreInput {
   predictionId: string;
-  points: number;
+  points?: number;
   correct: boolean;
 }
 
@@ -79,9 +86,32 @@ function outcome(home: number, away: number): "home" | "away" | "draw" {
   return home > away ? "home" : "away";
 }
 
-function gradeScoreline(row: PredictionRow, homeScore: number, awayScore: number): ScoreEntryDto {
-  const predictedHome = toNumber(row.payload?.a);
-  const predictedAway = toNumber(row.payload?.b);
+export function defaultPointsForKind(kind: string): number {
+  switch (kind) {
+    case "winner":
+      return PREDICTION_POINTS.winner;
+    case "scoreline":
+      return PREDICTION_POINTS.scoreline;
+    case "match_mvp":
+      return PREDICTION_POINTS.match_mvp;
+    case "worst_player":
+      return PREDICTION_POINTS.worst_player;
+    case "champion":
+      return PREDICTION_POINTS.champion;
+    case "advance":
+      return PREDICTION_POINTS.advance;
+    default:
+      return 1;
+  }
+}
+
+function payloadNumber(payload: PredictionPayload, primary: keyof PredictionPayload, legacy: keyof PredictionPayload): number | null {
+  return toNumber(payload?.[primary] ?? payload?.[legacy]);
+}
+
+export function gradeScoreline(row: PredictionRow, homeScore: number, awayScore: number): ScoreEntryDto {
+  const predictedHome = payloadNumber(row.payload, "homeScore", "a");
+  const predictedAway = payloadNumber(row.payload, "awayScore", "b");
   if (predictedHome == null || predictedAway == null) {
     return {
       predictionId: row.id,
@@ -96,7 +126,7 @@ function gradeScoreline(row: PredictionRow, homeScore: number, awayScore: number
 
   const exact = predictedHome === homeScore && predictedAway === awayScore;
   const side = outcome(predictedHome, predictedAway) === outcome(homeScore, awayScore);
-  const points = exact ? 10 : side ? 3 : 0;
+  const points = exact ? PREDICTION_POINTS.scoreline : side ? 3 : 0;
   const correct = exact || side;
 
   return {
@@ -107,6 +137,44 @@ function gradeScoreline(row: PredictionRow, homeScore: number, awayScore: number
     correct,
     result: correct ? "correct" : "wrong",
     reason: exact ? "exact-scoreline" : side ? "correct-result" : "wrong-result",
+  };
+}
+
+function payloadWinnerSide(payload: PredictionPayload): "home" | "away" | "draw" | null {
+  if (payload.winnerSide === "home" || payload.winnerSide === "away" || payload.winnerSide === "draw") {
+    return payload.winnerSide;
+  }
+  const n = toNumber(payload.a);
+  if (n === 0) return "draw";
+  if (n === 1) return "home";
+  if (n === 2) return "away";
+  return null;
+}
+
+export function gradeWinner(row: PredictionRow, homeScore: number, awayScore: number): ScoreEntryDto {
+  const predicted = payloadWinnerSide(row.payload);
+  if (!predicted) {
+    return {
+      predictionId: row.id,
+      user: row.sui_address,
+      kind: row.kind,
+      points: 0,
+      correct: false,
+      result: "wrong",
+      reason: "bad-payload",
+    };
+  }
+
+  const actual = outcome(homeScore, awayScore);
+  const correct = predicted === actual;
+  return {
+    predictionId: row.id,
+    user: row.sui_address,
+    kind: row.kind,
+    points: correct ? PREDICTION_POINTS.winner : 0,
+    correct,
+    result: correct ? "correct" : "wrong",
+    reason: correct ? "correct-winner" : "wrong-winner",
   };
 }
 
@@ -132,7 +200,7 @@ async function loadPendingPredictions(matchId: string): Promise<PredictionRow[]>
   }));
 }
 
-function buildEntries(
+export function buildEntries(
   rows: PredictionRow[],
   input: ScoreMatchInput,
 ): { entries: ScoreEntryDto[]; skipped: ScoreMatchResult["skipped"] } {
@@ -143,20 +211,26 @@ function buildEntries(
   for (const row of rows) {
     const manualScore = manual.get(row.id);
     if (manualScore) {
+      const correct = Boolean(manualScore.correct);
+      const points = manualScore.points == null ? (correct ? defaultPointsForKind(row.kind) : 0) : manualScore.points;
       entries.push({
         predictionId: row.id,
         user: row.sui_address,
         kind: row.kind,
-        points: Math.max(0, Math.floor(manualScore.points)),
-        correct: Boolean(manualScore.correct),
-        result: manualScore.correct ? "correct" : "wrong",
+        points: Math.max(0, Math.floor(points)),
+        correct,
+        result: correct ? "correct" : "wrong",
         reason: "manual-score",
       });
       continue;
     }
 
-    if (row.kind !== "scoreline") {
-      skipped.push({ predictionId: row.id, kind: row.kind, reason: "manual-score-required" });
+    if (row.kind !== "scoreline" && row.kind !== "winner") {
+      skipped.push({
+        predictionId: row.id,
+        kind: row.kind,
+        reason: `manual-score-required:${defaultPointsForKind(row.kind)}pt`,
+      });
       continue;
     }
 
@@ -167,7 +241,7 @@ function buildEntries(
       continue;
     }
 
-    entries.push(gradeScoreline(row, homeScore, awayScore));
+    entries.push(row.kind === "winner" ? gradeWinner(row, homeScore, awayScore) : gradeScoreline(row, homeScore, awayScore));
   }
 
   return { entries, skipped };

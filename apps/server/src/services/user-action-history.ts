@@ -176,7 +176,24 @@ function matchLabel(row: Row): string {
 export function formatPredictionPayload(kind: string, payload: unknown): string {
   if (!payload || typeof payload !== "object") return String(payload ?? "empty pick");
   const record = payload as Record<string, unknown>;
-  const keys = ["winner", "team", "teamCode", "homeScore", "awayScore", "champion", "target", "player", "value"];
+  if (kind === "scoreline" && record.homeScore != null && record.awayScore != null) {
+    return `${kind} ${String(record.homeScore)}-${String(record.awayScore)}`;
+  }
+  if (record.targetLabel != null) return `${kind} ${String(record.targetLabel)}`;
+  const keys = [
+    "winner",
+    "winnerSide",
+    "team",
+    "teamCode",
+    "teamName",
+    "homeScore",
+    "awayScore",
+    "champion",
+    "target",
+    "player",
+    "playerName",
+    "value",
+  ];
   const parts = keys
     .filter((key) => record[key] != null)
     .map((key) => `${key}:${String(record[key])}`);

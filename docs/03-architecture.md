@@ -117,8 +117,8 @@ users(id uuid pk, sui_address text unique, memwal_account_id text,
 
 -- prediction ledger (scoring)
 predictions(id uuid pk, user_id uuid fk, match_id text,
-      kind text,                 -- 'winner' | 'scoreline' | 'tournament'
-      payload jsonb,             -- e.g. {"winner":"BRA"} or {"home":2,"away":1}
+      kind text,                 -- winner | scoreline | match_mvp | worst_player | champion | advance
+      payload jsonb,             -- normalized team/player pick, e.g. {"winnerSide":"home","teamCode":"BRA"} or {"homeScore":2,"awayScore":1}
       created_at timestamptz, locked_at timestamptz,
       result text,               -- 'pending' | 'correct' | 'wrong'
       scored_at timestamptz)
@@ -143,6 +143,8 @@ leaderboard_mv(user_id, display_name, total, correct, accuracy, streak)
 ```
 - **Realtime** pushes leaderboard & match-result updates.
 - `pgvector` is only needed if we do semantic recall ourselves in Mastra; if we rely on MemWal's recall it can be dropped → fewer dependencies.
+- **Prediction target contract:** UI picks team/player targets from `team_profiles` / `team_players`. Mainnet Move kind space stays unchanged; winner uses the existing `advance` kind with a payload marker, then the indexer normalizes it to `kind='winner'`.
+- **Scoring weights:** scoreline exact = 10, scoreline correct result = 3, winner = 4, MVP = 8, worst player = 6, team advance = 5, champion = 20. Non-objective kinds require oracle/manual correctness unless a richer official source exists.
 
 ## 4. Memory flow (this is the "scoring" part)
 
@@ -188,8 +190,8 @@ request with { resource: suiAddress, thread }
 | `getMyOutputRecords` | `{ limit? }` | wallet-owned Sui `OutputRecord` proof index |
 | `getMyDappActions` | `{ limit? }` | merged timeline from predictions, roasts, votes, and output proofs |
 | `getMyGameRecord` | `{}` | wallet-scoped points, accuracy, streak, and graded count |
-| `makePrediction` | `{ matchId, kind, payload }` | writes `predictions` + remember |
-| `scorePredictions` | `{ matchId }` | compares the result → updates correct/wrong, streak |
+| `makePrediction` | `{ matchId, kind, payload }` | writes a wallet-owned `Prediction`; payload is normalized from catalog-picked team/player options |
+| `scorePredictions` | `{ matchId, homeScore, awayScore, manualScores? }` | auto-grades scoreline/winner, applies default/manual points for subjective kinds, updates streak |
 | `getMyRecord` | `{}` | the user's W–L, accuracy, streak |
 | `getLeaderboard` | `{ limit? }` | top by accuracy |
 | `verifyOnWalrus` | `{ kind }` | returns `blobId/objectId` + an aggregator/explorer URL to verify |

@@ -1,6 +1,8 @@
 // Domain types shared by server, web, and db.
 
-export type PredictionKind = "winner" | "scoreline" | "tournament";
+import type { PredictionKind } from "./predictions.js";
+
+export type { PredictionKind } from "./predictions.js";
 export type PredictionResult = "pending" | "correct" | "wrong";
 export type FixtureStatus = "scheduled" | "live" | "finished";
 export type RoastSeverity = "light" | "standard" | "savage";

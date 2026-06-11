@@ -1,4 +1,5 @@
 export * from "./types.js";
+export * from "./predictions.js";
 export {
   GIL_NAME,
   GIL_PERSONA,

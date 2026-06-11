@@ -1,5 +1,6 @@
-import { ids, Kind } from "@daily-walrus/contract";
+import { ids } from "@daily-walrus/contract";
 import { getPool } from "@daily-walrus/db";
+import { normalizePredictionPayload, predictionKindName } from "./prediction-payloads.js";
 import { queryMoveEvents, type ChainEvent, type ChainEventCursor } from "./sui-events.js";
 import { syncUserPredictionMemory } from "./user-prediction-memory.js";
 
@@ -33,23 +34,6 @@ function splitLabel(label: string): { home: string; away: string } {
   const parts = label.split(/\s+(?:vs|v|VS|V)\s+/).map((s) => s.trim()).filter(Boolean);
   if (parts.length >= 2) return { home: parts[0]!, away: parts.slice(1).join(" vs ") };
   return { home: label || "World Cup Match", away: "TBD" };
-}
-
-function kindName(kind: number): string {
-  switch (kind) {
-    case Kind.Scoreline:
-      return "scoreline";
-    case Kind.MatchMvp:
-      return "match_mvp";
-    case Kind.WorstPlayer:
-      return "worst_player";
-    case Kind.Champion:
-      return "champion";
-    case Kind.Advance:
-      return "advance";
-    default:
-      return `kind_${kind}`;
-  }
 }
 
 async function getCursor(name: string): Promise<ChainEventCursor | null> {
@@ -128,6 +112,7 @@ async function handlePredictionSubmitted(event: ChainEvent): Promise<void> {
     d: numberField(json.d),
     e: numberField(json.e),
   };
+  const resolvedKind = predictionKindName(kind, payload);
 
   await getPool().query(
     `insert into predictions(user_id, match_id, kind, payload, chain_prediction_id, tx_digest, chain_status, created_at)
@@ -142,8 +127,8 @@ async function handlePredictionSubmitted(event: ChainEvent): Promise<void> {
     [
       userId,
       matchId,
-      kindName(kind),
-      JSON.stringify(payload),
+      resolvedKind,
+      JSON.stringify(normalizePredictionPayload({ kind: resolvedKind, matchId, payload })),
       predictionId,
       event.id.txDigest,
       dateFromMs(json.created_ms ?? json.createdMs),
