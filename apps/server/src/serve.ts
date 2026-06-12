@@ -92,12 +92,17 @@ function numberBody(value: unknown): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
+function boolParam(value: string | null): boolean {
+  return value === "1" || value === "true";
+}
+
 function oracleAuthorized(req: IncomingMessage): boolean {
-  const expected = process.env.ORACLE_ADMIN_TOKEN;
-  if (!expected) return false;
+  const allowed = [process.env.ORACLE_ADMIN_TOKEN, process.env.CRON_SECRET].filter(Boolean);
+  if (allowed.length === 0) return false;
   const header = req.headers["x-oracle-token"];
   const token = Array.isArray(header) ? header[0] : header;
-  return token === expected || bearer(req) === expected;
+  const bearerToken = bearer(req);
+  return allowed.includes(token ?? "") || allowed.includes(bearerToken ?? "");
 }
 
 // One anonymous snapshot computation per stream tick, shared across all concurrent
@@ -286,6 +291,19 @@ export const server = createServer(async (req, res) => {
       const body = JSON.parse((await readBody(req)) || "{}") as { date?: string; type?: BriefingType; focus?: string; force?: boolean };
       const { runDailyBriefingWorkflow } = await import("./services/daily-briefing-workflow.js");
       return json(res, 200, await runDailyBriefingWorkflow(body));
+    }
+    if (req.method === "GET" && url.pathname === "/api/oracle/briefings/daily-cron") {
+      if (!oracleAuthorized(req)) return json(res, 401, { error: "oracle token required" });
+      const { runDailyBriefingWorkflow } = await import("./services/daily-briefing-workflow.js");
+      return json(
+        res,
+        200,
+        await runDailyBriefingWorkflow({
+          type: "daily",
+          focus: url.searchParams.get("focus") ?? "vercel-cron",
+          force: boolParam(url.searchParams.get("force")),
+        }),
+      );
     }
     if (req.method === "POST" && req.url === "/api/oracle/live-data/sync") {
       if (!oracleAuthorized(req)) return json(res, 401, { error: "oracle token required" });

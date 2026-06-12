@@ -26,6 +26,7 @@ Required keys:
 - `WC_ADMIN_CAP_ID`, `WC_ORACLE_CAP_ID`
 - `MEMWAL_ACCOUNT_ID`, `MEMWAL_DELEGATE_KEY`, `MEMWAL_RELAYER_URL`
 - `AI_GATEWAY_API_KEY`, `DATABASE_URL`
+- `CRON_SECRET` for Vercel Cron bearer auth; `ORACLE_ADMIN_TOKEN` may also be used for manual oracle calls.
 - `MASTRA_URL` (server endpoint)
 - Optional daily briefing keys: `BRIEFING_SOURCE_URLS`, `BRIEFING_SIDE_STORIES_JSON`, `BRIEFING_PUBLISHER_WALLET_KEY`, `BRIEFING_POST_SCORE_ENABLED`
 - Walrus blob publishing order:
@@ -111,6 +112,11 @@ curl -sS https://gil-var-shamebook-api.vercel.app/api/briefings/latest
    - `https://roast2026wc.wal.app`
    - `http://localhost:5173`
    - Vercel preview origins for smoke testing
+5. Vercel Cron is configured in `vercel.json`:
+   - `GET /api/oracle/briefings/daily-cron`
+   - `30 5 * * *` UTC, equivalent to 12:30 in Vietnam.
+   - The route is idempotent: existing same-date `daily` briefing is reused unless `force=1`.
+   - Vercel sends `Authorization: Bearer $CRON_SECRET`; the API also accepts `ORACLE_ADMIN_TOKEN` for manual calls.
 
 ## 6) SuiNS / Public URL
 - Mainnet Walrus Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`.
@@ -127,6 +133,12 @@ curl -sS https://gil-var-shamebook-api.vercel.app/api/briefings/latest
     -H "content-type: application/json" \
     -H "x-oracle-token: $ORACLE_ADMIN_TOKEN" \
     -d '{"type":"daily","force":true}'
+  ```
+- Verify the cron-safe GET path:
+  ```bash
+  CRON_SECRET=<token> \
+  curl -sS https://gil-var-shamebook-api.vercel.app/api/oracle/briefings/daily-cron \
+    -H "authorization: Bearer $CRON_SECRET"
   ```
 - Confirm `#briefings` opens, Walrus blob link opens if publisher is configured, and tracking shows latest Daily What's Up status.
 - Confirm Daily What's Up trace shows `previousBriefings`, novelty score, and retry rows if duplicate drafts were rejected.
