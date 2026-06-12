@@ -79,6 +79,13 @@ function iso(value: string | Date | null | undefined): string | null {
 }
 
 function dateOnly(value: string | Date): string {
+  if (value instanceof Date) {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, "0");
+    const day = String(value.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+  if (/^\d{4}-\d{2}-\d{2}/.test(value)) return value.slice(0, 10);
   return new Date(value).toISOString().slice(0, 10);
 }
 

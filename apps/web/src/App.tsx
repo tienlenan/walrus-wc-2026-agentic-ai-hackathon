@@ -10,6 +10,7 @@ const loadConnectBar = () => import("./components/connect-bar").then((mod) => ({
 const loadNewsDeskChat = () => import("./components/news-desk-chat").then((mod) => ({ default: mod.NewsDeskChat }));
 const loadSettingsPanel = () => import("./components/settings-panel").then((mod) => ({ default: mod.SettingsPanel }));
 const loadPredictionsDesk = () => import("./components/predictions-desk").then((mod) => ({ default: mod.PredictionsDesk }));
+const loadMyPredictionsManager = () => import("./components/my-predictions-manager").then((mod) => ({ default: mod.MyPredictionsManager }));
 const loadLeaderboard = () => import("./components/leaderboard").then((mod) => ({ default: mod.Leaderboard }));
 const loadRoastWall = () => import("./components/roast-wall").then((mod) => ({ default: mod.RoastWall }));
 const loadTeamProfiles = () => import("./components/team-profiles").then((mod) => ({ default: mod.TeamProfiles }));
@@ -25,6 +26,7 @@ const ConnectBar = lazy(loadConnectBar);
 const NewsDeskChat = lazy(loadNewsDeskChat);
 const SettingsPanel = lazy(loadSettingsPanel);
 const PredictionsDesk = lazy(loadPredictionsDesk);
+const MyPredictionsManager = lazy(loadMyPredictionsManager);
 const Leaderboard = lazy(loadLeaderboard);
 const RoastWall = lazy(loadRoastWall);
 const TeamProfiles = lazy(loadTeamProfiles);
@@ -240,6 +242,7 @@ export default function App() {
       <nav className="edition-nav" aria-label="Edition sections">
         <NavLink href="#newsroom" label={t("nav.gil")} />
         <NavLink href="#predictions" label={t("nav.predictions")} />
+        <NavLink href="#my-picks" label={t("nav.myPicks")} />
         <NavLink href="#leaderboard" label={t("nav.leaderboard")} />
         <NavLink href="#roasts" label={t("nav.roasts")} />
         <NavLink href="#guide" label={t("nav.guide")} reference />
@@ -272,6 +275,13 @@ export default function App() {
             <DeferredSection fallback={<SectionSkeleton title={t("nav.predictions")} />}>
               <Suspense fallback={<SectionSkeleton title={t("nav.predictions")} />}>
                 <PredictionsDesk />
+              </Suspense>
+            </DeferredSection>
+          </div>
+          <div id="my-picks" className="section-anchor">
+            <DeferredSection fallback={<SectionSkeleton title={t("nav.myPicks")} />}>
+              <Suspense fallback={<SectionSkeleton title={t("nav.myPicks")} />}>
+                <MyPredictionsManager />
               </Suspense>
             </DeferredSection>
           </div>

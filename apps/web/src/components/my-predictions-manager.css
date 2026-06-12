@@ -1,0 +1,185 @@
+.my-picks-section {
+  margin: 1.5rem 0;
+  border-bottom: 4px double var(--ink);
+  padding-bottom: 1.25rem;
+}
+
+.my-picks-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(1.35rem, 4vw, 2rem);
+  margin-bottom: 0.85rem;
+}
+
+.my-picks-title button,
+.my-picks-filters button,
+.my-picks-proof button {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+.my-picks-title button {
+  padding: 0.55rem 0.75rem;
+  font-size: 0.72rem;
+}
+
+.my-picks-title button:disabled,
+.my-picks-proof button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.my-picks-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--ink);
+  margin-bottom: 0.85rem;
+}
+
+.my-picks-summary div {
+  padding: 0.7rem;
+  border-right: 1px solid var(--rule);
+}
+
+.my-picks-summary div:last-child {
+  border-right: none;
+}
+
+.my-picks-summary span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
+.my-picks-summary strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  line-height: 1.05;
+}
+
+.my-picks-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.85rem;
+}
+
+.my-picks-filters button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.48rem 0.65rem;
+  font-size: 0.7rem;
+}
+
+.my-picks-filters button.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.my-picks-filters b {
+  font-size: 0.78rem;
+}
+
+.my-picks-table-wrap {
+  overflow-x: auto;
+}
+
+.my-picks-table {
+  width: 100%;
+  min-width: 880px;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+}
+
+.my-picks-table th,
+.my-picks-table td {
+  border: 1px solid var(--rule);
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.my-picks-table th {
+  background: var(--ink);
+  color: var(--paper);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.my-picks-table td {
+  font-size: 0.78rem;
+}
+
+.my-picks-status {
+  display: inline-block;
+  border: 1px solid var(--ink);
+  padding: 0.18rem 0.45rem;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+}
+
+.my-picks-status.correct {
+  background: #e7f4dc;
+}
+
+.my-picks-status.wrong {
+  background: #f8ded7;
+}
+
+.my-picks-status.pending {
+  background: #fff5cf;
+}
+
+.my-picks-proof {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+
+.my-picks-proof a,
+.my-picks-proof span {
+  color: var(--ink);
+}
+
+.my-picks-proof button {
+  padding: 0.22rem 0.4rem;
+  font-size: 0.62rem;
+}
+
+.my-picks-error {
+  margin-top: 0.65rem;
+  color: var(--red);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+}
+
+@media (max-width: 640px) {
+  .my-picks-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .my-picks-summary div:nth-child(2) {
+    border-right: none;
+  }
+
+  .my-picks-summary div:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--rule);
+  }
+}
