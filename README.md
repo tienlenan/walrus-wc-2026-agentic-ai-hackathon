@@ -159,13 +159,16 @@ For testnet demo recording, use `pnpm dev:web:test`.
 Frontend deploy is documented in [docs/mainnet-deploy-runbook.md](docs/mainnet-deploy-runbook.md).
 
 ```bash
-export PATH="/Users/mpdh/.nvm/versions/node/v22.22.2/bin:/Users/mpdh/.bun/bin:$PATH"
-SITE_BUILDER_BIN=/Users/mpdh/.local/share/suiup/binaries/mainnet/site-builder-v2.10.0 \
-WALRUS_BINARY=/Users/mpdh/.local/share/suiup/binaries/mainnet/walrus-v1.49.1 \
+corepack enable
+corepack prepare pnpm@9.15.9 --activate
+pnpm install --frozen-lockfile
+export PATH="$HOME/.local/bin:$PATH"
 WALRUS_SITE_CONTEXT=mainnet \
 WALRUS_SITE_EPOCHS=12 \
-./scripts/deploy-walrus-site.sh
+pnpm deploy:walrus-site
 ```
+
+Install `sui`, `walrus`, and `site-builder` with `suiup` before deploying. If your binaries or Walrus Sites config are not in default locations, set `SITE_BUILDER_BIN`, `WALRUS_BINARY`, or `SITE_BUILDER_CONFIG` as described in the runbook.
 
 Backend deploy runs through Vercel and serves `https://gil-var-shamebook-api.vercel.app/`.
 

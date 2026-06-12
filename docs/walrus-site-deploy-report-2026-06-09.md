@@ -7,9 +7,9 @@
 - Final hackathon submission must use mainnet IDs and URLs. Testnet IDs below are internal verification only.
 
 ## Tooling
-- `sui`: `/Users/mpdh/.local/bin/sui`, version `1.73.1`.
-- `site-builder`: `/Users/mpdh/.local/share/suiup/binaries/mainnet/site-builder-v2.10.0`.
-- `walrus`: `/Users/mpdh/.local/share/suiup/binaries/mainnet/walrus-v1.49.1`.
+- `sui`: installed through `suiup`, version `1.73.1` during the recorded deploy.
+- `site-builder`: installed through `suiup` and resolved from `PATH`.
+- `walrus`: installed through `suiup` and resolved from `PATH`.
 - Walrus config: `~/.config/walrus/client_config.yaml`.
 - Walrus Sites config: `~/.config/walrus/sites-config.yaml`.
 
@@ -22,11 +22,10 @@
 ## Testnet Deploy
 - Command:
   ```bash
-  SITE_BUILDER_BIN=/Users/mpdh/.local/share/suiup/binaries/mainnet/site-builder-v2.10.0 \
-  WALRUS_BINARY=/Users/mpdh/.local/share/suiup/binaries/mainnet/walrus-v1.49.1 \
+  export PATH="$HOME/.local/bin:$PATH"
   WALRUS_SITE_CONTEXT=testnet \
   WALRUS_SITE_EPOCHS=1 \
-  ./scripts/deploy-walrus-site.sh
+  pnpm deploy:walrus-site
   ```
 - Site object ID: `0x2e21836114d4f0a8fd3fd931bd6f13256a0fbe25e4d9cef1cb535c64b6542609`
 - Note: `wal.app` only serves mainnet sites. Testnet site requires a self-hosted or third-party testnet portal.
@@ -39,11 +38,10 @@
   - Do not use dry-run package/object IDs for submission; they are simulation output.
 - Command:
   ```bash
-  SITE_BUILDER_BIN=/Users/mpdh/.local/share/suiup/binaries/mainnet/site-builder-v2.10.0 \
-  WALRUS_BINARY=/Users/mpdh/.local/share/suiup/binaries/mainnet/walrus-v1.49.1 \
+  export PATH="$HOME/.local/bin:$PATH"
   WALRUS_SITE_CONTEXT=mainnet \
   WALRUS_SITE_EPOCHS=12 \
-  ./scripts/deploy-walrus-site.sh
+  pnpm deploy:walrus-site
   ```
 - Active deploy wallet: `0xf5ca4f02cf58d6448b6429c691b53c89c56b30c3ded38b45e73ce78829e99f6d`
 - Publish digest: `68d4RuFpzqNqzXgLum5KQFkd2qCRL137EkyS4YXpipv2`

@@ -1,13 +1,17 @@
 # Mainnet Deploy Runbook
 
-## 0) Known-good local shell
-Use Node 22 and the repo-pinned pnpm. Some shells resolve to Node 24, which can fail Rollup native loading.
+## 0) Public-safe toolchain
+Use Node 22 LTS when possible; the repo supports Node `>=20.9.0`, but Node 22 is the verified deploy runtime. Do not commit machine-local absolute paths to this public repository.
 
 ```bash
-export PATH="/Users/mpdh/.nvm/versions/node/v22.22.2/bin:/Users/mpdh/.bun/bin:$PATH"
-node --version   # v22.22.2
-pnpm --version   # 9.15.x
+node --version
+corepack enable
+corepack prepare pnpm@9.15.9 --activate
+pnpm --version
+pnpm install --frozen-lockfile
 ```
+
+Use any Node manager (`nvm`, `fnm`, `asdf`, Volta, system package manager) as long as `node --version` resolves to Node 22 or another supported Node 20+ runtime.
 
 If Rollup native loading fails with a macOS code-signature error, re-sign the local optional binary once:
 
@@ -17,7 +21,77 @@ xattr -dr com.apple.quarantine "$ROLLUP_NODE" 2>/dev/null || true
 codesign --force --sign - "$ROLLUP_NODE"
 ```
 
-## 1) Preflight Variables
+## 1) Sui / Walrus CLI Setup
+Install ecosystem CLIs with `suiup`, the upstream version manager for Sui stack binaries.
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/Mystenlabs/suiup/main/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+
+suiup install sui@mainnet
+suiup install walrus
+suiup install site-builder@mainnet
+suiup install move-analyzer   # optional, useful for Move development
+
+sui --version
+walrus --help
+site-builder --help
+```
+
+Configure the Sui client and select Mainnet:
+
+```bash
+sui client
+sui client new-env --alias mainnet --rpc https://fullnode.mainnet.sui.io:443 || true
+sui client switch --env mainnet
+sui client active-address
+```
+
+Configure Walrus and Walrus Sites. These commands use the default config locations expected by `walrus` and `site-builder`.
+
+```bash
+mkdir -p "$HOME/.config/walrus"
+curl --create-dirs https://docs.wal.app/setup/client_config.yaml \
+  -o "$HOME/.config/walrus/client_config.yaml"
+curl https://raw.githubusercontent.com/MystenLabs/walrus-sites/refs/heads/mainnet/sites-config.yaml \
+  -o "$HOME/.config/walrus/sites-config.yaml"
+```
+
+If binaries or config files live outside default locations, use env vars at deploy time:
+
+```bash
+SITE_BUILDER_BIN=/path/to/site-builder \
+WALRUS_BINARY=/path/to/walrus \
+SITE_BUILDER_CONFIG=/path/to/sites-config.yaml \
+WALRUS_SITE_CONTEXT=mainnet \
+WALRUS_SITE_EPOCHS=12 \
+pnpm deploy:walrus-site
+```
+
+Primary references:
+- Sui install: <https://docs.sui.io/getting-started/onboarding/sui-install>
+- Sui client config: <https://docs.sui.io/getting-started/onboarding/configure-sui-client>
+- Walrus client: <https://docs.wal.app/docs/walrus-client/walrus-cli>
+- Walrus Sites site-builder: <https://docs.wal.app/docs/sites/getting-started/installing-the-site-builder>
+- Walrus Sites deploy/reference: <https://docs.wal.app/docs/sites/getting-started/using-the-site-builder>
+
+## 2) Project SDK Dependencies
+JavaScript/TypeScript SDKs are workspace dependencies, not global installs. A fresh clone only needs `pnpm install --frozen-lockfile`.
+
+Pinned project SDKs:
+- `@mysten/sui@2.17.0`: Sui RPC, transaction building, signing helpers.
+- `@mysten/dapp-kit@^1`: wallet connection UI/runtime in the React app.
+- `@mysten/walrus@1.1.7`: direct Walrus blob writes from the server.
+- `@mysten-incubation/memwal@0.0.7`: Walrus Memory integration.
+
+If extracting a package into another project, install the matching SDKs explicitly:
+
+```bash
+pnpm add @mysten/sui@2.17.0 @mysten/walrus@1.1.7 @mysten-incubation/memwal@0.0.7
+pnpm add @mysten/dapp-kit@^1 @tanstack/react-query@^5
+```
+
+## 3) Preflight Variables
 Copy `.env.local` and create a separate `.env.mainnet` for production.
 
 Required keys:
@@ -39,12 +113,12 @@ Funding gate:
 - The wallet must hold enough mainnet SUI for Move publish and enough WAL for Walrus Sites storage.
 - Current verified state on 2026-06-09: funded, mainnet package published, Walrus Sites object deployed.
 
-## 2) Testnet Snapshot (required)
+## 4) Testnet Snapshot (required)
 - Keep testnet package and contract IDs as baseline.
 - Run testnet verification checklist (phase 2 plan) and keep logs.
 - Treat testnet IDs as internal verification only. Final hackathon submission must use mainnet object IDs and mainnet URL.
 
-## 3) Mainnet Contract
+## 5) Mainnet Contract
 - Publish digest: `68d4RuFpzqNqzXgLum5KQFkd2qCRL137EkyS4YXpipv2`
 - Package: `0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb`
 - MatchRegistry: `0xa992d65237ec8a953f04f0450c39203cc2777b2a67ae61add8c39f74578d3446`
@@ -53,17 +127,17 @@ Funding gate:
 - OracleCap: `0x147d6290d21bd01d51a6cdafc2610cfcdb3d4272d7419d57d71df714fa90c25c`
 - Fixture seed: 104/104 registered; MatchRegistry `match_count=104`.
 
-## 4) Frontend Deploy
-1. Build and deploy with pinned tooling:
+## 6) Frontend Deploy
+1. Build and deploy with public-safe defaults:
    ```bash
-   export PATH="/Users/mpdh/.nvm/versions/node/v22.22.2/bin:/Users/mpdh/.bun/bin:$PATH"
-   SITE_BUILDER_BIN=/Users/mpdh/.local/share/suiup/binaries/mainnet/site-builder-v2.10.0 \
-   WALRUS_BINARY=/Users/mpdh/.local/share/suiup/binaries/mainnet/walrus-v1.49.1 \
+   export PATH="$HOME/.local/bin:$PATH"
    WALRUS_SITE_CONTEXT=mainnet \
    WALRUS_SITE_EPOCHS=12 \
    WALRUS_PRECOMPRESS=1 \
-   ./scripts/deploy-walrus-site.sh
+   pnpm deploy:walrus-site
    ```
+   `scripts/deploy-walrus-site.sh` resolves `site-builder` from `PATH` by default. Set `SITE_BUILDER_BIN`, `WALRUS_BINARY`, or `SITE_BUILDER_CONFIG` only for non-standard installs.
+
    `WALRUS_PRECOMPRESS=1` runs `scripts/precompress-walrus-assets.mjs` after the build:
    assets under `/assets/*` are stored as brotli bytes and `ws-resources.json` declares
    `content-encoding: br` + immutable cache headers (portals serve blob bytes verbatim,
@@ -90,10 +164,12 @@ Funding gate:
    - check `html` has `app-ready`
    - `#boot-splash` should be `visibility:hidden` and `opacity:0`
 
-## 5) Backend Deploy
+## 7) Backend Deploy
 1. Deploy the API from repo root:
    ```bash
-   export PATH="/Users/mpdh/.nvm/versions/node/v22.22.2/bin:/Users/mpdh/.bun/bin:$PATH"
+   corepack enable
+   corepack prepare pnpm@9.15.9 --activate
+   pnpm install --frozen-lockfile
    vercel deploy --prod --yes
    ```
 2. Confirm Vercel aliases production to:
@@ -118,13 +194,13 @@ curl -sS https://gil-var-shamebook-api.vercel.app/api/briefings/latest
    - The route is idempotent: existing same-date `daily` briefing is reused unless `force=1`.
    - Vercel sends `Authorization: Bearer $CRON_SECRET`; the API also accepts `ORACLE_ADMIN_TOKEN` for manual calls.
 
-## 6) SuiNS / Public URL
+## 8) SuiNS / Public URL
 - Mainnet Walrus Site object: `0xd7b94c015080b56d9ba19e18112eb69bf5d40dff83158631cd455cd9860c0158`.
 - Base36 diagnostic: `5dk6jtcpgo39hujesoc658qum6wetenol3b5avm3qpuywq0qqg`.
 - SuiNS/public URL is live: `https://roast2026wc.wal.app/`.
 - Keep the base36 subdomain only as a diagnostic; use `roast2026wc.wal.app` for submission.
 
-## 7) Final validation
+## 9) Final validation
 - Confirm `/api/tracking/runtime` shows mainnet contract + memory sync status.
 - Run or verify one daily briefing:
   ```bash
@@ -145,7 +221,7 @@ curl -sS https://gil-var-shamebook-api.vercel.app/api/briefings/latest
 - Post a smoke transaction from frontend with wallet and confirm tx + object IDs exist.
 - Update `docs/submission-brief-en.md` and `docs/submission-checklist.md` with final mainnet package, object, and URL values.
 
-## 8) Submission PDF Export
+## 10) Submission PDF Export
 Render the high-level design PDF from the HTML source with local Chrome:
 
 ```bash
