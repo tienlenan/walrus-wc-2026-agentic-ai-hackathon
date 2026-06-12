@@ -199,6 +199,15 @@ export async function getGameSnapshot(): Promise<GameSnapshot> {
   return (await res.json()) as GameSnapshot;
 }
 
+export async function syncGameIndex(): Promise<{ indexed: number; snapshot: GameSnapshot }> {
+  if (DEMO_GAME_SNAPSHOT) return { indexed: 0, snapshot: demoGameSnapshot() };
+  const session = getSession();
+  if (!session?.token) throw new Error("Sign in first.");
+  const res = await fetch(`${BASE}/api/game/index`, { method: "POST", headers: { Authorization: `Bearer ${session.token}` } });
+  if (!res.ok) throw new Error(`game index ${res.status}`);
+  return (await res.json()) as { indexed: number; snapshot: GameSnapshot };
+}
+
 export async function saveMatchVote(input: {
   matchId: string;
   kind: "match_mvp" | "worst_player";

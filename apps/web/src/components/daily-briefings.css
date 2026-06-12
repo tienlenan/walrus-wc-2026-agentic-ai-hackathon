@@ -195,6 +195,21 @@
   margin-top: 0.2rem;
 }
 
+.briefing-history-copy {
+  margin: -0.25rem 0 0.65rem;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.briefing-history em {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--ink-soft);
+  font-style: normal;
+  line-height: 1.35;
+}
+
 .briefing-source {
   display: grid;
   grid-template-columns: minmax(0, 1fr) max-content;
@@ -209,6 +224,19 @@
 
 .briefing-source strong {
   overflow-wrap: anywhere;
+}
+
+.briefing-source-facts {
+  grid-column: 1 / -1;
+  margin: 0.2rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.briefing-source-facts li + li {
+  margin-top: 0.25rem;
 }
 
 .briefing-trace {

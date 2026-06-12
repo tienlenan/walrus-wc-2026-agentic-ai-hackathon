@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { buildSubmitPrediction } from "@daily-walrus/contract";
-import { getGameSnapshot, saveMatchVote, type Fixture, type GameSnapshot, type MatchVoteSummary } from "../lib/game-api";
+import { saveMatchVote, type Fixture, type MatchVoteSummary } from "../lib/game-api";
+import { useGameSnapshotStore } from "../lib/game-snapshot-store";
 import { getWorldCupSnapshot, type WorldCupSnapshot } from "../lib/world-cup-api";
 import {
   buildPredictionTargetOptions,
@@ -82,6 +83,10 @@ function voteTitle(summary: MatchVoteSummary | undefined, t: (key: string) => st
   return `${top.targetLabel} leads with ${top.votes}`;
 }
 
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
 export function PredictionsDesk() {
   const { t } = useI18n();
   const { formatDateTime } = useTimeSettings();
@@ -90,7 +95,10 @@ export function PredictionsDesk() {
   const gas = useSuiGasBalance(account?.address);
   const recordOutput = useSuiOutputRecorder();
   const { mutateAsync: signAndExecute } = useSignAndExecuteTransaction();
-  const [snapshot, setSnapshot] = useState<GameSnapshot | null>(null);
+  const snapshot = useGameSnapshotStore((state) => state.snapshot);
+  const snapshotLoading = useGameSnapshotStore((state) => state.loading);
+  const refreshSnapshot = useGameSnapshotStore((state) => state.refresh);
+  const syncGameIndex = useGameSnapshotStore((state) => state.syncIndex);
   const [worldCupSnapshot, setWorldCupSnapshot] = useState<WorldCupSnapshot | null>(null);
   const [kindKey, setKindKey] = useState<PredictionKindKey>("winner");
   const [groupFilter, setGroupFilter] = useState<GroupFilter>("all");
@@ -105,17 +113,27 @@ export function PredictionsDesk() {
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  function ensureMatchSelection(next = snapshot) {
+    const firstOpen = next?.fixtures.find((fixture) => fixture.predictionOpen) ?? next?.fixtures[0];
+    if (!matchId && firstOpen) setMatchId(firstOpen.matchId);
+  }
+
   async function refresh() {
-    const next = await getGameSnapshot();
-    setSnapshot(next);
+    const next = await refreshSnapshot();
     try {
       setWorldCupSnapshot(await getWorldCupSnapshot());
     } catch {
       setWorldCupSnapshot(null);
     }
-    const firstOpen = next.fixtures.find((fixture) => fixture.predictionOpen) ?? next.fixtures[0];
-    if (!matchId && firstOpen) {
-      setMatchId(firstOpen.matchId);
+    ensureMatchSelection(next);
+  }
+
+  async function syncSubmittedPrediction(digest: string) {
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const next = await syncGameIndex();
+      ensureMatchSelection(next);
+      if (!digest || next.myRecord?.predictions.some((prediction) => prediction.txDigest === digest)) return;
+      await wait(900);
     }
   }
 
@@ -163,14 +181,24 @@ export function PredictionsDesk() {
     () => snapshot?.votes.find((vote) => vote.matchId === matchId && vote.kind === kindKey),
     [snapshot?.votes, matchId, kindKey],
   );
+  const existingPrediction = useMemo(
+    () =>
+      snapshot?.myRecord?.predictions.find((prediction) => {
+        if (prediction.kind !== kindKey) return false;
+        return needsFixture ? prediction.matchId === matchId : true;
+      }) ?? null,
+    [kindKey, matchId, needsFixture, snapshot?.myRecord?.predictions],
+  );
   const faucetUrl = SUI_NETWORKS[gas.network as AppSuiNetwork]?.faucetUrl ?? null;
   const gasBlocked = Boolean(signedIn && account && !gas.loading && !gas.hasGas);
   const gated = needsFixture && selectedFixture && !selectedFixture.predictionOpen;
+  const duplicate = Boolean(signedIn && existingPrediction);
   const canSubmit = Boolean(
     signedIn &&
       account &&
       gas.hasGas &&
       !busy &&
+      !duplicate &&
       (!needsFixture || (matchId && selectedFixture?.predictionOpen)) &&
       (!needsTarget || selectedTarget),
   );
@@ -203,7 +231,7 @@ export function PredictionsDesk() {
       const result = await signAndExecute({ transaction: tx });
       const digest = "digest" in result ? result.digest : "";
       setNotice(digest ? `${t("pred.submitted")}: ${shortDigest(digest)}` : `${t("pred.submitted")}.`);
-      await refresh();
+      await syncSubmittedPrediction(digest);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("pred.failed"));
     } finally {
@@ -234,7 +262,7 @@ export function PredictionsDesk() {
         outputHash: proof.contentHash,
       });
       setNotice(`${t("pred.voteSaved")}: ${vote.targetLabel}`);
-      await refresh();
+      await refreshSnapshot();
     } catch (err) {
       setError(err instanceof Error ? err.message : t("pred.voteFailed"));
     } finally {
@@ -247,8 +275,8 @@ export function PredictionsDesk() {
     <section className="predictions-desk">
       <div className="desk-title">
         <span>{t("pred.title")}</span>
-        <button type="button" onClick={() => void refresh()} disabled={busy}>
-          {t("common.refresh")}
+        <button type="button" onClick={() => void refresh()} disabled={busy || snapshotLoading}>
+          {snapshotLoading ? t("common.loading") : t("common.refresh")}
         </button>
       </div>
 
@@ -365,6 +393,7 @@ export function PredictionsDesk() {
       )}
 
       {gated && selectedFixture && <div className="prediction-alert">{gateCopy(selectedFixture, t)}</div>}
+      {duplicate && <div className="prediction-alert">{t("pred.alreadyPicked")}</div>}
       {needsTarget && targetOptions.length === 0 && <div className="prediction-alert">{t("pred.noTargets")}</div>}
       {gasBlocked && (
         <div className="prediction-alert gas-alert">

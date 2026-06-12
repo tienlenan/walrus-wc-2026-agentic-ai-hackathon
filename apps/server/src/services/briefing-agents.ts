@@ -21,20 +21,22 @@ export function runSynthesisAgent(
   options: { memory?: BriefingMemorySnapshot; attempt?: number } = {},
 ): BriefingOutline {
   const fixtureFacts = pickFacts(sources, "fixture_cache", 8);
+  const matchFacts = fixtureFacts.slice(1);
   const teamFacts = pickFacts(sources, "team_profile", 5);
-  const playerFacts = pickFacts(sources, "manual_side_story", 4);
+  const sideStoryFacts = pickFacts(sources, "manual_side_story", 6);
+  const playerFacts = pickFacts(sources, "player_roast_trait", 4);
   const webFacts = pickFacts(sources, "configured_web", 4);
   const attempt = Math.max(1, options.attempt ?? 1);
-  const matchStart = attempt === 1 ? 1 : attempt === 2 ? 3 : 5;
+  const matchStart = attempt === 1 ? 0 : attempt === 2 ? 2 : 4;
   const previousTitles = options.memory?.items.map((item) => item.title).slice(0, 3) ?? [];
   return {
     headlineAngles: [
-      fixtureFacts[0] ?? "The fixture desk is open, but Gil is still checking the receipts.",
-      attempt >= 3 && playerFacts[0] ? playerFacts[0] : webFacts[0] ?? "No external side-story source was configured; the dispatch stays schedule-first.",
+      matchFacts[0] ?? fixtureFacts[0] ?? "The fixture desk is open, but Gil is still checking the receipts.",
+      sideStoryFacts[0] ?? webFacts[0] ?? "No external side-story source was configured; the dispatch stays schedule-first.",
     ],
-    matchesToWatch: fixtureFacts.slice(matchStart, matchStart + 5),
+    matchesToWatch: matchFacts.slice(matchStart, matchStart + 5),
     teamNotes: attempt >= 2 ? teamFacts.slice().reverse() : teamFacts,
-    playerWatch: attempt >= 3 ? playerFacts.slice().reverse() : playerFacts,
+    playerWatch: [...sideStoryFacts, ...(attempt >= 3 ? playerFacts.slice().reverse() : playerFacts)].slice(0, 6),
     memoryHooks: [
       "This dispatch should be remembered globally so Gil can reference today's published desk later.",
       "Prediction gates remain governed by on-chain registration, kickoff time, and settlement status.",
@@ -84,7 +86,7 @@ export function runWriterAgent(input: { date: string; type: string; outline: Bri
     "## Team Notes",
     teams,
     "",
-    "## Player Roast Watch",
+    "## Player / Side Story Watch",
     players,
     "",
     "## What Walrus Should Remember",

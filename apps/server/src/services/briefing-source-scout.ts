@@ -3,6 +3,8 @@ import { getWorldCupSnapshot, getWorldCupSnapshotWithProfileBlobs } from "./worl
 import { PLAYER_ROAST_TRAITS } from "../data/player-roast-traits.js";
 import type { BriefingSource } from "./briefing-types.js";
 import { getLiveMatchDetail } from "./live-data/live-match-service.js";
+import { briefingTimeZone, selectFixturesForBriefing } from "./briefing-fixture-selection.js";
+import { briefingSideStories } from "./briefing-side-stories.js";
 
 function shortId(value: string): string {
   if (value.length <= 18) return value;
@@ -24,15 +26,6 @@ function walrusBlobUrl(blobId: string): string {
 function walrusProfileLink(blobId: string | null | undefined, status: string | null | undefined): string {
   if (blobId) return `[${shortId(blobId)}](${walrusBlobUrl(blobId)})`;
   return status ?? "not_published";
-}
-
-function dateKey(value: Date): string {
-  return value.toISOString().slice(0, 10);
-}
-
-function fixtureTime(fixture: FixtureDto): number {
-  const time = fixture.kickoff ? Date.parse(fixture.kickoff) : Number.POSITIVE_INFINITY;
-  return Number.isFinite(time) ? time : Number.POSITIVE_INFINITY;
 }
 
 function fixtureLabel(fixture: FixtureDto): string {
@@ -73,44 +66,12 @@ async function liveMatchSource(fixtures: FixtureDto[]): Promise<BriefingSource |
   };
 }
 
-function selectFixtures(fixtures: FixtureDto[], date: string, focus?: string): FixtureDto[] {
-  const normalizedFocus = (focus ?? "").trim().toLocaleLowerCase();
-  const sameDay = fixtures.filter((fixture) => fixture.kickoff && dateKey(new Date(fixture.kickoff)) === date);
-  const focused = normalizedFocus
-    ? fixtures.filter((fixture) =>
-        [fixture.home, fixture.away, fixture.homeTeamCode, fixture.awayTeamCode, fixture.groupName, fixture.stage]
-          .filter(Boolean)
-          .some((value) => String(value).toLocaleLowerCase().includes(normalizedFocus)),
-      )
-    : [];
-  const source = focused.length > 0 ? focused : sameDay.length > 0 ? sameDay : fixtures.filter((fixture) => fixture.status !== "finished");
-  return source.sort((a, b) => fixtureTime(a) - fixtureTime(b)).slice(0, 8);
-}
-
 function configuredUrls(): string[] {
   return (process.env.BRIEFING_SOURCE_URLS ?? "")
     .split(",")
     .map((value) => value.trim())
     .filter((value) => /^https?:\/\//.test(value))
     .slice(0, 6);
-}
-
-function manualSideStories(): BriefingSource[] {
-  const raw = process.env.BRIEFING_SIDE_STORIES_JSON;
-  if (!raw) return [];
-  try {
-    const parsed = JSON.parse(raw) as Array<{ title?: string; url?: string; facts?: string[] }>;
-    return parsed.slice(0, 8).map((story, index) => ({
-      sourceId: `side-${index + 1}`,
-      kind: "manual_side_story",
-      title: String(story.title ?? `Side story ${index + 1}`).slice(0, 160),
-      url: story.url ?? null,
-      publishedAt: null,
-      facts: (story.facts ?? []).map((fact) => String(fact).slice(0, 260)).filter(Boolean).slice(0, 4),
-    }));
-  } catch {
-    return [];
-  }
 }
 
 function textBetween(input: string, pattern: RegExp): string | null {
@@ -149,11 +110,12 @@ async function fetchConfiguredSource(url: string, index: number): Promise<Briefi
 
 export async function runScoutAgent(input: { date: string; focus?: string }): Promise<BriefingSource[]> {
   const [game, worldCup] = await Promise.all([getGameSnapshot(null), getWorldCupSnapshotWithProfileBlobs()]);
-  const selectedFixtures = selectFixtures(game.fixtures, input.date, input.focus);
+  const timeZone = briefingTimeZone();
+  const selectedFixtures = selectFixturesForBriefing(game.fixtures, input.date, input.focus, timeZone);
   const fixtureSource: BriefingSource = {
     sourceId: "fixtures-1",
     kind: "fixture_cache",
-    title: `World Cup 2026 fixture cache for ${input.date}`,
+    title: `World Cup 2026 fixture cache for ${input.date} (${timeZone})`,
     url: getWorldCupSnapshot().sources.crawlableScheduleUrl,
     publishedAt: null,
     facts: [
@@ -189,7 +151,7 @@ export async function runScoutAgent(input: { date: string; focus?: string }): Pr
 
   const playerSource: BriefingSource = {
     sourceId: "players-1",
-    kind: "manual_side_story",
+    kind: "player_roast_trait",
     title: "Player roast trait memory",
     url: null,
     publishedAt: null,
@@ -203,5 +165,5 @@ export async function runScoutAgent(input: { date: string; focus?: string }): Pr
   ).filter((source): source is BriefingSource => Boolean(source));
   const liveSource = await liveMatchSource(selectedFixtures);
 
-  return [fixtureSource, teamSource, officialSource, playerSource, ...(liveSource ? [liveSource] : []), ...manualSideStories(), ...webSources];
+  return [fixtureSource, teamSource, officialSource, ...briefingSideStories(input.date), playerSource, ...(liveSource ? [liveSource] : []), ...webSources];
 }

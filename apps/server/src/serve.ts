@@ -168,6 +168,13 @@ export const server = createServer(async (req, res) => {
       const subject = verifySession(bearer(req));
       return json(res, 200, await getGameSnapshot(subject?.startsWith("0x") ? subject : null));
     }
+    if (req.method === "POST" && req.url === "/api/game/index") {
+      const subject = verifySession(bearer(req));
+      if (!subject?.startsWith("0x")) return json(res, 401, { error: "verified Sui session required" });
+      const { indexOnce } = await import("./services/event-indexer.js");
+      const result = await indexOnce();
+      return json(res, 200, { ...result, snapshot: await getGameSnapshot(subject) });
+    }
     if (req.method === "GET" && req.url?.startsWith("/api/world-cup/snapshot")) {
       return cachedJson(res, 300, 600, await getWorldCupSnapshotWithProfileBlobs());
     }

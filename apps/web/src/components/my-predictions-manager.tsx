@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getGameSnapshot, type Fixture, type MyPrediction, type MyRecord } from "../lib/game-api";
+import type { Fixture, MyPrediction } from "../lib/game-api";
+import { useGameSnapshotStore } from "../lib/game-snapshot-store";
 import { useI18n } from "../lib/i18n";
 import { APP_SUI_NETWORK } from "../lib/sui-network";
 import { useTimeSettings } from "../lib/time-settings";
@@ -53,34 +54,29 @@ export function MyPredictionsManager() {
   const { t } = useI18n();
   const { formatDateTime } = useTimeSettings();
   const { signedIn, session } = useVerifiedSession();
-  const [record, setRecord] = useState<MyRecord | null>(null);
-  const [fixtures, setFixtures] = useState<Fixture[]>([]);
+  const snapshot = useGameSnapshotStore((state) => state.snapshot);
+  const loading = useGameSnapshotStore((state) => state.loading);
+  const loadError = useGameSnapshotStore((state) => state.error);
+  const refreshSnapshot = useGameSnapshotStore((state) => state.refresh);
   const [filter, setFilter] = useState<FilterKey>("all");
-  const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    if (!signedIn) {
-      setRecord(null);
-      return;
-    }
-    setLoading(true);
+    if (!signedIn) return;
     setError(null);
     try {
-      const snapshot = await getGameSnapshot();
-      setRecord(snapshot.myRecord);
-      setFixtures(snapshot.fixtures);
+      await refreshSnapshot();
     } catch {
       setError(t("mypicks.loadErr"));
-    } finally {
-      setLoading(false);
     }
-  }, [signedIn, t]);
+  }, [refreshSnapshot, signedIn, t]);
 
   useEffect(() => {
     void refresh();
   }, [refresh, session?.token]);
+  const record = signedIn ? snapshot?.myRecord ?? null : null;
+  const fixtures = snapshot?.fixtures ?? [];
   const predictions = record?.predictions ?? [];
   const filtered = useMemo(
     () => predictions.filter((prediction) => matchesFilter(prediction, filter)),
@@ -192,7 +188,7 @@ export function MyPredictionsManager() {
           </tbody>
         </table>
       </div>
-      {error && <div className="my-picks-error">{error}</div>}
+      {(error || loadError) && <div className="my-picks-error">{error ?? loadError}</div>}
     </section>
   );
 }

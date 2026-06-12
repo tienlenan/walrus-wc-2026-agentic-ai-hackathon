@@ -83,6 +83,13 @@ function SourceList({ briefing }: { briefing: DailyBriefing }) {
             ) : (
               <span className="briefing-muted">{source.kind}</span>
             )}
+            {source.facts.length > 0 && (
+              <ul className="briefing-source-facts" aria-label={t("briefings.sourceFacts")}>
+                {source.facts.slice(0, 4).map((fact) => (
+                  <li key={fact}>{fact}</li>
+                ))}
+              </ul>
+            )}
           </div>
         ))}
       </div>
@@ -221,11 +228,13 @@ export function DailyBriefings() {
           <aside className="briefing-sidebar">
             <div className="briefing-side-panel">
               <h3>{t("briefings.history")}</h3>
+              <p className="briefing-history-copy">{t("briefings.archiveCopy")}</p>
               <div className="briefing-history">
                 {history.map((item) => (
                   <button key={item.id} className={item.id === selected.id ? "selected" : ""} onClick={() => setSelectedId(item.id)}>
-                    <span>{item.briefingDate}</span>
+                    <span>{item.briefingDate} - {item.status}</span>
                     <strong>{item.title}</strong>
+                    <em>{item.summary}</em>
                   </button>
                 ))}
               </div>
