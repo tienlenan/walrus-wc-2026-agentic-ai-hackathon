@@ -141,12 +141,26 @@ async function publishWithWalrusCli(kind: string, value: unknown, hash: string):
   }
 }
 
+// Walrus upload relay offloads the slow multi-node storage coordination to a hosted relay,
+// keeping the client-side write within serverless time limits (the signer still pays WAL + a small SUI tip).
+function uploadRelayOptions(): { host: string; sendTip: { max: number } } | undefined {
+  if (process.env.WALRUS_UPLOAD_RELAY_DISABLED === "true") return undefined;
+  const network = process.env.WALRUS_CONTEXT ?? process.env.SUI_NETWORK ?? "mainnet";
+  const host =
+    process.env.WALRUS_UPLOAD_RELAY_HOST ??
+    (network === "mainnet" ? "https://upload-relay.mainnet.walrus.space" : "https://upload-relay.testnet.walrus.space");
+  // Tip scales with blob size; ~2.6M MIST for a few-KB briefing, so default the cap well above that.
+  const maxTip = Number(process.env.WALRUS_UPLOAD_RELAY_TIP_MAX ?? 10_000_000);
+  return { host, sendTip: { max: Number.isFinite(maxTip) ? maxTip : 10_000_000 } };
+}
+
 async function publishWithWalrusSdk(value: unknown, hash: string): Promise<WalrusBlobPointer> {
   const secret = process.env.WALRUS_SDK_WALLET_KEY ?? process.env.SESSION_WALLET_KEY ?? process.env.ORACLE_WALLET_KEY;
   if (!secret || process.env.WALRUS_SDK_DISABLED === "true") return { status: "not_configured", blobId: null, objectId: null, hash };
   try {
     const signer = Ed25519Keypair.fromSecretKey(secret);
-    const client = getSuiGrpcClient().$extend(walrus());
+    const relay = uploadRelayOptions();
+    const client = getSuiGrpcClient().$extend(relay ? walrus({ uploadRelay: relay }) : walrus());
     const result = (await client.walrus.writeBlob({
       blob: new TextEncoder().encode(stableJson(value)),
       deletable: true,
