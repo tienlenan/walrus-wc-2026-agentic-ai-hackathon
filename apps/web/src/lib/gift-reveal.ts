@@ -67,3 +67,41 @@ export function buildGiftReveals(predictions: MyPrediction[], walletAddress: str
     .filter((reveal): reveal is GiftReveal => reveal !== null)
     .sort((a, b) => b.predictionId.localeCompare(a.predictionId));
 }
+
+// Shared localStorage helpers so the strip, the box, and the history modal agree on opened state.
+export function readGiftOpened(key: string): boolean {
+  try {
+    return localStorage.getItem(key) === "opened";
+  } catch {
+    return false;
+  }
+}
+
+export function writeGiftOpened(key: string): void {
+  try {
+    localStorage.setItem(key, "opened");
+  } catch {
+    /* ignore */
+  }
+}
+
+export function readGiftProof(key: string): string | null {
+  try {
+    return localStorage.getItem(`${key}:proof`);
+  } catch {
+    return null;
+  }
+}
+
+export function writeGiftProof(key: string, digest: string): void {
+  try {
+    localStorage.setItem(`${key}:proof`, digest);
+  } catch {
+    /* ignore */
+  }
+}
+
+// A gift counts as opened only when its proof receipt is stored too (unless on-chain recording is disabled).
+export function isGiftOpened(key: string, recordingDisabled: boolean): boolean {
+  return readGiftOpened(key) && (recordingDisabled || Boolean(readGiftProof(key)));
+}
