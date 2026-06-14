@@ -1,7 +1,8 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { BootSplash } from "./components/boot-splash";
 import { DeferredSection } from "./components/deferred-section";
 import { getSession, subscribeSession } from "./lib/auth";
+import { clearChunkReloadFlag, lazyWithRetry } from "./lib/chunk-recovery";
 import { useI18n } from "./lib/i18n";
 import { useTimeSettings } from "./lib/time-settings";
 import "./styles/ui-controls.css";
@@ -22,21 +23,21 @@ const loadMatchCenter = () => import("./components/match-center").then((mod) => 
 const loadLatestBriefingTeaser = () => import("./components/latest-briefing-teaser").then((mod) => ({ default: mod.LatestBriefingTeaser }));
 const loadGuidePage = () => import("./components/guide-page").then((mod) => ({ default: mod.GuidePage }));
 
-const ConnectBar = lazy(loadConnectBar);
-const NewsDeskChat = lazy(loadNewsDeskChat);
-const SettingsPanel = lazy(loadSettingsPanel);
-const PredictionsDesk = lazy(loadPredictionsDesk);
-const MyPredictionsManager = lazy(loadMyPredictionsManager);
-const Leaderboard = lazy(loadLeaderboard);
-const RoastWall = lazy(loadRoastWall);
-const TeamProfiles = lazy(loadTeamProfiles);
-const GalleryWall = lazy(loadGalleryWall);
-const MemoryNotebook = lazy(loadMemoryNotebook);
-const RuntimeTracking = lazy(loadRuntimeTracking);
-const DailyBriefings = lazy(loadDailyBriefings);
-const MatchCenter = lazy(loadMatchCenter);
-const LatestBriefingTeaser = lazy(loadLatestBriefingTeaser);
-const GuidePage = lazy(loadGuidePage);
+const ConnectBar = lazyWithRetry(loadConnectBar);
+const NewsDeskChat = lazyWithRetry(loadNewsDeskChat);
+const SettingsPanel = lazyWithRetry(loadSettingsPanel);
+const PredictionsDesk = lazyWithRetry(loadPredictionsDesk);
+const MyPredictionsManager = lazyWithRetry(loadMyPredictionsManager);
+const Leaderboard = lazyWithRetry(loadLeaderboard);
+const RoastWall = lazyWithRetry(loadRoastWall);
+const TeamProfiles = lazyWithRetry(loadTeamProfiles);
+const GalleryWall = lazyWithRetry(loadGalleryWall);
+const MemoryNotebook = lazyWithRetry(loadMemoryNotebook);
+const RuntimeTracking = lazyWithRetry(loadRuntimeTracking);
+const DailyBriefings = lazyWithRetry(loadDailyBriefings);
+const MatchCenter = lazyWithRetry(loadMatchCenter);
+const LatestBriefingTeaser = lazyWithRetry(loadLatestBriefingTeaser);
+const GuidePage = lazyWithRetry(loadGuidePage);
 
 type ReferencePageKey = "guide" | "team-profiles" | "gallery" | "notebook" | "tracking" | "briefings" | "matches";
 
@@ -109,6 +110,8 @@ export default function App() {
     }, 2000);
     const frame = window.requestAnimationFrame(() => {
       document.documentElement.classList.add("app-ready");
+      // App mounted cleanly → allow a future post-redeploy stale chunk to reload again.
+      clearChunkReloadFlag();
     });
     const minSplash = new Promise((resolve) => window.setTimeout(resolve, BOOT_SPLASH_MIN_MS));
     void preloadHomeChunks().catch(() => undefined);
