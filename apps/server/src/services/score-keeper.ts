@@ -77,6 +77,7 @@ function digestFromResult(result: { Transaction?: { digest: string; status?: { s
 }
 
 function toNumber(value: unknown): number | null {
+  if (value == null || value === "") return null;
   const n = Number(value);
   return Number.isFinite(n) ? n : null;
 }

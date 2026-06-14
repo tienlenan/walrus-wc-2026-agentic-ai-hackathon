@@ -71,3 +71,22 @@ test("buildEntries auto-grades scoreline and winner from match result", () => {
     ],
   );
 });
+
+test("buildEntries skips auto-grading when match result is missing", () => {
+  const { entries, skipped } = buildEntries(
+    [
+      row({ id: "score-1", kind: "scoreline", payload: { homeScore: 0, awayScore: 0 }, home_score: null, away_score: null }),
+      row({ id: "winner-1", kind: "winner", payload: { winnerSide: "draw" }, home_score: null, away_score: null }),
+    ],
+    { matchId: "1" },
+  );
+
+  assert.equal(entries.length, 0);
+  assert.deepEqual(
+    skipped.map((entry) => [entry.predictionId, entry.reason]),
+    [
+      ["score-1", "match-result-required"],
+      ["winner-1", "match-result-required"],
+    ],
+  );
+});
