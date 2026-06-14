@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "web",
+      "name": "web-preview",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@daily-walrus/web", "dev"],
-      "port": 5173
+      "runtimeArgs": ["--filter", "@daily-walrus/web", "preview"],
+      "port": 4173
     }
   ]
 }
