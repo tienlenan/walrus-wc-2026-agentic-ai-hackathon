@@ -60,8 +60,9 @@
 
 .briefing-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.36fr);
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
   gap: 1rem;
+  align-items: start;
   margin-top: 1rem;
 }
 
@@ -152,10 +153,12 @@
   display: grid;
   align-content: start;
   gap: 0.75rem;
+  min-width: 0;
 }
 
 .briefing-side-panel {
   padding: 0.8rem;
+  min-width: 0;
 }
 
 .briefing-side-panel h3 {
@@ -178,6 +181,10 @@
 }
 
 .briefing-history button {
+  display: grid;
+  gap: 0.22rem;
+  width: 100%;
+  min-width: 0;
   text-align: left;
   padding: 0.55rem;
   color: var(--ink);
@@ -193,6 +200,8 @@
 .briefing-source strong {
   display: block;
   margin-top: 0.2rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .briefing-history-copy {
@@ -208,6 +217,48 @@
   color: var(--ink-soft);
   font-style: normal;
   line-height: 1.35;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.briefing-history span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.briefing-history-controls {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, max-content) minmax(0, 1fr) minmax(4.5rem, max-content);
+  gap: 0.45rem;
+  align-items: center;
+  border-top: 1px solid var(--rule);
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+}
+
+.briefing-history-controls button {
+  border: 1px solid var(--ink);
+  background: var(--paper-2);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  min-height: 2rem;
+  padding: 0.4rem 0.55rem;
+  text-transform: uppercase;
+}
+
+.briefing-history-controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.briefing-history-controls span {
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  justify-self: center;
+  text-transform: uppercase;
 }
 
 .briefing-source {
@@ -216,14 +267,16 @@
   gap: 0.6rem;
   align-items: center;
   padding: 0.55rem;
+  min-width: 0;
 }
 
 .briefing-source > div {
   min-width: 0;
 }
 
-.briefing-source strong {
-  overflow-wrap: anywhere;
+.briefing-source a {
+  justify-self: end;
+  white-space: nowrap;
 }
 
 .briefing-source-facts {
@@ -233,6 +286,15 @@
   color: var(--ink-soft);
   font-size: 0.76rem;
   line-height: 1.4;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.briefing-source-facts li {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .briefing-source-facts li + li {

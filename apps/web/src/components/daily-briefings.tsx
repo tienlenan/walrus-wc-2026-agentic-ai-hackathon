@@ -7,6 +7,9 @@ import { useTimeSettings } from "../lib/time-settings";
 import "streamdown/styles.css";
 import "./daily-briefings.css";
 
+const HISTORY_PAGE_SIZE = 5;
+const HISTORY_FETCH_LIMIT = 25;
+
 function shortId(value: string | null | undefined): string {
   if (!value) return "-";
   if (value.length <= 18) return value;
@@ -166,6 +169,7 @@ export function DailyBriefings() {
   const [latest, setLatest] = useState<DailyBriefing | null>(null);
   const [history, setHistory] = useState<DailyBriefing[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [historyPage, setHistoryPage] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -175,11 +179,12 @@ export function DailyBriefings() {
       try {
         setLoading(true);
         setError(null);
-        const [nextLatest, nextHistory] = await Promise.all([getLatestBriefing(), listBriefings(14)]);
+        const [nextLatest, nextHistory] = await Promise.all([getLatestBriefing(), listBriefings(HISTORY_FETCH_LIMIT)]);
         if (!cancelled) {
           setLatest(nextLatest);
           setHistory(nextHistory);
           setSelectedId((current) => current ?? nextLatest?.id ?? null);
+          setHistoryPage(0);
         }
       } catch {
         if (!cancelled) setError(t("briefings.loadErr"));
@@ -194,6 +199,21 @@ export function DailyBriefings() {
   }, [t]);
 
   const selected = history.find((item) => item.id === selectedId) ?? latest;
+  const totalHistoryPages = Math.max(1, Math.ceil(history.length / HISTORY_PAGE_SIZE));
+  const safeHistoryPage = Math.min(historyPage, totalHistoryPages - 1);
+  const visibleHistory = history.slice(safeHistoryPage * HISTORY_PAGE_SIZE, safeHistoryPage * HISTORY_PAGE_SIZE + HISTORY_PAGE_SIZE);
+  const hasHistoryPaging = history.length > HISTORY_PAGE_SIZE;
+
+  useEffect(() => {
+    if (historyPage !== safeHistoryPage) setHistoryPage(safeHistoryPage);
+  }, [historyPage, safeHistoryPage]);
+
+  function goToHistoryPage(nextPage: number) {
+    const boundedPage = Math.max(0, Math.min(totalHistoryPages - 1, nextPage));
+    const nextVisibleHistory = history.slice(boundedPage * HISTORY_PAGE_SIZE, boundedPage * HISTORY_PAGE_SIZE + HISTORY_PAGE_SIZE);
+    setHistoryPage(boundedPage);
+    setSelectedId((current) => (nextVisibleHistory.some((item) => item.id === current) ? current : nextVisibleHistory[0]?.id ?? current));
+  }
 
   return (
     <section className="daily-briefings">
@@ -230,7 +250,7 @@ export function DailyBriefings() {
               <h3>{t("briefings.history")}</h3>
               <p className="briefing-history-copy">{t("briefings.archiveCopy")}</p>
               <div className="briefing-history">
-                {history.map((item) => (
+                {visibleHistory.map((item) => (
                   <button key={item.id} className={item.id === selected.id ? "selected" : ""} onClick={() => setSelectedId(item.id)}>
                     <span>{item.briefingDate} - {item.status}</span>
                     <strong>{item.title}</strong>
@@ -238,6 +258,19 @@ export function DailyBriefings() {
                   </button>
                 ))}
               </div>
+              {hasHistoryPaging && (
+                <div className="briefing-history-controls" aria-label={t("briefings.historyPages")}>
+                  <button type="button" onClick={() => goToHistoryPage(safeHistoryPage - 1)} disabled={safeHistoryPage === 0}>
+                    {t("briefings.prev")}
+                  </button>
+                  <span>
+                    {t("briefings.page")} {safeHistoryPage + 1}/{totalHistoryPages}
+                  </span>
+                  <button type="button" onClick={() => goToHistoryPage(safeHistoryPage + 1)} disabled={safeHistoryPage >= totalHistoryPages - 1}>
+                    {t("briefings.next")}
+                  </button>
+                </div>
+              )}
             </div>
             <SourceList briefing={selected} />
           </aside>
