@@ -44,6 +44,23 @@
         }
       }
     </style>
+    <script>
+      // Boot watchdog: the entry module is a single Walrus blob served cold through the wal.app
+      // portal — a slow/503 cold read can leave the page blank with no JS to recover. If the app
+      // hasn't mounted in time, reload once (the retry usually hits a warm blob). Guarded against
+      // loops via sessionStorage; App clears the flag on a clean mount (see chunk-recovery.ts).
+      (function () {
+        var KEY = "gil:chunk-reloaded";
+        setTimeout(function () {
+          if (document.documentElement.classList.contains("app-ready")) return;
+          try {
+            if (sessionStorage.getItem(KEY)) return;
+            sessionStorage.setItem(KEY, "1");
+          } catch (e) {}
+          window.location.reload();
+        }, 15000);
+      })();
+    </script>
   </head>
   <body>
     <div class="app-top-progress" aria-hidden="true"></div>
