@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">Qatar stoppage time point cartoon</title>
+  <desc id="desc">Cartoon of Qatar mailing its first World Cup point in stoppage time while Switzerland piles up missed chances.</desc>
+  <rect width="1200" height="820" fill="#fdeef2"/>
+  <path d="M54 62c250-38 830-34 1090 8 38 178 34 496-20 682-284 40-790 36-1070-8C18 524 18 238 54 62Z" fill="#fffdf3" stroke="#141414" stroke-width="7"/>
+  <g transform="translate(112 86)">
+    <rect width="760" height="126" rx="24" fill="#8a1538" stroke="#141414" stroke-width="6"/>
+    <text x="28" y="50" fill="#fffdf3" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="35" font-weight="900">QATAR MAILS A POINT AT 90+5</text>
+    <text x="28" y="92" fill="#f8c54f" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="25">Switzerland left chances on read.</text>
+  </g>
+  <!-- stoppage clock -->
+  <g transform="translate(150 250)">
+    <circle cx="120" cy="150" r="120" fill="#fffdf3" stroke="#141414" stroke-width="8"/>
+    <path d="M120 60v90l64 40" fill="none" stroke="#e85b45" stroke-width="12" stroke-linecap="round"/>
+    <text x="120" y="300" text-anchor="middle" fill="#141414" font-family="Arial Black, Arial, sans-serif" font-size="46">90+5'</text>
+    <text x="120" y="-2" text-anchor="middle" font-size="34">⏱️</text>
+  </g>
+  <!-- Switzerland wasteful: pile of missed balls -->
+  <g transform="translate(470 470)">
+    <circle cx="40" cy="120" r="58" fill="#d52b1e" stroke="#141414" stroke-width="6"/>
+    <path d="M2 84h76M40 64v76" stroke="#fffdf3" stroke-width="14"/>
+    <!-- missed balls scattered -->
+    <g stroke="#141414" stroke-width="4">
+      <circle cx="150" cy="40" r="22" fill="#fffdf3"/>
+      <circle cx="210" cy="90" r="22" fill="#fffdf3"/>
+      <circle cx="170" cy="150" r="22" fill="#fffdf3"/>
+      <circle cx="240" cy="160" r="22" fill="#fffdf3"/>
+    </g>
+    <text x="120" y="232" text-anchor="middle" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="22" font-weight="900">xG: wasted</text>
+  </g>
+  <!-- Qatar posts a letter "1 PT" -->
+  <g transform="translate(820 300)">
+    <circle cx="96" cy="70" r="52" fill="#f1bd7c" stroke="#141414" stroke-width="6"/>
+    <path d="M60 60c24-30 70-30 96 0-32-10-66-9-96 0Z" fill="#3a2a1c"/>
+    <path d="M44 130h104l28 150H16l28-150Z" fill="#8a1538" stroke="#141414" stroke-width="7"/>
+    <path d="M150 170l86-26" stroke="#141414" stroke-width="16" stroke-linecap="round"/>
+    <!-- mailbox -->
+    <g transform="translate(214 96)">
+      <rect x="0" y="40" width="120" height="120" rx="14" fill="#2f7d4f" stroke="#141414" stroke-width="6"/>
+      <rect x="20" y="68" width="80" height="16" rx="6" fill="#141414"/>
+      <rect x="50" y="160" width="20" height="80" fill="#141414"/>
+      <!-- letter going in -->
+      <g transform="translate(2 30)">
+        <rect x="0" y="0" width="60" height="40" fill="#fffdf3" stroke="#141414" stroke-width="5"/>
+        <path d="M0 0l30 24 30-24" fill="none" stroke="#141414" stroke-width="4"/>
+        <text x="30" y="60" text-anchor="middle" fill="#8a1538" font-family="Arial Black, Arial, sans-serif" font-size="26">1 PT</text>
+      </g>
+    </g>
+  </g>
+  <g transform="translate(700 656)">
+    <rect width="450" height="112" rx="22" fill="#141414" stroke="#141414" stroke-width="6"/>
+    <text x="225" y="46" text-anchor="middle" fill="#fffdf3" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="25" font-weight="900">FIRST WORLD CUP POINT</text>
+    <text x="225" y="84" text-anchor="middle" fill="#f8c54f" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="20">Delivered in injury time, signed by Walrus.</text>
+  </g>
+</svg>

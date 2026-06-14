@@ -13,6 +13,30 @@ interface GalleryItem {
 
 const ITEMS: GalleryItem[] = [
   {
+    id: "cartoon-england-boots-heist",
+    title: "England's boots did a runner",
+    caption: "Cartoon roast: the Three Lions' match boots got swiped from a Kansas City van before a single kick — Walrus filed the evidence first.",
+    src: "/gallery/cartoon-england-boots-heist.svg",
+    blobId: "TW3NmohFov7VWKqSsvb3Y_Fo1GBb2eYYnp9_9wzgdAE",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/TW3NmohFov7VWKqSsvb3Y_Fo1GBb2eYYnp9_9wzgdAE",
+  },
+  {
+    id: "cartoon-qatar-stoppage-point",
+    title: "Qatar mails a point at 90+5",
+    caption: "Cartoon roast: Switzerland left a pile of chances on read while Qatar posts its first-ever World Cup point in injury time.",
+    src: "/gallery/cartoon-qatar-stoppage-point.svg",
+    blobId: "z0giyxlvl8UMPcQwn2e2k2HlNRLkmM-JiKUzVq9pa4o",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/z0giyxlvl8UMPcQwn2e2k2HlNRLkmM-JiKUzVq9pa4o",
+  },
+  {
+    id: "cartoon-usa-four-goal-welcome",
+    title: "USA hands out a four-goal welcome",
+    caption: "Cartoon roast: Balogun's brace headlines a 4-1 opener and Paraguay clearly RSVP'd to the wrong party.",
+    src: "/gallery/cartoon-usa-four-goal-welcome.svg",
+    blobId: "_nZOKPYjY_CQJHJ95__9z7KG46xIMCC9vb136iGLNL0",
+    blobUrl: "https://aggregator.walrus-mainnet.walrus.space/v1/blobs/_nZOKPYjY_CQJHJ95__9z7KG46xIMCC9vb136iGLNL0",
+  },
+  {
     id: "cartoon-walrus-better-than-idols",
     title: "Gil kicks better than your idol",
     caption: "Cartoon roast: Gil bicycle-kicks into every idol debate Walrus Memory refuses to forget.",

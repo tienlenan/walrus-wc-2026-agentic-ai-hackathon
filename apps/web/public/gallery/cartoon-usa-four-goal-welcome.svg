@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">USA four goal welcome cartoon</title>
+  <desc id="desc">Cartoon of USA opening the World Cup with a four-goal win over Paraguay, a striker and a scoreboard.</desc>
+  <rect width="1200" height="820" fill="#eef2ff"/>
+  <path d="M54 62c250-38 830-34 1090 8 38 178 34 496-20 682-284 40-790 36-1070-8C18 524 18 238 54 62Z" fill="#fffdf3" stroke="#141414" stroke-width="7"/>
+  <g transform="translate(112 86)">
+    <rect width="780" height="126" rx="24" fill="#3c3b8f" stroke="#141414" stroke-width="6"/>
+    <text x="28" y="50" fill="#fffdf3" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="34" font-weight="900">USA HANDS OUT A FOUR-GOAL WELCOME</text>
+    <text x="28" y="92" fill="#f8c54f" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="25">Paraguay RSVP'd to the wrong party.</text>
+  </g>
+  <!-- goal net with four balls -->
+  <g transform="translate(120 300)">
+    <rect x="0" y="0" width="320" height="240" rx="8" fill="#fffdf3" stroke="#141414" stroke-width="7"/>
+    <g stroke="#cdd6ef" stroke-width="3">
+      <path d="M40 0v240M120 0v240M200 0v240M280 0v240"/>
+      <path d="M0 60h320M0 120h320M0 180h320"/>
+    </g>
+    <g stroke="#141414" stroke-width="4">
+      <circle cx="70" cy="70" r="26" fill="#e85b45"/>
+      <circle cx="210" cy="60" r="26" fill="#e85b45"/>
+      <circle cx="110" cy="170" r="26" fill="#e85b45"/>
+      <circle cx="250" cy="180" r="26" fill="#e85b45"/>
+    </g>
+    <text x="160" y="300" text-anchor="middle" fill="#141414" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="26" font-weight="900">net full, RSVP closed</text>
+  </g>
+  <!-- striker number 9 celebrating -->
+  <g transform="translate(560 250)">
+    <circle cx="96" cy="70" r="52" fill="#f1bd7c" stroke="#141414" stroke-width="6"/>
+    <path d="M52 64c26-34 78-34 100 2-32-12-68-11-100-2Z" fill="#1f1206"/>
+    <path d="M44 134h104l30 178H16l28-178Z" fill="#3c3b8f" stroke="#141414" stroke-width="7"/>
+    <text x="96" y="248" text-anchor="middle" fill="#fffdf3" font-family="Arial Black, Arial, sans-serif" font-size="66">9</text>
+    <!-- arms up celebration -->
+    <path d="M48 150 4 70M144 150l64-72" stroke="#141414" stroke-width="20" stroke-linecap="round"/>
+    <circle cx="2" cy="62" r="13" fill="#f1bd7c" stroke="#141414" stroke-width="5"/>
+    <circle cx="210" cy="70" r="13" fill="#f1bd7c" stroke="#141414" stroke-width="5"/>
+    <path d="M48 312 20 470M144 312l28 158" stroke="#141414" stroke-width="22" stroke-linecap="round"/>
+    <path d="M14 474h70M168 474h70" stroke="#141414" stroke-width="18" stroke-linecap="round"/>
+    <!-- brace x2 bubble -->
+    <g transform="translate(196 150)">
+      <circle cx="60" cy="0" r="46" fill="#f8c54f" stroke="#141414" stroke-width="6"/>
+      <text x="60" y="14" text-anchor="middle" fill="#141414" font-family="Arial Black, Arial, sans-serif" font-size="34">x2</text>
+    </g>
+  </g>
+  <!-- scoreboard -->
+  <g transform="translate(820 360)">
+    <rect width="300" height="180" rx="20" fill="#141414" stroke="#141414" stroke-width="6"/>
+    <text x="150" y="48" text-anchor="middle" fill="#fffdf3" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="26" font-weight="900">FULL TIME</text>
+    <text x="80" y="120" text-anchor="middle" fill="#8ad0ff" font-family="Arial Black, Arial, sans-serif" font-size="40">USA 4</text>
+    <text x="222" y="120" text-anchor="middle" fill="#e85b45" font-family="Arial Black, Arial, sans-serif" font-size="40">PAR 1</text>
+    <text x="150" y="160" text-anchor="middle" fill="#f8c54f" font-family="Comic Sans MS, Marker Felt, sans-serif" font-size="20">stamped on Walrus</text>
+  </g>
+</svg>
