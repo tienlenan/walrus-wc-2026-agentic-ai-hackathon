@@ -191,17 +191,16 @@ Backend deploy runs through Vercel and serves `https://gil-var-shamebook-api.ver
 | --- | --- | --- |
 | ![Home screenshot](submission-pack/assets/screenshots/screenshot-home.png) | ![Predictions screenshot](submission-pack/assets/screenshots/screenshot-predictions.png) | ![Gift reveal screenshot](submission-pack/assets/screenshots/screenshot-gift-reveal-roast-box.png) |
 
-## Status
+## Gallery
 
-- Mainnet Walrus Site live.
-- Mainnet Sui package deployed.
-- 104 World Cup 2026 fixture records registered.
-- Team/player profile data published and indexed.
-- Daily What's Up workflow implemented with duplicate-avoidance memory.
-- Submission materials prepared in `submission-pack/`.
+A wall of Gil's cartoon roasts — each panel is an SVG stored as its own blob on Walrus.
+
+| | | |
+| --- | --- | --- |
+| ![England's boots did a runner](apps/web/public/gallery/cartoon-england-boots-heist.svg) | ![Qatar mails a point at 90+5](apps/web/public/gallery/cartoon-qatar-stoppage-point.svg) | ![USA hands out a four-goal welcome](apps/web/public/gallery/cartoon-usa-four-goal-welcome.svg) |
+| ![Ronaldo free-kick airmail](apps/web/public/gallery/cartoon-ronaldo-airmail.svg) | ![Messi walking chess mode](apps/web/public/gallery/cartoon-messi-walking-chess.svg) | ![Gil kicks better than your idol](apps/web/public/gallery/cartoon-walrus-better-than-idols.svg) |
+| ![Vini courtroom dribble](apps/web/public/gallery/cartoon-vini-courtroom-dribble.svg) | ![Haaland waiting for service](apps/web/public/gallery/cartoon-haaland-loading-service.svg) | ![VAR first-touch apology](apps/web/public/gallery/cartoon-var-first-touch-apology.svg) |
 
 ## License
 
-TBD.
-
-<p align="center"><b>Gil's verdict:</b> stored forever, roasted politely, verified on Walrus.</p>
+[MIT](LICENSE) © 2026 tienlenan

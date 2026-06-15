@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "description": "The Daily Walrus — AI World Cup 2026 pundit with persistent memory on Walrus. Walrus Memory World Cup hackathon.",
+  "license": "MIT",
   "engines": {
     "node": ">=20.9.0"
   },
