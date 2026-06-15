@@ -32,3 +32,17 @@ if [[ -n "$WALRUS_BINARY" ]]; then
 fi
 
 "$SITE_BUILDER" "${ARGS[@]}" deploy --epochs "$EPOCHS" "$ROOT/apps/web/dist"
+
+# Warm the wal.app portal cache so the first real visitor doesn't eat a cold Walrus blob read
+# (cold reads are ~10-20s and can 503). We fetch each freshly published asset twice from the
+# operator machine; opt out with WALRUS_WARMUP=0.
+if [[ "${WALRUS_WARMUP:-1}" == "1" ]]; then
+  WARMUP_URL="${WALRUS_WARMUP_URL:-https://roast2026wc.wal.app}"
+  echo "Warming portal cache at ${WARMUP_URL} ..."
+  curl -fsS -o /dev/null "${WARMUP_URL}/" || true
+  while IFS= read -r asset; do
+    curl -fsS -o /dev/null "${WARMUP_URL}/${asset}" || true
+    curl -fsS -o /dev/null --max-time 60 "${WARMUP_URL}/${asset}" || true
+  done < <(cd "$ROOT/apps/web/dist" && find assets -type f \( -name '*.js' -o -name '*.css' \) 2>/dev/null)
+  echo "Warm-up complete."
+fi
