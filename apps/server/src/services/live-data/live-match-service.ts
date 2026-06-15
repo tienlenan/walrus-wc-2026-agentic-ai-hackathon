@@ -95,14 +95,19 @@ export async function listLiveMatches(limit = 12): Promise<LiveMatchDetailDto[]>
   if (process.env.DATABASE_URL) {
     await ensureLiveDataTables();
     const { rows } = await getPool().query<{ match_id: string }>(
+      // Surface live matches, then recent results (finished within 48h, newest first), then
+      // upcoming fixtures (soonest first). Without the recent-results bucket the long list of
+      // scheduled fixtures pushes every finished match past the limit, so /#matches never shows scores.
       `select f.match_id
        from fixtures f
        left join match_live_states live on live.match_id = f.match_id
        order by
          case when coalesce(live.status, f.status) = 'live' then 0
-              when coalesce(live.status, f.status) = 'scheduled' then 1
-              else 2 end,
-         f.kickoff nulls last,
+              when coalesce(live.status, f.status) = 'finished' and f.kickoff > now() - interval '48 hours' then 1
+              when coalesce(live.status, f.status) = 'scheduled' then 2
+              else 3 end,
+         case when coalesce(live.status, f.status) = 'scheduled' then f.kickoff end asc nulls last,
+         f.kickoff desc nulls last,
          f.match_id
        limit $1`,
       [limit],
