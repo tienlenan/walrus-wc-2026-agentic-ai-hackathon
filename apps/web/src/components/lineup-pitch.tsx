@@ -3,10 +3,19 @@ import "./lineup-pitch.css";
 
 type Side = "home" | "away";
 
+// Surname particles that belong with the surname (e.g. "van Dijk", "El Khannouss").
+const NAME_PARTICLES = new Set(["van", "von", "de", "der", "den", "di", "da", "dos", "del", "della", "la", "le", "el", "al", "bin", "ben", "mac", "mc"]);
+
+// Pitch badges are tiny — show just the surname (with its particle) so names stay readable.
 function shortName(name: string): string {
   const parts = name.split(/\s+/).filter(Boolean);
-  if (parts.length <= 2) return name;
-  return `${parts[0]} ${parts[parts.length - 1]}`;
+  if (parts.length <= 1) return name;
+  const last = parts[parts.length - 1] ?? name;
+  const prev = parts[parts.length - 2] ?? "";
+  if (parts.length >= 2 && NAME_PARTICLES.has(prev.toLowerCase())) {
+    return `${prev} ${last}`;
+  }
+  return last;
 }
 
 function parseGrid(grid: string | null): { row: number; col: number } | null {
