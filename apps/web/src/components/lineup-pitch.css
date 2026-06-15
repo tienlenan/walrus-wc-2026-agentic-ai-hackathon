@@ -1,6 +1,6 @@
 .lineup-shell {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
 }
 
@@ -11,10 +11,19 @@
   font-family: var(--font-mono);
 }
 
-.lineup-team {
-  border: 1px solid var(--ink);
-  background: var(--paper);
-  min-width: 0;
+/* Team headers: home on the left, away on the right, matching their pitch halves. */
+.lineup-heads {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.lineup-vs {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
 }
 
 .lineup-team-head {
@@ -22,8 +31,12 @@
   justify-content: space-between;
   gap: 0.6rem;
   align-items: start;
-  padding: 0.65rem;
-  border-bottom: 1px solid var(--rule);
+  min-width: 0;
+}
+
+.lineup-team-head.away {
+  flex-direction: row-reverse;
+  text-align: right;
 }
 
 .lineup-team-head h3 {
@@ -31,7 +44,7 @@
   font-family: var(--font-display);
   text-transform: uppercase;
   line-height: 1;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
 }
 
 .lineup-team-head span,
@@ -48,32 +61,39 @@
   white-space: nowrap;
 }
 
-.pitch-half {
+/* Single pitch shared by both teams, split by the halfway line. */
+.pitch {
   position: relative;
-  min-height: 24rem;
+  width: 100%;
+  min-height: 30rem;
   overflow: hidden;
+  border: 1px solid var(--ink);
   background:
-    linear-gradient(90deg, transparent 49.7%, rgba(255,255,255,0.65) 49.7% 50.3%, transparent 50.3%),
-    repeating-linear-gradient(0deg, #4f8f60 0 3.2rem, #477f57 3.2rem 6.4rem);
+    linear-gradient(90deg, transparent calc(50% - 1.5px), rgba(255, 255, 255, 0.7) calc(50% - 1.5px) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    repeating-linear-gradient(90deg, #4f8f60 0 3.2rem, #477f57 3.2rem 6.4rem);
 }
 
-.pitch-half::before {
+/* Pitch boundary. */
+.pitch::before {
   content: "";
   position: absolute;
   inset: 0.8rem;
-  border: 2px solid rgba(255,255,255,0.7);
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  pointer-events: none;
 }
 
-.pitch-half::after {
+/* Centre circle on the halfway line. */
+.pitch::after {
   content: "";
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 5.8rem;
+  width: 6.2rem;
   aspect-ratio: 1;
-  border: 2px solid rgba(255,255,255,0.7);
+  border: 2px solid rgba(255, 255, 255, 0.7);
   border-radius: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .pitch-player {
@@ -82,23 +102,32 @@
   display: grid;
   justify-items: center;
   gap: 0.15rem;
-  width: 4.7rem;
+  width: 4.4rem;
   transform: translate(-50%, -50%);
   color: #fff;
   text-align: center;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .pitch-player strong {
   display: grid;
   place-items: center;
-  width: 1.8rem;
+  width: 1.9rem;
   aspect-ratio: 1;
   border-radius: 50%;
   background: var(--ink);
-  border: 1px solid rgba(255,255,255,0.8);
+  border: 2px solid rgba(255, 255, 255, 0.85);
   font-family: var(--font-mono);
   font-size: 0.72rem;
+}
+
+/* Colour the badge ring by side so the two teams read apart on the shared pitch. */
+.pitch-player.home strong {
+  border-color: #37c3b0;
+}
+
+.pitch-player.away strong {
+  border-color: #e0392b;
 }
 
 .pitch-player span {
@@ -106,23 +135,47 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
 }
 
 .lineup-empty {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50%;
   display: grid;
   place-items: center;
+  padding: 0 0.5rem;
   color: #fff;
   font-family: var(--font-mono);
+  font-size: 0.74rem;
   text-transform: uppercase;
-  background: rgba(0,0,0,0.24);
+  text-align: center;
+}
+
+.lineup-empty.home {
+  left: 0;
+}
+
+.lineup-empty.away {
+  right: 0;
+}
+
+.lineup-benches {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
 }
 
 .bench-list {
+  border: 1px solid var(--rule);
+  background: var(--paper);
   padding: 0.65rem;
-  border-top: 1px solid var(--rule);
+  min-width: 0;
+}
+
+.bench-list.away {
+  text-align: right;
 }
 
 .bench-list p {
@@ -132,11 +185,15 @@
 }
 
 @media (max-width: 820px) {
-  .lineup-shell {
-    grid-template-columns: 1fr;
+  .pitch {
+    min-height: 24rem;
   }
 
-  .pitch-half {
-    min-height: 21rem;
+  .pitch-player {
+    width: 3.6rem;
+  }
+
+  .pitch-player span {
+    font-size: 0.6rem;
   }
 }
