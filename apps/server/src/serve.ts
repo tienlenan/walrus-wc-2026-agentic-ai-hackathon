@@ -402,7 +402,17 @@ export const server = createServer(async (req, res) => {
       await syncUserPredictionMemory(identity).catch((error) =>
         console.error("[memory] prediction notebook sync failed:", error?.message ?? error),
       );
-      return json(res, 200, { memories: await recall(memNamespace(identity), query, 10), memoryEnabled: isMemoryEnabled() });
+      // A relayer/credential failure must not 500 the whole notebook — degrade to an empty,
+      // flagged response so the page renders instead of showing "Cannot read Gil's notebook".
+      let memories: string[] = [];
+      let memoryError: string | null = null;
+      try {
+        memories = await recall(memNamespace(identity), query, 10);
+      } catch (error) {
+        memoryError = error instanceof Error ? error.message : String(error);
+        console.error("[memory] notebook recall failed:", memoryError);
+      }
+      return json(res, 200, { memories, memoryEnabled: isMemoryEnabled(), memoryError });
     }
   } catch (e) {
     return json(res, 500, { error: e instanceof Error ? e.message : String(e) });

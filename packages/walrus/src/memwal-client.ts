@@ -1,6 +1,8 @@
 import { MemWal } from "@mysten-incubation/memwal";
 
-const RELAYER_URL = process.env.MEMWAL_RELAYER_URL ?? "https://relayer.memory.walrus.xyz";
+// Use a truthy check (not ??) so an empty-string env var on the host falls back to the default
+// relayer instead of becoming serverUrl:"" and breaking every recall/remember call.
+const RELAYER_URL = process.env.MEMWAL_RELAYER_URL?.trim() || "https://relayer.memory.walrus.xyz";
 
 /** Memory is only enabled once an account + delegate key exist (after provisioning). */
 export function isMemoryEnabled(): boolean {
