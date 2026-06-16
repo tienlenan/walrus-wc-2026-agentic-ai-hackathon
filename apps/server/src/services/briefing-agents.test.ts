@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { runModeratorAgent, runSynthesisAgent, runWriterAgent } from "./briefing-agents.js";
+import { buildTemplateArticle, runModeratorAgent, runSynthesisAgent, titleFor } from "./briefing-agents.js";
 import type { BriefingSource } from "./briefing-types.js";
 
 const sources: BriefingSource[] = [
@@ -33,9 +33,10 @@ const sources: BriefingSource[] = [
   },
 ];
 
-test("writer produces Daily What's Up copy from sourced facts", () => {
+test("template fallback produces Daily What's Up copy from sourced facts", () => {
   const outline = runSynthesisAgent(sources);
-  const article = runWriterAgent({ date: "2026-06-09", type: "daily", outline });
+  const input = { date: "2026-06-09", type: "daily", outline };
+  const article = buildTemplateArticle(input, titleFor(input));
   assert.equal(article.title, "Gil's Daily What's Up - Jun 9, 2026");
   assert.match(article.markdown, /\[fixtures-1\]/);
   assert.match(article.markdown, /Mexico vs South Africa/);
