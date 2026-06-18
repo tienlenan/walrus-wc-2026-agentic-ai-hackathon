@@ -1,9 +1,10 @@
 [package]
 name = "wc_predict"
 edition = "2024.beta"
+published-at = "0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb"
 
 [dependencies]
-Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet" }
 
 [addresses]
-wc_predict = "0x0"
+wc_predict = "0x2c9496db107257631c4bad0b8f97593a661f82df83b0bd84500bec57d7738beb"

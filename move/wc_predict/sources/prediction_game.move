@@ -16,6 +16,7 @@ module wc_predict::prediction_game {
     const EBadKind: u64 = 4;
     const EMatchExists: u64 = 5;
     const ELenMismatch: u64 = 6;
+    const EScoreNotFound: u64 = 7;
 
     // ---- prediction kinds ----
     const K_SCORELINE: u8 = 0;
@@ -104,6 +105,14 @@ module wc_predict::prediction_game {
         streak: u64,
         total_points: u64,
         scored_ms: u64,
+    }
+    public struct ScoreAdjusted has copy, drop {
+        owner: address,
+        points_removed: u64,
+        correct_removed: u64,
+        graded_removed: u64,
+        total_points: u64,
+        adjusted_ms: u64,
     }
     public struct OutputRecordCreated has copy, drop {
         output_id: ID,
@@ -251,6 +260,33 @@ module wc_predict::prediction_game {
             });
             i = i + 1;
         };
+    }
+
+    /// Oracle corrects a previously-recorded score (e.g. after a grading-rule fix). record_scores
+    /// only adds, so this lets the oracle subtract over-awarded points/correct/graded counts.
+    /// Saturating subtraction — never underflows below zero.
+    public fun adjust_score(
+        _oracle: &OracleCap,
+        board: &mut Scoreboard,
+        user: address,
+        remove_points: u64,
+        remove_correct: u64,
+        remove_graded: u64,
+        clock: &Clock,
+    ) {
+        assert!(table::contains(&board.scores, user), EScoreNotFound);
+        let s = table::borrow_mut(&mut board.scores, user);
+        s.points = if (s.points > remove_points) { s.points - remove_points } else { 0 };
+        s.correct = if (s.correct > remove_correct) { s.correct - remove_correct } else { 0 };
+        s.graded = if (s.graded > remove_graded) { s.graded - remove_graded } else { 0 };
+        event::emit(ScoreAdjusted {
+            owner: user,
+            points_removed: remove_points,
+            correct_removed: remove_correct,
+            graded_removed: remove_graded,
+            total_points: s.points,
+            adjusted_ms: clock::timestamp_ms(clock),
+        });
     }
 
     /// Admin delegates settling/scoring to a hot oracle wallet.
