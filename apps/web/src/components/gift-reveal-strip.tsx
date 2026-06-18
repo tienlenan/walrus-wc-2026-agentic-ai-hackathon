@@ -14,22 +14,36 @@ import { GiftHistoryModal } from "./gift-history-modal";
 import "./gift-reveal-strip.css";
 
 const OUTPUT_RECORDING_DISABLED = import.meta.env.VITE_DISABLE_SUI_OUTPUT_RECORDING === "1";
+// How long the opened gift stays revealed before it slides into the history modal.
+const REVEAL_MS = 4000;
 
 function GiftRevealBox({ reveal, onOpened }: { reveal: GiftReveal; onOpened: () => void }) {
   const { t } = useI18n();
   const recordOutput = useSuiOutputRecorder();
   const [signing, setSigning] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  // undefined = still closed; null = revealed (demo, no proof); string = revealed with proof digest.
+  const [revealedDigest, setRevealedDigest] = useState<string | null | undefined>(undefined);
 
   useEffect(() => {
     setSaveError(null);
   }, [reveal.openedStorageKey]);
 
-  async function openGift() {
-    if (signing) return;
-    if (OUTPUT_RECORDING_DISABLED) {
+  // Show the prize for a few seconds, THEN persist it and move it to history. We delay the
+  // localStorage write so a background refresh can't filter the box out mid-reveal.
+  function revealThenArchive(digest: string | null) {
+    setRevealedDigest(digest);
+    window.setTimeout(() => {
+      if (digest) writeGiftProof(reveal.openedStorageKey, digest);
       writeGiftOpened(reveal.openedStorageKey);
       onOpened();
+    }, REVEAL_MS);
+  }
+
+  async function openGift() {
+    if (signing || revealedDigest !== undefined) return;
+    if (OUTPUT_RECORDING_DISABLED) {
+      revealThenArchive(null);
       return;
     }
     setSigning(true);
@@ -52,9 +66,7 @@ function GiftRevealBox({ reveal, onOpened }: { reveal: GiftReveal; onOpened: () 
         },
         onBeforeSign: () => setSigning(true),
       });
-      writeGiftProof(reveal.openedStorageKey, proof.txDigest);
-      writeGiftOpened(reveal.openedStorageKey);
-      onOpened();
+      revealThenArchive(proof.txDigest);
     } catch {
       setSaveError(t("gift.saveErr"));
     } finally {
@@ -62,22 +74,37 @@ function GiftRevealBox({ reveal, onOpened }: { reveal: GiftReveal; onOpened: () 
     }
   }
 
-  // Opened boxes are filtered out by the strip, so a rendered box is always still closed.
+  const opened = revealedDigest !== undefined;
   return (
-    <article className={`gift-reveal-box is-closed ${reveal.tone}`}>
+    <article className={`gift-reveal-box ${opened ? "is-open" : "is-closed"} ${reveal.tone}`}>
       <div className="gift-reveal-meta">
         <span>{t(`pred.kind.${reveal.kind}`)}</span>
         <span>{t("gift.match")} #{reveal.matchId}</span>
       </div>
 
-      <button type="button" className="gift-reveal-button" onClick={() => void openGift()} aria-label={t("gift.open")} disabled={signing}>
-        <span className="gift-reveal-icon" aria-hidden="true">
-          <span className="gift-lid" />
-          <span className="gift-body" />
-        </span>
-        <span>{OUTPUT_RECORDING_DISABLED ? t("gift.open") : signing ? t("gift.signing") : t("gift.signToOpen")}</span>
-        {saveError && <em>{saveError}</em>}
-      </button>
+      {opened ? (
+        <div className="gift-reveal-receipt">
+          <strong>{t(reveal.titleKey)}</strong>
+          <p>{t(reveal.lineKey)}</p>
+          <span>{reveal.points == null ? t("gift.noPoints") : `${reveal.points} ${t("gift.points")}`}</span>
+          <div className="gift-proof-line">
+            {OUTPUT_RECORDING_DISABLED
+              ? t("gift.demoOnly")
+              : revealedDigest
+                ? `${t("gift.saved")}: ${revealedDigest.slice(0, 10)}...${revealedDigest.slice(-6)}`
+                : ""}
+          </div>
+        </div>
+      ) : (
+        <button type="button" className="gift-reveal-button" onClick={() => void openGift()} aria-label={t("gift.open")} disabled={signing}>
+          <span className="gift-reveal-icon" aria-hidden="true">
+            <span className="gift-lid" />
+            <span className="gift-body" />
+          </span>
+          <span>{OUTPUT_RECORDING_DISABLED ? t("gift.open") : signing ? t("gift.signing") : t("gift.signToOpen")}</span>
+          {saveError && <em>{saveError}</em>}
+        </button>
+      )}
     </article>
   );
 }
