@@ -125,19 +125,17 @@ export function gradeScoreline(row: PredictionRow, homeScore: number, awayScore:
     };
   }
 
+  // Scoreline is all-or-nothing: only the exact final score counts. Predicting the right winner
+  // with the wrong score is NOT a scoreline hit (that is what the separate "winner" market is for).
   const exact = predictedHome === homeScore && predictedAway === awayScore;
-  const side = outcome(predictedHome, predictedAway) === outcome(homeScore, awayScore);
-  const points = exact ? PREDICTION_POINTS.scoreline : side ? 3 : 0;
-  const correct = exact || side;
-
   return {
     predictionId: row.id,
     user: row.sui_address,
     kind: row.kind,
-    points,
-    correct,
-    result: correct ? "correct" : "wrong",
-    reason: exact ? "exact-scoreline" : side ? "correct-result" : "wrong-result",
+    points: exact ? PREDICTION_POINTS.scoreline : 0,
+    correct: exact,
+    result: exact ? "correct" : "wrong",
+    reason: exact ? "exact-scoreline" : "wrong-scoreline",
   };
 }
 

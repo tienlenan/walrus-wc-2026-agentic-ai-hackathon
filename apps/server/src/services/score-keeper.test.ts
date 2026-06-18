@@ -13,16 +13,17 @@ function row(input: Partial<PredictionRow>): PredictionRow {
   };
 }
 
-test("scoreline scoring gives exact-score and result-only points", () => {
+test("scoreline scoring is exact-only", () => {
   const exact = gradeScoreline(row({ payload: { homeScore: 2, awayScore: 1 } }), 2, 1);
   assert.equal(exact.points, 10);
   assert.equal(exact.correct, true);
   assert.equal(exact.reason, "exact-scoreline");
 
-  const side = gradeScoreline(row({ payload: { homeScore: 3, awayScore: 0 } }), 1, 0);
-  assert.equal(side.points, 3);
-  assert.equal(side.correct, true);
-  assert.equal(side.reason, "correct-result");
+  // Right winner but wrong score is NOT a scoreline hit.
+  const rightWinnerWrongScore = gradeScoreline(row({ payload: { homeScore: 3, awayScore: 0 } }), 1, 0);
+  assert.equal(rightWinnerWrongScore.points, 0);
+  assert.equal(rightWinnerWrongScore.correct, false);
+  assert.equal(rightWinnerWrongScore.reason, "wrong-scoreline");
 });
 
 test("winner scoring uses the separate winner point rule", () => {
